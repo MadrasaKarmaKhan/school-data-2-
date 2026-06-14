@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;650;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-arabic: "Noto Naskh Arabic", serif;
+
+  --animate-marquee: marquee 35s linear infinite;
+  --animate-marquee2: marquee2 35s linear infinite;
+  --animate-shimmer: shimmer 6s infinite;
+  --animate-spin-slow: spin 20s linear infinite;
+
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+  @keyframes marquee2 {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(0%); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+}
+
+/* Custom background styles for Madrasa Arabia Noorul Uloom */
+.bg-emerald-850 {
+  background-color: #064e3b;
+}
+
+.text-emerald-650 {
+  color: #047857;
+}
+
+.bg-emerald-650 {
+  background-color: #059669;
+}
+
+.border-emerald-150 {
+  border-color: #a7f3d0;
+}
+
+/* Modern Glowing and Glassmorphism effects */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(254, 243, 199, 0.4);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+.gold-glow {
+  box-shadow: 0 0 20px rgba(217, 119, 6, 0.2);
+}
+
+.emerald-glow {
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+}
+
+/* Print Styles for Marksheet - creates a real paper-size PDF view */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-certificate, #printable-certificate *,
+  #card-printed-view, #card-printed-view *,
+  #bulkPrintArea, #bulkPrintArea *,
+  #printable-admission-token, #printable-admission-token * {
+    visibility: visible !important;
+  }
+  #printable-certificate, #printable-admission-token {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

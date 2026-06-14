@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Remix: Remix: Remix: Madrasa Arabia Noorul Uloom Portal",
+  "description": "A premium school website and ERP system for Madrasa Arabia Noorul Uloom featuring student results, admissions management, and a secure principal dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
