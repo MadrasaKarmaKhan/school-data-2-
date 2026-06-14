@@ -4,6 +4,7 @@ import multer from 'multer';
 import { google } from 'googleapis';
 import { createServer as createViteServer } from 'vite';
 import fs from 'fs';
+import { Readable } from 'stream';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -13,8 +14,8 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configure multer for file uploads
-const upload = multer({ dest: 'uploads/' });
+// Configure multer for file uploads in memory (Zaroori hai Vercel ke liye)
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Helper to construct Google API auth client
 function getGoogleAuth() {
@@ -64,7 +65,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       
       const media = {
         mimeType: file.mimetype,
-        body: fs.createReadStream(file.path)
+        body: Readable.from(file.buffer)
       };
 
       const uploadedFile = await drive.files.create({
@@ -74,9 +75,6 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       });
 
       fileUrl = uploadedFile.data.webViewLink || uploadedFile.data.id || '';
-      
-      // Cleanup locally uploaded file
-      fs.unlinkSync(file.path);
     }
 
     // 2. Append Data to Google Sheets
@@ -99,11 +97,6 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   } catch (error: any) {
     console.error('API Error:', error);
     res.status(500).json({ error: error.message || 'An error occurred during upload' });
-    
-    // Clean up local file in case of error
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
   }
 });
 
@@ -128,3 +121,6 @@ async function startServer() {
 }
 
 startServer();
+
+// Vercel serverless functions support
+export default app;
