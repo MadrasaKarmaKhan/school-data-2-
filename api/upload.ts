@@ -1,23 +1,20 @@
 import express from 'express';
-import path from 'path';
 import multer from 'multer';
 import { google } from 'googleapis';
-import { createServer as createViteServer } from 'vite';
-import fs from 'fs';
 import { Readable } from 'stream';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Configure multer for file uploads in memory (Zaroori hai Vercel ke liye)
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Helper to construct Google API auth client
+// VERCEL SPECIFIC: Disable default body parsing so multer can handle the file
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 function getGoogleAuth() {
   const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
   // Replace actual literal newlines if it's stored exactly as a string
@@ -38,8 +35,8 @@ function getGoogleAuth() {
   });
 }
 
-// API Routes
-app.post('/api/upload', upload.single('file'), async (req, res) => {
+// Ensure the path matches exactly what frontend calls
+app.post('*', upload.single('file'), async (req, res) => {
   try {
     const { name, email, role } = req.body;
     const file = req.file;
@@ -78,13 +75,11 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
     // 2. Append Data to Google Sheets
     const sheets = google.sheets({ version: 'v4', auth });
-    
-    // We append a row with: Timestamp, Name, Email, Role, File URL
     const timestamp = new Date().toISOString();
     
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
-      range: 'Sheet1!A1', // Adjust to your actual sheet name 
+      range: 'Sheet1!A1', 
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [[timestamp, name, email, role, fileUrl]]
@@ -99,27 +94,5 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   }
 });
 
-async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  }
-
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
-
-startServer();
-
-// Vercel serverless functions support
+// For Vercel Serverless Function entry point
 export default app;
