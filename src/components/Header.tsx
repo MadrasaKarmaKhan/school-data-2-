@@ -45,6 +45,7 @@ export default function Header({
     { id: 'home', label: 'Home Page', icon: School },
     { id: 'results', label: 'Exam Results', icon: GraduationCap },
     { id: 'admissions', label: 'Admissions Open', icon: FileText },
+    { id: 'cloud', label: 'Cloud Drive System', icon: FileText },
     { id: 'dashboard', label: isLoggedIn ? 'Principal Panel' : 'Principal Office', icon: ShieldAlert },
   ];
 

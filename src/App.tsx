@@ -6,6 +6,7 @@ import Homepage from './components/Homepage';
 import ResultPortal from './components/ResultPortal';
 import PrincipalDashboard from './components/PrincipalDashboard';
 import AdmissionForm from './components/AdmissionForm';
+import CloudUploader from './components/CloudUploader';
 import {
   Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName
 } from './types';
@@ -227,6 +228,10 @@ export default function App() {
 
         {currentTab === 'admissions' && (
           <AdmissionForm onSubmit={handleAdmissionSubmit} admissions={admissions} gallery={gallery} />
+        )}
+
+        {currentTab === 'cloud' && (
+          <CloudUploader />
         )}
 
         {currentTab === 'dashboard' && (
