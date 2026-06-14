@@ -67,7 +67,8 @@ app.post('*', upload.single('file'), async (req, res) => {
       const uploadedFile = await drive.files.create({
         requestBody: fileMetadata,
         media: media,
-        fields: 'id, webViewLink'
+        fields: 'id, webViewLink',
+        supportsAllDrives: true
       });
 
       fileUrl = uploadedFile.data.webViewLink || uploadedFile.data.id || '';
