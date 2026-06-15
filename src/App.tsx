@@ -16,6 +16,7 @@ import {
 } from './data';
 import { ArrowUp, MessageSquare, ShieldCheck, HelpCircle } from 'lucide-react';
 import { syncToFirebase, subscribeToFirebase } from './lib/firebaseUtils';
+import { compressBase64Image } from './lib/imageUtils';
 
 function normalizeClassName(rawClass: any): any {
   if (!rawClass) return "EDADIA";
@@ -168,6 +169,74 @@ export default function App() {
   }, [schoolConfig, isLoggedIn]);
   useEffect(() => { setStoredData('nu_darkmode', darkMode); }, [darkMode]);
   useEffect(() => { setStoredData('nu_islogged', isLoggedIn); }, [isLoggedIn]);
+
+  // Compress any overly large base64 strings in the config if we are admin
+  useEffect(() => {
+    if (isLoggedIn) {
+      const compressHugeImages = async () => {
+        let changed = false;
+        const newConfig = { ...schoolConfig };
+        const imageFields = [
+          'principalPhotoUrl', 'logoUrl', 'heroBg1', 'heroBg2', 'heroBg3',
+          'fac1Img', 'fac2Img', 'fac3Img', 'qrCodeUrl'
+        ];
+        for (const field of imageFields) {
+          const val = newConfig[field as keyof SchoolConfig];
+          if (typeof val === 'string' && val.length > 100000) {
+            try {
+               newConfig[field as keyof SchoolConfig] = await compressBase64Image(val, 800, 800, 0.5);
+               changed = true;
+            } catch (e) {
+               console.error("Compression failed for field", field, e);
+            }
+          }
+        }
+        if (changed) setSchoolConfig(newConfig);
+      };
+
+      const compressTeachers = async () => {
+        let changed = false;
+        const newTeachers = [...teachers];
+        for (let i = 0; i < newTeachers.length; i++) {
+          if (newTeachers[i].photoUrl && newTeachers[i].photoUrl!.length > 100000) {
+            try {
+              newTeachers[i] = {
+                ...newTeachers[i],
+                photoUrl: await compressBase64Image(newTeachers[i].photoUrl!, 800, 800, 0.5)
+              };
+              changed = true;
+            } catch (e) {
+               console.error("Compression failed for teacher", e);
+            }
+          }
+        }
+        if (changed) setTeachers(newTeachers);
+      };
+      
+      const compressGallery = async () => {
+        let changed = false;
+        const newGallery = [...gallery];
+        for (let i = 0; i < newGallery.length; i++) {
+          if (newGallery[i].url && newGallery[i].url.length > 100000) {
+            try {
+              newGallery[i] = {
+                ...newGallery[i],
+                url: await compressBase64Image(newGallery[i].url, 800, 800, 0.5)
+              };
+              changed = true;
+            } catch (e) {
+               console.error("Compression failed for gallery", e);
+            }
+          }
+        }
+        if (changed) setGallery(newGallery);
+      };
+
+      compressHugeImages();
+      compressTeachers();
+      compressGallery();
+    }
+  }, [isLoggedIn, schoolConfig, teachers, gallery]);
 
   // Handle Dark mode DOM tags update
   useEffect(() => {
