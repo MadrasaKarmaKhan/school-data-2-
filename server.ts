@@ -6,6 +6,7 @@ import { createServer as createViteServer } from 'vite';
 import fs from 'fs';
 import { Readable } from 'stream';
 import * as dotenv from 'dotenv';
+import { v2 as cloudinary } from 'cloudinary';
 dotenv.config();
 
 const app = express();
@@ -53,7 +54,6 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     // 1. Upload File to Cloudinary
     let fileUrl = '';
     if (file) {
-      const cloudinary = require('cloudinary').v2;
       cloudinary.config({
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,
