@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import NewsTicker from './components/NewsTicker';
@@ -15,6 +15,7 @@ import {
   INITIAL_ADMISSIONS, INITIAL_GALLERY, INITIAL_NEWS, getStoredData, setStoredData, getSchoolClasses
 } from './data';
 import { ArrowUp, MessageSquare, ShieldCheck, HelpCircle } from 'lucide-react';
+import { syncToFirebase, subscribeToFirebase } from './lib/firebaseUtils';
 
 function normalizeClassName(rawClass: any): any {
   if (!rawClass) return "EDADIA";
@@ -106,23 +107,60 @@ export default function App() {
         console.error("Migration error: ", e);
       }
     }
+    
+    // Subscribe to Firebase Firestore and populate states
+    const unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
+      if (data) setSchoolConfig(data);
+    });
+    const unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
+      if (data) setTeachers(data);
+    });
+    const unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
+      if (data) setStudents(data);
+    });
+    const unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
+      if (data && Array.isArray(data)) {
+        const mapped = data.map(r => ({ ...r, className: normalizeClassName(r.className) as ClassName }));
+        setResults(mapped);
+      }
+    });
+
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1300);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      unsubSchoolConfig();
+      unsubTeachers();
+      unsubStudents();
+      unsubResults();
+    };
   }, []);
 
-  // Sync state modifications directly back to LocalStorage
-  useEffect(() => { setStoredData('nu_students', students); }, [students]);
+  const initialRender = useRef(true);
+
+  // Sync state modifications directly back to LocalStorage AND Firebase Firestore (only if it's the admin changing it)
+  useEffect(() => { 
+    setStoredData('nu_students', students); 
+    if (isLoggedIn) syncToFirebase('schoolData', 'students', students);
+  }, [students]);
   useEffect(() => {
     setStoredData('nu_results', results);
     localStorage.setItem("madarsa_records", JSON.stringify(results));
+    if (isLoggedIn) syncToFirebase('schoolData', 'results', results);
   }, [results]);
-  useEffect(() => { setStoredData('nu_teachers', teachers); }, [teachers]);
+  useEffect(() => { 
+    setStoredData('nu_teachers', teachers); 
+    if (isLoggedIn) syncToFirebase('schoolData', 'teachers', teachers);
+  }, [teachers]);
   useEffect(() => { setStoredData('nu_admissions', admissions); }, [admissions]);
   useEffect(() => { setStoredData('nu_gallery', gallery); }, [gallery]);
   useEffect(() => { setStoredData('nu_news', news); }, [news]);
-  useEffect(() => { setStoredData('nu_config', schoolConfig); }, [schoolConfig]);
+  
+  useEffect(() => { 
+    setStoredData('nu_config', schoolConfig); 
+    if (isLoggedIn) syncToFirebase('schoolData', 'config', schoolConfig);
+  }, [schoolConfig]);
   useEffect(() => { setStoredData('nu_darkmode', darkMode); }, [darkMode]);
   useEffect(() => { setStoredData('nu_islogged', isLoggedIn); }, [isLoggedIn]);
 
