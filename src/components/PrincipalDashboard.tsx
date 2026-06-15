@@ -5,6 +5,7 @@ import {
   Search, Upload, Image, ShieldCheck, Mail, Phone, MapPin, RefreshCw, AlertCircle, PlusCircle, Calendar, Printer
 } from 'lucide-react';
 import { Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName } from '../types';
+import { resizeImage } from '../lib/imageUtils';
 import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSessions } from '../data';
 
 interface PrincipalDashboardProps {
@@ -1779,14 +1780,10 @@ export default function PrincipalDashboard({
                         if (file.type !== "image/png") {
                           alert("Please upload a transparent .png format logo only to avoid background errors!");
                         }
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                          if (ev.target?.result) {
-                            localStorage.setItem("m_logo", ev.target.result as string);
-                            setAdminSchoolLogo(ev.target.result as string);
-                          }
-                        };
-                        reader.readAsDataURL(file);
+                        resizeImage(file, 800, 800, 0.6).then((url) => {
+                                localStorage.setItem("m_logo", url);
+                            setAdminSchoolLogo(url);
+                              }).catch(e => console.error("Compression failed", e));
                       }
                     }}
                   />
@@ -1801,14 +1798,10 @@ export default function PrincipalDashboard({
                         if (file.type !== "image/png") {
                           alert("Please upload a transparent .png format Urdu name logo only!");
                         }
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                          if (ev.target?.result) {
-                            localStorage.setItem("m_urdu_logo", ev.target.result as string);
-                            setAdminUrduLogo(ev.target.result as string);
-                          }
-                        };
-                        reader.readAsDataURL(file);
+                        resizeImage(file, 800, 800, 0.6).then((url) => {
+                                localStorage.setItem("m_urdu_logo", url);
+                            setAdminUrduLogo(url);
+                              }).catch(e => console.error("Compression failed", e));
                       }
                     }}
                   />
@@ -1820,13 +1813,9 @@ export default function PrincipalDashboard({
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                          if (ev.target?.result) {
-                            setAdminPhoto(ev.target.result as string);
-                          }
-                        };
-                        reader.readAsDataURL(file);
+                        resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setAdminPhoto(url);
+                              }).catch(e => console.error("Compression failed", e));
                       }
                     }}
                   />
@@ -3442,13 +3431,9 @@ export default function PrincipalDashboard({
                               if (file.type !== "image/png") {
                                 alert("Please select a transparent .png format photo only!");
                               }
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  setNewTeacher(prev => ({ ...prev, photoUrl: ev.target!.result as string }));
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setNewTeacher(prev => ({ ...prev, photoUrl: url }));
+                              }).catch(e => console.error("Compression failed", e));
                             }
                           }}
                           className="p-1 border rounded dark:bg-slate-850 dark:border-slate-700 flex-grow text-xs"
@@ -3519,13 +3504,9 @@ export default function PrincipalDashboard({
                               if (file.type !== "image/png") {
                                 alert("Please select a transparent .png format photo only!");
                               }
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  setEditingTeacher(prev => prev ? ({ ...prev, photoUrl: ev.target!.result as string }) : null);
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setEditingTeacher(prev => prev ? ({ ...prev, photoUrl: url }) : null);
+                              }).catch(e => console.error("Compression failed", e));
                             }
                           }}
                           className="p-1 border rounded dark:bg-slate-850 dark:border-slate-700 flex-grow text-xs"
@@ -3737,13 +3718,9 @@ export default function PrincipalDashboard({
                               alert("Please upload an image file only.");
                               return;
                             }
-                            const reader = new FileReader();
-                            reader.onload = (ev) => {
-                              if (ev.target?.result) {
-                                setNewGallery(prev => ({ ...prev, url: ev.target!.result as string }));
-                              }
-                            };
-                            reader.readAsDataURL(file);
+                            resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setNewGallery(prev => ({ ...prev, url: url }));
+                              }).catch(e => console.error("Compression failed", e));
                           }
                         }}
                         onClick={() => document.getElementById('galleryImageInput')?.click()}
@@ -3761,13 +3738,9 @@ export default function PrincipalDashboard({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  setNewGallery(prev => ({ ...prev, url: ev.target!.result as string }));
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setNewGallery(prev => ({ ...prev, url: url }));
+                              }).catch(e => console.error("Compression failed", e));
                             }
                           }}
                         />
@@ -4114,13 +4087,9 @@ export default function PrincipalDashboard({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  setSchoolConfig({ ...schoolConfig, principalPhotoUrl: ev.target.result as string });
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, principalPhotoUrl: url });
+                              }).catch(e => console.error("Compression failed", e));
                             }
                           }}
                         />
@@ -4165,13 +4134,9 @@ export default function PrincipalDashboard({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  setSchoolConfig({ ...schoolConfig, logoUrl: ev.target.result as string });
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, logoUrl: url });
+                              }).catch(e => console.error("Compression failed", e));
                             }
                           }}
                         />
@@ -4278,13 +4243,9 @@ export default function PrincipalDashboard({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  setSchoolConfig({ ...schoolConfig, heroBg1: ev.target.result as string });
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, heroBg1: url });
+                              }).catch(e => console.error("Compression failed", e));
                             }
                           }}
                         />
@@ -4325,13 +4286,9 @@ export default function PrincipalDashboard({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  setSchoolConfig({ ...schoolConfig, heroBg2: ev.target.result as string });
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, heroBg2: url });
+                              }).catch(e => console.error("Compression failed", e));
                             }
                           }}
                         />
@@ -4372,13 +4329,9 @@ export default function PrincipalDashboard({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  setSchoolConfig({ ...schoolConfig, heroBg3: ev.target.result as string });
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, heroBg3: url });
+                              }).catch(e => console.error("Compression failed", e));
                             }
                           }}
                         />
@@ -4609,13 +4562,9 @@ export default function PrincipalDashboard({
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                  const reader = new FileReader();
-                                  reader.onload = (ev) => {
-                                    if (ev.target?.result) {
-                                      setSchoolConfig({ ...schoolConfig, fac1Img: ev.target.result as string });
-                                    }
-                                  };
-                                  reader.readAsDataURL(file);
+                                  resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, fac1Img: url });
+                              }).catch(e => console.error("Compression failed", e));
                                 }
                               }}
                             />
@@ -4680,13 +4629,9 @@ export default function PrincipalDashboard({
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                  const reader = new FileReader();
-                                  reader.onload = (ev) => {
-                                    if (ev.target?.result) {
-                                      setSchoolConfig({ ...schoolConfig, fac2Img: ev.target.result as string });
-                                    }
-                                  };
-                                  reader.readAsDataURL(file);
+                                  resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, fac2Img: url });
+                              }).catch(e => console.error("Compression failed", e));
                                 }
                               }}
                             />
@@ -4751,13 +4696,9 @@ export default function PrincipalDashboard({
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                  const reader = new FileReader();
-                                  reader.onload = (ev) => {
-                                    if (ev.target?.result) {
-                                      setSchoolConfig({ ...schoolConfig, fac3Img: ev.target.result as string });
-                                    }
-                                  };
-                                  reader.readAsDataURL(file);
+                                  resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, fac3Img: url });
+                              }).catch(e => console.error("Compression failed", e));
                                 }
                               }}
                             />
@@ -5110,13 +5051,9 @@ export default function PrincipalDashboard({
                                   onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (file) {
-                                      const reader = new FileReader();
-                                      reader.onload = (ev) => {
-                                        if (ev.target?.result) {
-                                          setSchoolConfig({ ...schoolConfig, qrCodeUrl: ev.target.result as string });
-                                        }
-                                      };
-                                      reader.readAsDataURL(file);
+                                      resizeImage(file, 800, 800, 0.6).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, qrCodeUrl: url });
+                              }).catch(e => console.error("Compression failed", e));
                                     }
                                   }}
                                 />
