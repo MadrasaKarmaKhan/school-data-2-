@@ -31,9 +31,7 @@ function getGoogleAuth() {
     email: clientEmail,
     key: privateKey,
     scopes: [
-      'https://www.googleapis.com/auth/spreadsheets',
-      'https://www.googleapis.com/auth/drive.file',
-      'https://www.googleapis.com/auth/drive'
+      'https://www.googleapis.com/auth/spreadsheets'
     ]
   });
 }
@@ -45,36 +43,35 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     const file = req.file;
 
     const sheetId = process.env.GOOGLE_SHEET_ID;
-    const driveFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
-    if (!sheetId || !driveFolderId) {
-      return res.status(500).json({ error: 'System configuration missing (Sheet or Drive Folder ID)' });
+    if (!sheetId) {
+      return res.status(500).json({ error: 'System configuration missing (Sheet ID)' });
     }
 
     const auth = getGoogleAuth();
     
-    // 1. Upload File to Google Drive
+    // 1. Upload File to Cloudinary
     let fileUrl = '';
     if (file) {
-      const drive = google.drive({ version: 'v3', auth });
-      const fileMetadata = {
-        name: file.originalname,
-        parents: [driveFolderId]
-      };
-      
-      const media = {
-        mimeType: file.mimetype,
-        body: Readable.from(file.buffer)
-      };
-
-      const uploadedFile = await drive.files.create({
-        requestBody: fileMetadata,
-        media: media,
-        fields: 'id, webViewLink',
-        supportsAllDrives: true
+      const cloudinary = require('cloudinary').v2;
+      cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
       });
 
-      fileUrl = uploadedFile.data.webViewLink || uploadedFile.data.id || '';
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: 'website-uploads' },
+          (error: any, result: any) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        Readable.from(file.buffer).pipe(uploadStream);
+      });
+
+      fileUrl = (uploadResult as any).secure_url;
     }
 
     // 2. Append Data to Google Sheets
@@ -92,7 +89,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       }
     });
 
-    res.json({ success: true, message: 'Data saved to Google Sheets and Drive successfully!' });
+    res.json({ success: true, message: 'Data saved to Google Sheets and Cloudinary successfully!' });
 
   } catch (error: any) {
     console.error('API Error:', error);
