@@ -49,9 +49,9 @@ export default function CloudUploader() {
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
       <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
-        <h2 className="text-2xl font-serif text-slate-800 dark:text-slate-100 mb-2">Google Cloud Sync System</h2>
+        <h2 className="text-2xl font-serif text-slate-800 dark:text-slate-100 mb-2">Cloud Sync System</h2>
         <p className="text-slate-500 dark:text-slate-400 text-sm">
-          Aapka data Google Sheets aur file Google Drive me save hoga.
+          Aapka data Google Sheets aur file Cloudinary me save hoga.
         </p>
       </div>
 
@@ -120,14 +120,14 @@ export default function CloudUploader() {
         {status === 'error' && (
           <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-3 text-red-700 dark:text-red-400 text-sm">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <p>{errorMessage} - <span className="font-bold">Ensure Backend Env Vars / Sheet Share Access is valid.</span></p>
+            <p>{errorMessage} - <span className="font-bold">Ensure Backend Env Vars (Cloudinary & Google Sheets) are valid.</span></p>
           </div>
         )}
 
         {status === 'success' && (
           <div className="p-4 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-lg flex items-center gap-3 text-emerald-700 dark:text-emerald-400 text-sm">
             <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-            <p>Alhamdulillah! Data Sheets aur Drive mein upload ho gaya.</p>
+            <p>Alhamdulillah! Data Sheets aur Cloudinary mein upload ho gaya.</p>
           </div>
         )}
 
