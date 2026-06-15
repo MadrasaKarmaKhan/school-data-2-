@@ -89,6 +89,11 @@ export default function App() {
   const [visitorCount, setVisitorCount] = useState(() => getStoredData('nu_visitors', 384));
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  const isLoggedInRef = useRef(isLoggedIn);
+  useEffect(() => {
+    isLoggedInRef.current = isLoggedIn;
+  }, [isLoggedIn]);
+
   // Initial loader and migration effect
   useEffect(() => {
     // Migrate old default address/phone if present in stored local storage config to ensure user immediately sees the new address
@@ -108,18 +113,18 @@ export default function App() {
       }
     }
     
-    // Subscribe to Firebase Firestore and populate states
+    // Subscribe to Firebase Firestore and populate states (only if not admin, to prevent race conditions where admin data is overwritten)
     const unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
-      if (data) setSchoolConfig(data);
+      if (data && !isLoggedInRef.current) setSchoolConfig(data);
     });
     const unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
-      if (data) setTeachers(data);
+      if (data && !isLoggedInRef.current) setTeachers(data);
     });
     const unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
-      if (data) setStudents(data);
+      if (data && !isLoggedInRef.current) setStudents(data);
     });
     const unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
-      if (data && Array.isArray(data)) {
+      if (data && Array.isArray(data) && !isLoggedInRef.current) {
         const mapped = data.map(r => ({ ...r, className: normalizeClassName(r.className) as ClassName }));
         setResults(mapped);
       }
@@ -143,16 +148,16 @@ export default function App() {
   useEffect(() => { 
     setStoredData('nu_students', students); 
     if (isLoggedIn) syncToFirebase('schoolData', 'students', students);
-  }, [students]);
+  }, [students, isLoggedIn]);
   useEffect(() => {
     setStoredData('nu_results', results);
     localStorage.setItem("madarsa_records", JSON.stringify(results));
     if (isLoggedIn) syncToFirebase('schoolData', 'results', results);
-  }, [results]);
+  }, [results, isLoggedIn]);
   useEffect(() => { 
     setStoredData('nu_teachers', teachers); 
     if (isLoggedIn) syncToFirebase('schoolData', 'teachers', teachers);
-  }, [teachers]);
+  }, [teachers, isLoggedIn]);
   useEffect(() => { setStoredData('nu_admissions', admissions); }, [admissions]);
   useEffect(() => { setStoredData('nu_gallery', gallery); }, [gallery]);
   useEffect(() => { setStoredData('nu_news', news); }, [news]);
@@ -160,7 +165,7 @@ export default function App() {
   useEffect(() => { 
     setStoredData('nu_config', schoolConfig); 
     if (isLoggedIn) syncToFirebase('schoolData', 'config', schoolConfig);
-  }, [schoolConfig]);
+  }, [schoolConfig, isLoggedIn]);
   useEffect(() => { setStoredData('nu_darkmode', darkMode); }, [darkMode]);
   useEffect(() => { setStoredData('nu_islogged', isLoggedIn); }, [isLoggedIn]);
 
