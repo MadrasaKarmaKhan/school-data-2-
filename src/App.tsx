@@ -219,6 +219,7 @@ export default function App() {
             gallery={gallery}
             setCurrentTab={setCurrentTab}
             onAdmissionFormSubmit={handleAdmissionSubmit}
+            isLoggedIn={isLoggedIn}
           />
         )}
 

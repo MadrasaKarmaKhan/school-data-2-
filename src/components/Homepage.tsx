@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   BookOpen, Landmark, Eye, Heart, Milestone, GraduationCap, Award, MapPin, Phone, Mail,
   Send, RefreshCw, Layers, Monitor, Play, Sparkles, Book, Compass, Shield, ArrowRight,
-  Copy, Check, QrCode
+  Copy, Check, QrCode, Edit2
 } from 'lucide-react';
 import { Teacher, GalleryItem, SchoolConfig, ClassName, AdmissionApplication } from '../types';
 
@@ -12,9 +12,10 @@ interface HomepageProps {
   gallery: GalleryItem[];
   setCurrentTab: (tab: string) => void;
   onAdmissionFormSubmit: (app: Omit<AdmissionApplication, 'id' | 'applyDate' | 'status'>) => void;
+  isLoggedIn?: boolean;
 }
 
-export default function Homepage({ config, teachers, gallery, setCurrentTab, onAdmissionFormSubmit }: HomepageProps) {
+export default function Homepage({ config, teachers, gallery, setCurrentTab, onAdmissionFormSubmit, isLoggedIn }: HomepageProps) {
   // Contact form state
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [contactSuccess, setContactSuccess] = useState(false);
@@ -113,7 +114,16 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
       </section>
 
       {/* Principal Message message desk */}
-      <section id="principal" className="scroll-mt-20 p-6 md:p-10 bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-500/20 shadow-2xl grid grid-cols-1 md:grid-cols-3 gap-8 items-center.">
+      <section id="principal" className="relative scroll-mt-20 p-6 md:p-10 bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-500/20 shadow-2xl grid grid-cols-1 md:grid-cols-3 gap-8 items-center.">
+        {isLoggedIn && (
+          <button 
+            onClick={() => setCurrentTab('dashboard')}
+            className="absolute top-4 right-4 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md font-bold text-xs flex items-center gap-1.5 z-10 transition-colors"
+            title="Edit in Admin Panel"
+          >
+            <Edit2 className="w-3.5 h-3.5" /> Edit Principal Photo & Text
+          </button>
+        )}
         {/* Principal Portrait */}
         <div className="md:col-span-1 flex flex-col items-center gap-3 text-center self-center">
           <div className="relative">
@@ -182,7 +192,16 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
 
       {/* Honorable Faculty / Teacher Profiles Section */}
       {teachers && teachers.length > 0 && (
-        <section id="teachers" className="scroll-mt-20 space-y-8">
+        <section id="teachers" className="relative scroll-mt-20 space-y-8">
+          {isLoggedIn && (
+            <button 
+              onClick={() => setCurrentTab('dashboard')}
+              className="absolute top-0 right-4 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md font-bold text-xs flex items-center gap-1.5 z-10 transition-colors"
+              title="Edit Teachers in Admin Panel"
+            >
+              <Edit2 className="w-3.5 h-3.5" /> Edit Teacher Photos & Details
+            </button>
+          )}
           <div className="text-center space-y-1">
             <span className="text-xs uppercase font-bold tracking-widest text-amber-600 font-mono">Our Mentors</span>
             <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Our Honorable Teachers (हमारे शिक्षक)</h3>

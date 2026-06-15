@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { School, Sun, Moon, LogIn, ShieldAlert, GraduationCap, FileText, PhoneCall, Image, Bell, Heart, X } from 'lucide-react';
+import { School, Sun, Moon, LogIn, ShieldAlert, GraduationCap, FileText, PhoneCall, Image, Bell, Heart, X, Edit2 } from 'lucide-react';
 import { SchoolConfig, NewsItem } from '../types';
 
 interface HeaderProps {
@@ -164,6 +164,15 @@ export default function Header({
             {/* Outer golden circular shine */}
             <div className="absolute inset-0 rounded-full border border-amber-400/35 animate-spin-slow"></div>
           </div>
+          {isLoggedIn && (
+            <button 
+              onClick={(e) => { e.stopPropagation(); setCurrentTab('dashboard'); }}
+              className="absolute top-2 left-2 px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded shadow-md font-bold text-[9px] flex items-center gap-1 z-10 transition-colors uppercase"
+              title="Edit Logo in Admin Panel"
+            >
+              <Edit2 className="w-2.5 h-2.5" /> Edit Logo
+            </button>
+          )}
  
           <div className="flex-1 max-w-[280px] sm:max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl min-w-0 justify-center">
             {/* High-visibility background shape (pill/capsule) under the sliding text */}
