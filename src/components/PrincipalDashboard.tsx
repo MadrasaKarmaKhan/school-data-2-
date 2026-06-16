@@ -121,8 +121,8 @@ export default function PrincipalDashboard({
   classWeights['5TH'] = classWeights['5TH A'] || 15;
 
   // Login State
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('principal123');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
   // Active Management Tab inside ERP panel
