@@ -48,10 +48,19 @@ export default function DuaPage() {
                     {currentDua.arabic}
                 </p>
                 
-                <div className="bg-amber-50 dark:bg-emerald-950/30 p-4 rounded-xl border border-amber-200/50 dark:border-emerald-900/60 mt-4">
-                    <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 font-medium">
-                        {currentDua.translation}
-                    </p>
+                <div className="bg-amber-50 dark:bg-emerald-950/30 p-4 rounded-xl border border-amber-200/50 dark:border-emerald-900/60 mt-4 space-y-4">
+                    <div className="flex gap-3">
+                        <span className="font-bold text-amber-700 dark:text-amber-500 shrink-0 mt-0.5">हिन्दी:</span>
+                        <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 font-medium">
+                            {currentDua.translationHindi}
+                        </p>
+                    </div>
+                    <div className="flex gap-3 border-t border-amber-200/50 dark:border-emerald-900/60 pt-4">
+                        <span className="font-bold text-emerald-700 dark:text-emerald-500 shrink-0 mt-0.5">اردو:</span>
+                        <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 font-medium font-serif leading-relaxed" dir="rtl">
+                            {currentDua.translationUrdu}
+                        </p>
+                    </div>
                 </div>
             </div>
 
