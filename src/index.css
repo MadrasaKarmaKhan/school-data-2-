@@ -59,6 +59,14 @@
   border: 1px solid rgba(254, 243, 199, 0.4);
 }
 
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .dark .glass-panel {
   background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(12px);

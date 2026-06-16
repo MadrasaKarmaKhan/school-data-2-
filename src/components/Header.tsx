@@ -264,7 +264,7 @@ export default function Header({
 
       {/* Floating Interactive Navigation Tab Bar */}
       <nav className="border-t border-emerald-50 dark:border-slate-800 py-1.5 bg-slate-50/50 dark:bg-slate-950/20">
-        <div className="max-w-7xl mx-auto px-4 flex justify-around md:justify-center items-center gap-1.5 md:gap-8 overflow-x-auto pb-1 md:pb-0">
+        <div className="max-w-7xl mx-auto px-1 sm:px-2 flex justify-center items-center gap-1 sm:gap-1.5 md:gap-2 flex-wrap pb-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
@@ -273,13 +273,13 @@ export default function Header({
                 key={item.id}
                 id={`nav-${item.id}`}
                 onClick={() => setCurrentTab(item.id)}
-                className={`py-2 px-3 md:px-5 rounded-lg flex items-center gap-1.5 text-xs md:text-sm font-semibold tracking-wide transition-all duration-300 whitespace-nowrap cursor-pointer relative ${
+                className={`py-1.5 px-2 md:px-3 rounded-lg flex items-center gap-1 text-[11px] md:text-[13px] font-bold tracking-tight transition-all duration-300 cursor-pointer relative ${
                   isActive
                     ? 'text-emerald-700 dark:text-amber-300 bg-emerald-100/55 dark:bg-emerald-950/60 shadow-inner'
                     : 'text-slate-650 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-850'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-650 dark:text-amber-400 animate-pulse' : 'text-slate-400'}`} />
+                <Icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isActive ? 'text-emerald-650 dark:text-amber-400 animate-pulse' : 'text-slate-400'}`} />
                 {item.label}
                 {isActive && (
                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-emerald-600 dark:bg-amber-400 rounded-full"></span>
@@ -299,9 +299,9 @@ export default function Header({
                 }
               }, 200);
             }}
-            className="py-1.5 px-3 md:px-4 rounded-lg flex items-center gap-1.5 text-xs md:text-sm font-bold tracking-wide text-amber-700 bg-amber-100/80 hover:bg-amber-100 dark:text-amber-300 dark:bg-amber-950/45 border border-amber-300 dark:border-amber-800 rounded-lg hover:scale-103 transition-all cursor-pointer whitespace-nowrap shadow-sm"
+            className="py-1.5 px-2 md:px-3 rounded-lg flex items-center gap-1 text-[11px] md:text-[13px] font-bold tracking-tight text-amber-700 bg-amber-100/80 hover:bg-amber-100 dark:text-amber-300 dark:bg-amber-950/45 border border-amber-300 dark:border-amber-800 hover:scale-105 transition-all cursor-pointer shadow-sm"
           >
-            <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500 animate-pulse" />
+            <Heart className="w-3.5 h-3.5 md:w-4 md:h-4 fill-amber-500 text-amber-500 animate-pulse" />
             <span>Donate (मदद करें)</span>
           </button>
         </div>

@@ -175,17 +175,19 @@ export default function DuaPage() {
 
   const currentLevel = getLevel(memorizedDuas.length);
 
-  // Compute Class Ranks
-  const classScores: Record<string, number> = {};
-  allStudents.forEach(s => {
-    if(!classScores[s.className]) classScores[s.className] = 0;
-    classScores[s.className] += (s.memorizedDuas?.length || 0);
-  });
-  const rankedClasses = Object.entries(classScores)
-     .sort((a, b) => b[1] - a[1])
-     .filter(a => a[1] > 0);
+  // Compute Top Student Per Class Leaderboard
+  const topStudentsByClass = Object.values(
+    allStudents.reduce((acc, s) => {
+      if ((s.memorizedDuas?.length || 0) === 0) return acc;
+      const score = s.memorizedDuas?.length || 0;
+      if (!acc[s.className] || score > (acc[s.className].memorizedDuas?.length || 0)) {
+        acc[s.className] = s;
+      }
+      return acc;
+    }, {} as Record<string, DuaStudent>)
+  ).sort((a, b) => (b.memorizedDuas?.length || 0) - (a.memorizedDuas?.length || 0));
 
-  const topClass = rankedClasses.length > 0 ? rankedClasses[0][0] : "None";
+  const topStudent = topStudentsByClass.length > 0 ? topStudentsByClass[0] : null;
 
   if (!student) {
     return (
@@ -194,7 +196,7 @@ export default function DuaPage() {
             <motion.div
               initial={{ scale: 0, y: -50 }}
               animate={{ scale: 1, y: 0, rotate: [0, -10, 10, -10, 0] }}
-              transition={{ duration: 0.7, type: 'spring', bounce: 0.5 }}
+              transition={{ duration: 0.7 }}
               className="p-4 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full shadow-lg mb-4"
             >
               <Sparkles className="w-10 h-10 text-white" />
@@ -244,7 +246,7 @@ export default function DuaPage() {
         <motion.div
            initial={{ scale: 0, y: -50 }}
            animate={{ scale: 1, y: 0, rotate: [0, -10, 10, -10, 0] }}
-           transition={{ duration: 0.7, type: 'spring', bounce: 0.5 }}
+           transition={{ duration: 0.7 }}
            className={`p-4 bg-gradient-to-br ${currentLevel.color} rounded-full shadow-lg mb-4 cursor-pointer hover:scale-110 transition-transform`}
         >
           {currentLevel.icon}
@@ -265,8 +267,8 @@ export default function DuaPage() {
         </div>
       </div>
       
-      {/* Class Challenge Bar */}
-      {rankedClasses.length > 0 && (
+      {/* Student Leaderboard Bar */}
+      {topStudentsByClass.length > 0 && (
          <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 shadow-xl mb-8 flex flex-col md:flex-row items-center justify-between text-white border-4 border-emerald-300 dark:border-emerald-700 relative overflow-hidden">
             <div className="absolute right-0 top-0 opacity-10">
                <Trophy className="w-48 h-48 -mr-10 -mt-10" />
@@ -276,17 +278,17 @@ export default function DuaPage() {
                   <Trophy className="w-10 h-10 text-yellow-300" />
                </div>
                <div>
-                  <h3 className="font-bold text-emerald-100 text-sm tracking-widest uppercase mb-1">Class Leaderboard</h3>
-                  <div className="text-2xl font-black">1st: Class {topClass}</div>
-                  <div className="text-sm text-emerald-100 font-medium">{classScores[topClass]} Duas Memorized</div>
+                  <h3 className="font-bold text-emerald-100 text-sm tracking-widest uppercase mb-1">Class Top Memorizers</h3>
+                  <div className="text-2xl font-black">{topStudent?.name} ({topStudent?.className})</div>
+                  <div className="text-sm text-emerald-100 font-medium">{topStudent?.memorizedDuas?.length || 0} Duas Memorized</div>
                </div>
             </div>
             
             <div className="flex -space-x-2 mt-4 md:mt-0 relative z-10 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
-               {rankedClasses.slice(0, 3).map(([cName, score], idx) => (
-                 <div key={cName} className={`flex items-center gap-2 flex-shrink-0 bg-emerald-900/40 backdrop-blur-md px-4 py-3 rounded-full border-2 ${idx === 0 ? 'border-yellow-400 outline-2 outline-yellow-400/50' : 'border-emerald-400/30'}`}>
+               {topStudentsByClass.slice(0, 5).map((s, idx) => (
+                 <div key={s.code} className={`flex items-center gap-2 flex-shrink-0 bg-emerald-900/40 backdrop-blur-md px-4 py-3 rounded-full border-2 ${idx === 0 ? 'border-yellow-400 outline-2 outline-yellow-400/50 z-20' : 'border-emerald-400/30'}`}>
                     <span className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-black ${idx === 0 ? 'bg-yellow-400 text-yellow-900' : 'bg-emerald-700 text-white'}`}>#{idx + 1}</span>
-                    <span className="font-bold whitespace-nowrap">{cName} <span className="text-emerald-200 ml-1">({score})</span></span>
+                    <span className="font-bold whitespace-nowrap">{s.name} <span className="text-emerald-200 ml-1 text-xs">({s.className}) - {s.memorizedDuas?.length || 0}</span></span>
                  </div>
                ))}
             </div>
