@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/master/schema/blueprint.schema.json",
+  "collections": [
+    {
+      "collectionId": "students",
+      "description": "Stores student profiles and their memorization progress",
+      "securityRules": {
+        "read": "true",
+        "create": "true",
+        "update": "true",
+        "delete": "false"
+      },
+      "fields": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "className",
+          "type": "string"
+        },
+        {
+          "name": "rollNo",
+          "type": "string"
+        },
+        {
+          "name": "memorizedDuas",
+          "type": "array"
+        }
+      ]
+    }
+  ]
+}

@@ -1,23 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import { DAILY_DUAS } from '../data/duas';
-import { ArrowRight, ArrowLeft, BookOpen, Star, Award, Sparkles, CheckCircle2, Shuffle, Crown, Medal, Flame } from 'lucide-react';
+import { ArrowRight, ArrowLeft, BookOpen, Star, Award, Sparkles, CheckCircle2, Shuffle, Crown, Medal, Flame, Trophy, Users, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
+import { doc, updateDoc, collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import DuaAuth, { DuaStudent } from './DuaAuth';
 
 export default function DuaPage() {
+  const [student, setStudent] = useState<DuaStudent | null>(null);
+  const [allStudents, setAllStudents] = useState<DuaStudent[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [memorizedDuas, setMemorizedDuas] = useState<number[]>([]);
 
-  // Load memorized duas from localStorage
+  // Real-time listener for students to calculate ranks
   useEffect(() => {
-    const saved = localStorage.getItem('memorizedDuas');
-    if (saved) {
-      try {
-        setMemorizedDuas(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse memorized duas", e);
+    if (!student) return;
+    const unsub = onSnapshot(collection(db, 'students'), (snapshot) => {
+      const studentsData: DuaStudent[] = [];
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        studentsData.push({
+           code: docSnap.id,
+           name: data.name,
+           className: data.className,
+           rollNo: data.rollNo,
+           memorizedDuas: data.memorizedDuas || []
+        });
+      });
+      setAllStudents(studentsData);
+      
+      // Update current student's memorized duas from latest FB data mapping
+      const me = studentsData.find(s => s.code === student.code);
+      if (me) {
+        setMemorizedDuas(me.memorizedDuas || []);
       }
+    });
+    return () => unsub();
+  }, [student]);
+
+  // Handle Logout
+  const handleLogout = () => {
+    localStorage.removeItem('dua_student_code');
+    setStudent(null);
+    setMemorizedDuas([]);
+  };
+
+  // Try auto-login on mount
+  useEffect(() => {
+    const savedCode = localStorage.getItem('dua_student_code');
+    if (savedCode) {
+      // Just set a dummy till real data arrives or do a fetch
+      // For simplicity we will wait for them to click login, but we can auto-fetch:
+      const fetchStud = async () => {
+        const { getDoc } = await import('firebase/firestore');
+        try {
+           const ds = await getDoc(doc(db, 'students', savedCode));
+           if(ds.exists()){
+             const data = ds.data();
+             setStudent({
+               code: ds.id,
+               name: data.name,
+               className: data.className,
+               rollNo: data.rollNo,
+               memorizedDuas: data.memorizedDuas || []
+             });
+             setMemorizedDuas(data.memorizedDuas || []);
+           } else {
+             localStorage.removeItem('dua_student_code');
+           }
+        }catch(e){}
+      };
+      fetchStud();
     }
   }, []);
 
@@ -93,7 +148,11 @@ export default function DuaPage() {
     }
     
     setMemorizedDuas(newMemorized);
-    localStorage.setItem('memorizedDuas', JSON.stringify(newMemorized));
+    if (student) {
+      updateDoc(doc(db, 'students', student.code), {
+        memorizedDuas: newMemorized
+      }).catch(err => console.error("Error updating firebase: ", err));
+    }
   };
 
   const currentDua = DAILY_DUAS[currentIndex];
@@ -115,6 +174,44 @@ export default function DuaPage() {
   };
 
   const currentLevel = getLevel(memorizedDuas.length);
+
+  // Compute Class Ranks
+  const classScores: Record<string, number> = {};
+  allStudents.forEach(s => {
+    if(!classScores[s.className]) classScores[s.className] = 0;
+    classScores[s.className] += (s.memorizedDuas?.length || 0);
+  });
+  const rankedClasses = Object.entries(classScores)
+     .sort((a, b) => b[1] - a[1])
+     .filter(a => a[1] > 0);
+
+  const topClass = rankedClasses.length > 0 ? rankedClasses[0][0] : "None";
+
+  if (!student) {
+    return (
+      <div className="max-w-4xl mx-auto py-8 md:py-12 px-4 animate-fade-in perspective-1000">
+         <div className="flex flex-col items-center justify-center mb-8 text-center">
+            <motion.div
+              initial={{ scale: 0, y: -50 }}
+              animate={{ scale: 1, y: 0, rotate: [0, -10, 10, -10, 0] }}
+              transition={{ duration: 0.7, type: 'spring', bounce: 0.5 }}
+              className="p-4 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full shadow-lg mb-4"
+            >
+              <Sparkles className="w-10 h-10 text-white" />
+            </motion.div>
+            <h2 className="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent drop-shadow-sm mb-2">
+              Dua Adventure Portal
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400 font-medium">Please verify your student profile to track your memorization progress.</p>
+         </div>
+         <DuaAuth onLogin={(s) => {
+           setStudent(s);
+           setMemorizedDuas(s.memorizedDuas || []);
+           localStorage.setItem('dua_student_code', s.code);
+         }} />
+      </div>
+    );
+  }
 
   const variants = {
     enter: (direction: number) => ({
@@ -155,10 +252,46 @@ export default function DuaPage() {
         <h2 className={`text-3xl md:text-5xl font-extrabold bg-gradient-to-r ${currentLevel.color} bg-clip-text text-transparent drop-shadow-sm mb-2`}>
           Dua Adventure
         </h2>
-        <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-full shadow-sm border border-slate-200 dark:border-slate-700">
-           <span className="font-bold text-slate-700 dark:text-slate-300">Level: <span className="text-emerald-600 dark:text-emerald-400">{currentLevel.title}</span></span>
+        <div className="flex flex-wrap justify-center items-center gap-3">
+          <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-full shadow-sm border border-slate-200 dark:border-slate-700">
+             <span className="font-bold text-slate-700 dark:text-slate-300">Level: <span className="text-emerald-600 dark:text-emerald-400">{currentLevel.title}</span></span>
+          </div>
+          <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-full shadow-sm border border-slate-200 dark:border-slate-700">
+             <span className="font-bold text-slate-700 dark:text-slate-300">Student: <span className="text-amber-600 dark:text-amber-400">{student.name} ({student.className})</span></span>
+          </div>
+          <button onClick={handleLogout} className="flex items-center gap-1 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 px-3 py-2 rounded-full font-bold text-sm hover:bg-red-100 transition-colors">
+            <LogOut className="w-4 h-4" /> Logout
+          </button>
         </div>
       </div>
+      
+      {/* Class Challenge Bar */}
+      {rankedClasses.length > 0 && (
+         <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 shadow-xl mb-8 flex flex-col md:flex-row items-center justify-between text-white border-4 border-emerald-300 dark:border-emerald-700 relative overflow-hidden">
+            <div className="absolute right-0 top-0 opacity-10">
+               <Trophy className="w-48 h-48 -mr-10 -mt-10" />
+            </div>
+            <div className="flex items-center gap-4 relative z-10">
+               <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
+                  <Trophy className="w-10 h-10 text-yellow-300" />
+               </div>
+               <div>
+                  <h3 className="font-bold text-emerald-100 text-sm tracking-widest uppercase mb-1">Class Leaderboard</h3>
+                  <div className="text-2xl font-black">1st: Class {topClass}</div>
+                  <div className="text-sm text-emerald-100 font-medium">{classScores[topClass]} Duas Memorized</div>
+               </div>
+            </div>
+            
+            <div className="flex -space-x-2 mt-4 md:mt-0 relative z-10 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
+               {rankedClasses.slice(0, 3).map(([cName, score], idx) => (
+                 <div key={cName} className={`flex items-center gap-2 flex-shrink-0 bg-emerald-900/40 backdrop-blur-md px-4 py-3 rounded-full border-2 ${idx === 0 ? 'border-yellow-400 outline-2 outline-yellow-400/50' : 'border-emerald-400/30'}`}>
+                    <span className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-black ${idx === 0 ? 'bg-yellow-400 text-yellow-900' : 'bg-emerald-700 text-white'}`}>#{idx + 1}</span>
+                    <span className="font-bold whitespace-nowrap">{cName} <span className="text-emerald-200 ml-1">({score})</span></span>
+                 </div>
+               ))}
+            </div>
+         </div>
+      )}
 
       {/* Main Card */}
       <div className="bg-white dark:bg-slate-900 border-4 border-emerald-400/50 dark:border-emerald-500/30 rounded-[2.5rem] p-6 md:p-10 shadow-2xl relative overflow-hidden">
