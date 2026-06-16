@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { School, Sun, Moon, LogIn, ShieldAlert, GraduationCap, FileText, PhoneCall, Image, Bell, Heart, X, Edit2 } from 'lucide-react';
+import { School, Sun, Moon, LogIn, ShieldAlert, GraduationCap, FileText, PhoneCall, Image, Bell, Heart, X, Edit2, BookOpen } from 'lucide-react';
 import { SchoolConfig, NewsItem } from '../types';
 
 interface HeaderProps {
@@ -43,6 +43,7 @@ export default function Header({
 
   const navItems = [
     { id: 'home', label: 'Home Page', icon: School },
+    { id: 'dua', label: 'Daily Duas', icon: BookOpen },
     { id: 'results', label: 'Exam Results', icon: GraduationCap },
     { id: 'admissions', label: 'Admissions Open', icon: FileText },
     { id: 'cloud', label: 'Cloud Drive System', icon: FileText },
