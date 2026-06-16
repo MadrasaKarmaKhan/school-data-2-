@@ -1201,12 +1201,7 @@ export default function PrincipalDashboard({
             </button>
           </form>
 
-          {/* Quick guide for dev testing */}
-          <div className="p-3 bg-amber-50/50 dark:bg-emerald-950/20 border border-amber-200 dark:border-emerald-900/50 rounded-xl text-[11px] text-slate-500 dark:text-slate-400 space-y-1 leading-normal">
-            <span className="font-bold text-amber-700 dark:text-amber-400 uppercase block font-mono">🔧 Testing Credentials:</span>
-            <p>Access ID: <code className="font-bold font-mono text-emerald-800 dark:text-emerald-400">admin</code></p>
-            <p>Pass Token: <code className="font-bold font-mono text-emerald-800 dark:text-emerald-400">principal123</code></p>
-          </div>
+
         </div>
       </div>
     );
