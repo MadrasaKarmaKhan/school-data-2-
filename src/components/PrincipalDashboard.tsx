@@ -4266,6 +4266,13 @@ export default function PrincipalDashboard({
                           </button>
                         )}
                       </div>
+  <input
+    type="text"
+    placeholder="Or paste image URL (या डायरेक्ट लिंक डालें)"
+    value={schoolConfig.heroBg1 || ""}
+    onChange={(e) => setSchoolConfig({ ...schoolConfig, heroBg1: e.target.value })}
+    className="w-full mt-2 p-2 border border-slate-200 dark:border-slate-700 rounded bg-slate-50 dark:bg-slate-900 text-xs font-mono"
+  />
                     </div>
 
                     <div className="space-y-1 bg-slate-50/50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-150 dark:border-slate-850 flex flex-col justify-between">
@@ -4309,6 +4316,13 @@ export default function PrincipalDashboard({
                           </button>
                         )}
                       </div>
+  <input
+    type="text"
+    placeholder="Or paste image URL (या डायरेक्ट लिंक डालें)"
+    value={schoolConfig.heroBg2 || ""}
+    onChange={(e) => setSchoolConfig({ ...schoolConfig, heroBg2: e.target.value })}
+    className="w-full mt-2 p-2 border border-slate-200 dark:border-slate-700 rounded bg-slate-50 dark:bg-slate-900 text-xs font-mono"
+  />
                     </div>
 
                     <div className="space-y-1 bg-slate-50/50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-150 dark:border-slate-850 flex flex-col justify-between">
@@ -4352,6 +4366,13 @@ export default function PrincipalDashboard({
                           </button>
                         )}
                       </div>
+  <input
+    type="text"
+    placeholder="Or paste image URL (या डायरेक्ट लिंक डालें)"
+    value={schoolConfig.heroBg3 || ""}
+    onChange={(e) => setSchoolConfig({ ...schoolConfig, heroBg3: e.target.value })}
+    className="w-full mt-2 p-2 border border-slate-200 dark:border-slate-700 rounded bg-slate-50 dark:bg-slate-900 text-xs font-mono"
+  />
                     </div>
                   </div>
 
@@ -4585,6 +4606,13 @@ export default function PrincipalDashboard({
                               </button>
                             )}
                           </div>
+  <input
+    type="text"
+    placeholder="Or paste image URL (या डायरेक्ट लिंक डालें)"
+    value={schoolConfig.fac1Img || ""}
+    onChange={(e) => setSchoolConfig({ ...schoolConfig, fac1Img: e.target.value })}
+    className="w-full mt-2 p-2 border border-slate-200 dark:border-slate-700 rounded bg-slate-50 dark:bg-slate-900 text-xs font-mono"
+  />
                         </div>
                       </div>
                       <div className="md:col-span-2 space-y-1.5">
@@ -4652,6 +4680,13 @@ export default function PrincipalDashboard({
                               </button>
                             )}
                           </div>
+  <input
+    type="text"
+    placeholder="Or paste image URL (या डायरेक्ट लिंक डालें)"
+    value={schoolConfig.fac2Img || ""}
+    onChange={(e) => setSchoolConfig({ ...schoolConfig, fac2Img: e.target.value })}
+    className="w-full mt-2 p-2 border border-slate-200 dark:border-slate-700 rounded bg-slate-50 dark:bg-slate-900 text-xs font-mono"
+  />
                         </div>
                       </div>
                       <div className="md:col-span-2 space-y-1.5">
@@ -4719,6 +4754,13 @@ export default function PrincipalDashboard({
                               </button>
                             )}
                           </div>
+  <input
+    type="text"
+    placeholder="Or paste image URL (या डायरेक्ट लिंक डालें)"
+    value={schoolConfig.fac3Img || ""}
+    onChange={(e) => setSchoolConfig({ ...schoolConfig, fac3Img: e.target.value })}
+    className="w-full mt-2 p-2 border border-slate-200 dark:border-slate-700 rounded bg-slate-50 dark:bg-slate-900 text-xs font-mono"
+  />
                         </div>
                       </div>
                       <div className="md:col-span-2 space-y-1.5">

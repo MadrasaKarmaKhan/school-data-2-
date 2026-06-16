@@ -190,6 +190,51 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
         </div>
       </section>
 
+      {/* Smart Campus Facilities Section */}
+      <section id="facilities" className="scroll-mt-20 space-y-8">
+        <div className="text-center space-y-1">
+          <span className="text-xs uppercase font-bold tracking-widest text-amber-600 font-mono">Infrastructure</span>
+          <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Smart Campus Facilities (सुविधाएं)</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              title: config.fac1Title || "Islamic Reference Library",
+              img: config.fac1Img || "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600",
+              text: config.fac1Text || "Houses over 10,000 reference volumes of Hadith collection, jurisprudential scrolls (Hanafi, Shafi, etc.) along with global history encyclopedias and textbooks."
+            },
+            {
+              title: config.fac2Title || "Digital Computing Center",
+              img: config.fac2Img || "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600",
+              text: config.fac2Text || "Equipped with high-performance computer terminals, smart multimedia overhead projectors, and safe filtered high-speed internet connections."
+            },
+            {
+              title: config.fac3Title || "Athletics & Assembly Ground",
+              img: config.fac3Img || "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=600",
+              text: config.fac3Text || "Spacious open courtyards configured for daily physical assemblies, and physical health recreation files like football, badminton, and running tracks."
+            }
+          ].map((fac, idx) => (
+            <div key={idx} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-150 dark:border-slate-755 shadow hover:shadow-lg transition-all overflow-hidden group">
+              <div className="relative h-48 w-full overflow-hidden">
+                <img 
+                  src={fac.img} 
+                  alt={fac.title} 
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                />
+              </div>
+              <div className="p-5 space-y-2">
+                <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{fac.title}</strong>
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  {fac.text}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Honorable Faculty / Teacher Profiles Section */}
       {teachers && teachers.length > 0 && (
         <section id="teachers" className="relative scroll-mt-20 space-y-8">
