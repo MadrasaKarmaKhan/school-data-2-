@@ -1,3 +1,7 @@
+import { NAMAZ_DUAS } from './namaz_duas';
+import { GENERAL_DUAS_1 } from './general_duas1';
+import { GENERAL_DUAS_2 } from './general_duas2';
+
 export interface Dua {
   id: number;
   title: string;
@@ -7,7 +11,7 @@ export interface Dua {
   translationUrdu: string;
 }
 
-export const DAILY_DUAS: Dua[] = [
+const BASE_DUAS: Dua[] = [
   {
     id: 1,
     title: "सोकर उठने की दुआ / نیند سے بیدار ہونے کی دعا",
@@ -218,4 +222,11 @@ export const DAILY_DUAS: Dua[] = [
     translationHindi: "ऐ लोगों के रब! तकलीफ़ को दूर कर दे, शिफ़ा अता फरमा, तू ही शिफ़ा देने वाला है, तेरी शिफ़ा के सिवा कोई शिफ़ा नहीं।",
     translationUrdu: "اے لوگوں کے رب! تکلیف کو دور کر دے، شفا عطا فرما، تو ہی شفا دینے والا ہے، تیری شفا کے سوا کوئی شفا نہیں۔"
   }
+];
+
+export const DAILY_DUAS: Dua[] = [
+  ...BASE_DUAS,
+  ...NAMAZ_DUAS,
+  ...GENERAL_DUAS_1,
+  ...GENERAL_DUAS_2
 ];
