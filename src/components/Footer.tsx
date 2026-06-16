@@ -133,6 +133,9 @@ export default function Footer({ config, onAdminClick }: FooterProps) {
       <div className="bg-black py-4 text-center text-[11px] text-slate-500 font-mono tracking-wider border-t border-emerald-950">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-2">
           <span>&copy; {currentYear} {config.schoolName}. All Rights Reserved.</span>
+          <span className="flex items-center gap-1 font-bold animate-rainbow-blink">
+            Site Developer: Mohammad Yunush | Mobile: 8881138153
+          </span>
           <span className="flex items-center gap-1">
             Made with <Heart className="w-3 h-3 text-red-500 animate-pulse fill-red-500" /> {config.footerCreditTag || "for Academic Excellence in Computer Lit & Ifta"}
           </span>
