@@ -130,6 +130,15 @@ export default function App() {
         setResults(mapped);
       }
     });
+    const unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data) => {
+      if (data && !isLoggedInRef.current) setGallery(data);
+    });
+    const unsubNews = subscribeToFirebase('schoolData', 'news', (data) => {
+      if (data && !isLoggedInRef.current) setNews(data);
+    });
+    const unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data) => {
+      if (data && !isLoggedInRef.current) setAdmissions(data);
+    });
 
     const timer = setTimeout(() => {
       setLoading(false);
@@ -140,6 +149,9 @@ export default function App() {
       unsubTeachers();
       unsubStudents();
       unsubResults();
+      unsubGallery();
+      unsubNews();
+      unsubAdmissions();
     };
   }, []);
 
@@ -171,9 +183,29 @@ export default function App() {
     }
   }, [teachers, isLoggedIn]);
   
-  useEffect(() => { setStoredData('nu_admissions', admissions); }, [admissions]);
-  useEffect(() => { setStoredData('nu_gallery', gallery); }, [gallery]);
-  useEffect(() => { setStoredData('nu_news', news); }, [news]);
+  useEffect(() => { 
+    setStoredData('nu_admissions', admissions); 
+    if (isLoggedIn) {
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'admissions', admissions), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [admissions, isLoggedIn]);
+  
+  useEffect(() => { 
+    setStoredData('nu_gallery', gallery); 
+    if (isLoggedIn) {
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'gallery', gallery), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [gallery, isLoggedIn]);
+  
+  useEffect(() => { 
+    setStoredData('nu_news', news); 
+    if (isLoggedIn) {
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'news', news), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [news, isLoggedIn]);
   
   useEffect(() => { 
     setStoredData('nu_config', schoolConfig); 
