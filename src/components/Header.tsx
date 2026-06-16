@@ -263,8 +263,8 @@ export default function Header({
       </div>
 
       {/* Floating Interactive Navigation Tab Bar */}
-      <nav className="border-t border-emerald-50 dark:border-slate-800 py-1.5 bg-slate-50/50 dark:bg-slate-950/20">
-        <div className="max-w-7xl mx-auto px-1 sm:px-2 flex justify-center items-center gap-1 sm:gap-1.5 md:gap-2 flex-wrap pb-1">
+      <nav className="border-t border-emerald-50 dark:border-slate-800 py-2 bg-slate-50/50 dark:bg-slate-950/20">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 flex justify-center items-center gap-2 sm:gap-4 md:gap-6 flex-wrap">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
@@ -273,7 +273,7 @@ export default function Header({
                 key={item.id}
                 id={`nav-${item.id}`}
                 onClick={() => setCurrentTab(item.id)}
-                className={`py-1.5 px-2 md:px-3 rounded-lg flex items-center gap-1 text-[11px] md:text-[13px] font-bold tracking-tight transition-all duration-300 cursor-pointer relative ${
+                className={`py-1.5 px-2.5 md:px-4 rounded-lg flex items-center gap-1.5 text-[12px] md:text-[14px] font-bold tracking-tight transition-all duration-300 cursor-pointer relative ${
                   isActive
                     ? 'text-emerald-700 dark:text-amber-300 bg-emerald-100/55 dark:bg-emerald-950/60 shadow-inner'
                     : 'text-slate-650 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-850'
@@ -299,7 +299,7 @@ export default function Header({
                 }
               }, 200);
             }}
-            className="py-1.5 px-2 md:px-3 rounded-lg flex items-center gap-1 text-[11px] md:text-[13px] font-bold tracking-tight text-amber-700 bg-amber-100/80 hover:bg-amber-100 dark:text-amber-300 dark:bg-amber-950/45 border border-amber-300 dark:border-amber-800 hover:scale-105 transition-all cursor-pointer shadow-sm"
+            className="py-1.5 px-2.5 md:px-4 rounded-lg flex items-center gap-1.5 text-[12px] md:text-[14px] font-bold tracking-tight text-amber-700 bg-amber-100/80 hover:bg-amber-100 dark:text-amber-300 dark:bg-amber-950/45 border border-amber-300 dark:border-amber-800 hover:scale-105 transition-all cursor-pointer shadow-sm"
           >
             <Heart className="w-3.5 h-3.5 md:w-4 md:h-4 fill-amber-500 text-amber-500 animate-pulse" />
             <span>Donate (मदद करें)</span>
