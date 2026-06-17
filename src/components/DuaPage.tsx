@@ -175,10 +175,11 @@ export default function DuaPage() {
 
   // Level Logic
   const getLevel = (count: number) => {
-    if (count >= 80) return { title: "Dua Master", icon: <Crown className="w-6 h-6 text-yellow-500" />, color: "from-yellow-400 to-amber-600" };
-    if (count >= 50) return { title: "Dua Scholar", icon: <Medal className="w-6 h-6 text-purple-500" />, color: "from-purple-400 to-indigo-600" };
-    if (count >= 20) return { title: "Dua Explorer", icon: <Flame className="w-6 h-6 text-orange-500" />, color: "from-orange-400 to-red-500" };
-    if (count >= 5) return { title: "Dua Learner", icon: <Star className="w-6 h-6 text-blue-500 fill-blue-500" />, color: "from-blue-400 to-cyan-500" };
+    if (count >= 130) return { title: "Dua Legend", icon: <Crown className="w-6 h-6 text-pink-500 animate-bounce" />, color: "from-pink-500 to-purple-600" };
+    if (count >= 100) return { title: "Dua Master", icon: <Crown className="w-6 h-6 text-yellow-500" />, color: "from-yellow-400 to-amber-600" };
+    if (count >= 60) return { title: "Dua Scholar", icon: <Medal className="w-6 h-6 text-purple-500" />, color: "from-purple-400 to-indigo-600" };
+    if (count >= 30) return { title: "Dua Explorer", icon: <Flame className="w-6 h-6 text-orange-500" />, color: "from-orange-400 to-red-500" };
+    if (count >= 10) return { title: "Dua Learner", icon: <Star className="w-6 h-6 text-blue-500 fill-blue-500" />, color: "from-blue-400 to-cyan-500" };
     return { title: "Dua Beginner", icon: <Sparkles className="w-6 h-6 text-emerald-500" />, color: "from-emerald-400 to-teal-500" };
   };
 
@@ -655,7 +656,7 @@ export default function DuaPage() {
                           {/* Score and Bar */}
                           <div className="col-span-4 sm:col-span-3 text-right flex flex-col items-end gap-1.5">
                             <span className="font-black text-sm text-emerald-600 dark:text-emerald-400">
-                              {score} / 80 <span className="text-[10px] font-bold text-slate-400">Duas</span>
+                              {score} / {DAILY_DUAS.length} <span className="text-[10px] font-bold text-slate-400">Duas</span>
                             </span>
                             <div className="w-full max-w-[120px] bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
                               <div 

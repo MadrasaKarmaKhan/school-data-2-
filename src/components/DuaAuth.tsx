@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { getSchoolClasses } from '../data';
-import { Sparkles, Key, UserPlus, LogIn, Award } from 'lucide-react';
+import { Sparkles, Key, UserPlus, LogIn, Award, Copy, Check, Info } from 'lucide-react';
 import { motion } from 'motion/react';
+import confetti from 'canvas-confetti';
 
 export interface DuaStudent {
   code: string;
@@ -30,8 +31,49 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
   const [regRoll, setRegRoll] = useState('');
   const [regCodeOut, setRegCodeOut] = useState('');
   const [regError, setRegError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const [loading, setLoading] = useState(false);
+
+  // Spark firecrackers confetti on successful registration!
+  useEffect(() => {
+    if (regCodeOut) {
+      // Firework confetti sequence simulating "patake foote"
+      const duration = 5 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 35, spread: 360, ticks: 70, zIndex: 1000 };
+
+      const randomInRange = (min: number, max: number) => {
+        return Math.random() * (max - min) + min;
+      };
+
+      const interval = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 45 * (timeLeft / duration);
+        // Left side fireworks
+        confetti({ 
+          ...defaults, 
+          particleCount, 
+          origin: { x: randomInRange(0.1, 0.35), y: Math.random() - 0.2 },
+          colors: ['#22c55e', '#f59e0b', '#3b82f6', '#ec4899', '#ff4500']
+        });
+        // Right side fireworks
+        confetti({ 
+          ...defaults, 
+          particleCount, 
+          origin: { x: randomInRange(0.65, 0.9), y: Math.random() - 0.2 },
+          colors: ['#22c55e', '#f59e0b', '#3b82f6', '#ec4899', '#ff4550']
+        });
+      }, 300);
+
+      return () => clearInterval(interval);
+    }
+  }, [regCodeOut]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,28 +138,116 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
   };
 
   if (regCodeOut) {
+    const handleCopy = () => {
+      navigator.clipboard.writeText(regCodeOut);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    };
+
     return (
-      <div className="max-w-md mx-auto mt-12 bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl text-center">
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex justify-center mb-6">
-          <div className="p-4 bg-emerald-100 dark:bg-emerald-900 rounded-full text-emerald-600 dark:text-emerald-400">
-            <Award className="w-12 h-12" />
+      <div className="max-w-md mx-auto mt-12 bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-2xl text-center border border-slate-200 dark:border-slate-700 relative overflow-hidden">
+        {/* Colorful top border pattern */}
+        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-400 via-emerald-500 to-blue-500" />
+        
+        <motion.div 
+          initial={{ scale: 0, rotate: -180 }} 
+          animate={{ scale: 1, rotate: 0 }} 
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          className="flex justify-center mb-6 mt-2"
+        >
+          <div className="p-4 bg-emerald-100 dark:bg-emerald-950/50 rounded-full text-emerald-600 dark:text-emerald-400 shadow-inner">
+            <Award className="w-14 h-14 animate-pulse" />
           </div>
         </motion.div>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">Registration Successful!</h2>
-        <p className="text-slate-600 dark:text-slate-400 mb-6 font-medium">Your Secret Login Code is:</p>
-        <div className="bg-amber-100 dark:bg-amber-900/50 p-6 rounded-2xl mb-8">
-          <span className="text-4xl font-mono font-black text-amber-700 dark:text-amber-400 tracking-widest">{regCodeOut}</span>
-        </div>
-        <p className="text-red-500 font-bold mb-6 text-sm">Please write this number down. You will need it to login to your account!</p>
+
+        {/* Big Congratulations Name Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="space-y-1"
+        >
+          <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-amber-50 to-emerald-700 dark:from-emerald-400 dark:via-amber-400 dark:to-emerald-300">
+            Congratulations!
+          </h2>
+          <h3 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">
+            {regName}
+          </h3>
+          <p className="text-emerald-600 dark:text-emerald-400 font-bold text-base mt-1">
+            बधाई हो, {regName}! | مبارک ہو، {regName}!
+          </p>
+        </motion.div>
+
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-6 font-medium">Your Unique Login Code is:</p>
+        
+        {/* Interactive Big Code Display */}
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.4, type: "spring" }}
+          className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-slate-900 dark:to-slate-850 p-6 rounded-2xl my-4 border-2 border-amber-300 dark:border-amber-900/50 relative group"
+        >
+          <span className="text-5xl font-mono font-black text-amber-600 dark:text-amber-400 tracking-[0.25em] pl-[0.25em] inline-block filter drop-shadow">
+            {regCodeOut}
+          </span>
+        </motion.div>
+
+        {/* Copy Button */}
         <button
+          type="button"
+          onClick={handleCopy}
+          className={`mx-auto mb-6 flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm active:scale-95 ${
+            copied 
+              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-300' 
+              : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-705 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600'
+          }`}
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>Copied! (कॉपी हो गया)</span>
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4" />
+              <span>Copy Code (कोड कॉपी करें)</span>
+            </>
+          )}
+        </button>
+
+        {/* Warning / Save Info Box */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="bg-rose-50 dark:bg-rose-950/20 border-2 border-rose-200 dark:border-rose-900/30 p-4 rounded-2xl mb-8 text-left space-y-3"
+        >
+          <div className="flex items-start gap-2.5">
+            <Info className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
+            <div className="space-y-2">
+              <h4 className="text-zinc-800 dark:text-zinc-200 font-extrabold text-sm uppercase tracking-wide">
+                Important Instruction (ज़रूरी नोट):
+              </h4>
+              <p className="text-rose-700 dark:text-rose-300 text-xs font-semibold leading-relaxed">
+                👉 <strong className="font-extrabold text-rose-800 dark:text-rose-300">बच्चे ध्यान दें:</strong> इस 6-डिजिट नंबर को अपनी डायरी या कॉपी में ध्यान से नोट कर लें! इसके बिना आप दोबारा लॉग इन नहीं कर पाएंगे।
+              </p>
+              <p className="text-rose-700 dark:text-rose-300 text-xs font-semibold leading-relaxed">
+                👉 <strong className="font-extrabold text-rose-800 dark:text-rose-300">اہم ہدایت:</strong> اس 6 ہندسوں والے نمبر کو اپنی ڈائری یا کاپی میں لکھ لیں! اگلی بار لاگ ان کرنے کے لیے اس کی ضرورت ہوگی۔
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        <button
+          type="button"
           onClick={() => {
             setLoginCode(regCodeOut);
             setRegCodeOut('');
             setMode('login');
           }}
-          className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md active:scale-95"
+          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black py-4 px-6 rounded-2xl transition-all shadow-md active:scale-95 text-base flex justify-center items-center gap-2"
         >
-          Go to Login
+          <span>Go to Class & Learn (क्लास में जाएँ)</span> <Sparkles className="w-5 h-5" />
         </button>
       </div>
     );
