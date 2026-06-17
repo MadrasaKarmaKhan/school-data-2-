@@ -317,7 +317,7 @@ export default function App() {
         )}
 
         {currentTab === 'results' && (
-          <ResultPortal results={results} />
+          <ResultPortal results={results} config={schoolConfig} />
         )}
 
         {currentTab === 'admissions' && (

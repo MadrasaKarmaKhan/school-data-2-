@@ -185,4 +185,6 @@ export interface SchoolConfig {
 
   // Custom Logo URL
   logoUrl?: string;
+  marksheetLogo?: string;
+  calligraphyBanner?: string;
 }

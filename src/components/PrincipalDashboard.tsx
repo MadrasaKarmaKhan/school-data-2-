@@ -670,11 +670,20 @@ export default function PrincipalDashboard({
   const [adminUrduLogo, setAdminUrduLogo] = useState("");
 
   useEffect(() => {
-    const sLogo = localStorage.getItem("m_logo");
-    if (sLogo) setAdminSchoolLogo(sLogo);
-    const uLogo = localStorage.getItem("m_urdu_logo");
-    if (uLogo) setAdminUrduLogo(uLogo);
-  }, []);
+    if (schoolConfig?.marksheetLogo) {
+      setAdminSchoolLogo(schoolConfig.marksheetLogo);
+    } else {
+      const sLogo = localStorage.getItem("m_logo");
+      if (sLogo) setAdminSchoolLogo(sLogo);
+    }
+
+    if (schoolConfig?.calligraphyBanner) {
+      setAdminUrduLogo(schoolConfig.calligraphyBanner);
+    } else {
+      const uLogo = localStorage.getItem("m_urdu_logo");
+      if (uLogo) setAdminUrduLogo(uLogo);
+    }
+  }, [schoolConfig]);
 
   // Handle Principal Login Attempt
   const handleLogin = (e: React.FormEvent) => {
@@ -1961,9 +1970,13 @@ export default function PrincipalDashboard({
                           alert("Please upload a transparent .png format logo only to avoid background errors!");
                         }
                         resizeImage(file, 800, 800, 0.6).then((url) => {
-                                localStorage.setItem("m_logo", url);
-                            setAdminSchoolLogo(url);
-                              }).catch(e => console.error("Compression failed", e));
+                          localStorage.setItem("m_logo", url);
+                          setAdminSchoolLogo(url);
+                          setSchoolConfig(prev => ({
+                            ...prev,
+                            marksheetLogo: url
+                          }));
+                        }).catch(e => console.error("Compression failed", e));
                       }
                     }}
                   />
@@ -1979,9 +1992,13 @@ export default function PrincipalDashboard({
                           alert("Please upload a transparent .png format Urdu name logo only!");
                         }
                         resizeImage(file, 800, 800, 0.6).then((url) => {
-                                localStorage.setItem("m_urdu_logo", url);
-                            setAdminUrduLogo(url);
-                              }).catch(e => console.error("Compression failed", e));
+                          localStorage.setItem("m_urdu_logo", url);
+                          setAdminUrduLogo(url);
+                          setSchoolConfig(prev => ({
+                            ...prev,
+                            calligraphyBanner: url
+                          }));
+                        }).catch(e => console.error("Compression failed", e));
                       }
                     }}
                   />

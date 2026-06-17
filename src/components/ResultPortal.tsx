@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Printer, RefreshCw, Award } from 'lucide-react';
-import { Result, ClassName } from '../types';
+import { Result, ClassName, SchoolConfig } from '../types';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { getClassSubjects, getSchoolClasses, getSchoolSessions } from '../data';
 
 interface ResultPortalProps {
   results: Result[];
+  config?: SchoolConfig;
 }
 
 const SUBJECTS = [
@@ -66,7 +67,7 @@ export function formatClassName(className: string | undefined): string {
   });
 }
 
-export default function ResultPortal({ results }: ResultPortalProps) {
+export default function ResultPortal({ results, config }: ResultPortalProps) {
   const [rollNo, setRollNo] = useState('');
   const [selectedClass, setSelectedClass] = useState<ClassName>('EDADIA');
   const [selectedExamType, setSelectedExamType] = useState<string>('Annual');
@@ -143,12 +144,21 @@ export default function ResultPortal({ results }: ResultPortalProps) {
   const [isGeneratingPrint, setIsGeneratingPrint] = useState(false);
 
   useEffect(() => {
-    // Load custom logos uploaded in panel
-    const logo = localStorage.getItem("m_logo");
-    if (logo) setSchoolLogo(logo);
-    const uLogo = localStorage.getItem("m_urdu_logo");
-    if (uLogo) setUrduLogo(uLogo);
-  }, [searchTriggered]);
+    // Load custom logos from cloud config first, then fall back to local storage
+    if (config?.marksheetLogo) {
+      setSchoolLogo(config.marksheetLogo);
+    } else {
+      const logo = localStorage.getItem("m_logo");
+      if (logo) setSchoolLogo(logo);
+    }
+
+    if (config?.calligraphyBanner) {
+      setUrduLogo(config.calligraphyBanner);
+    } else {
+      const uLogo = localStorage.getItem("m_urdu_logo");
+      if (uLogo) setUrduLogo(uLogo);
+    }
+  }, [searchTriggered, config]);
 
   const classes = getSchoolClasses() as ClassName[];
 
