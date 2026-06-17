@@ -3179,12 +3179,13 @@ export default function PrincipalDashboard({
                         display: block !important;
                         box-sizing: border-box !important;
                       }
-                      #bulkPrintArea > div {
+                      #bulkPrintArea .printable-card-item {
                         width: 100% !important;
                         max-width: 100% !important;
-                        min-height: auto !important;
-                        height: auto !important;
-                        margin: 0 0 40px 0 !important;
+                        height: 277mm !important; /* Forces vertical height to fit exactly onto one A4 page with 10mm margins */
+                        min-height: 277mm !important;
+                        max-height: 277mm !important;
+                        margin: 0 !important;
                         page-break-after: always !important;
                         box-shadow: none !important;
                         border: 5px solid #1e5631 !important;
@@ -3194,12 +3195,119 @@ export default function PrincipalDashboard({
                         flex-direction: column !important;
                         background: white !important;
                         background-color: white !important;
+                        padding: 12px 15px !important; /* Slightly more compact padding to save space */
+                        justify-content: space-between !important; /* Distribute items evenly and nicely */
                       }
-                      #topSpace {
+                      #bulkPrintArea .card-ribbon-container {
                         background: linear-gradient(90deg, #fdfbf7, #fffdd0, #fdfbf7) !important;
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
+                        height: 195px !important; /* Shrunk from 280px to save massive vertical space */
+                        margin: -12px -15px 12px -15px !important;
+                        padding: 8px !important;
+                        position: relative !important;
+                        border-radius: 0 !important;
                       }
+                      #bulkPrintArea .card-ribbon-container .card-logo-wrapper {
+                        background-color: transparent !important;
+                        background: transparent !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        width: 120px !important; /* Shrunk from 170px to fit on narrow width */
+                        height: 120px !important;
+                        top: 35px !important;
+                        left: 10px !important;
+                        position: absolute !important;
+                      }
+                      #bulkPrintArea .card-ribbon-container .card-logo-wrapper img {
+                        max-width: 100% !important;
+                        max-height: 100% !important;
+                      }
+                      #bulkPrintArea .card-ribbon-container .card-student-photo {
+                        width: 100px !important; /* Shrunk from 130px x 150px to save space */
+                        height: 115px !important;
+                        top: 40px !important;
+                        right: 10px !important;
+                        position: absolute !important;
+                      }
+                      #bulkPrintArea .card-ribbon-container .card-header-center {
+                        width: 70% !important; /* Centered narrow width to prevent overlapping of logos on printing */
+                        top: 5px !important;
+                        position: absolute !important;
+                        left: 50% !important;
+                        transform: translateX(-50%) !important;
+                      }
+                      #bulkPrintArea .card-ribbon-container .card-header-center img {
+                        max-height: 90px !important; /* Scale calligraphy image appropriately */
+                        margin-bottom: 2px !important;
+                        display: block !important;
+                        margin: auto !important;
+                      }
+                      #bulkPrintArea .card-ribbon-container .card-header-center div:nth-child(2) {
+                        font-size: 21px !important; /* MADARSA ARABIA NOORUL ULOOM */
+                        font-weight: 900 !important;
+                        margin-top: -2px !important;
+                      }
+                      #bulkPrintArea .card-ribbon-container .card-header-center div:nth-child(3) {
+                        font-size: 16px !important; /* Karma Khan... Address */
+                        font-weight: bold !important;
+                      }
+                      #bulkPrintArea .card-ribbon-container .card-header-center div:nth-child(4) {
+                        font-size: 14px !important; /* Exam Type - Session label */
+                        padding: 1px 15px !important;
+                        border-radius: 12px !important;
+                        margin-top: 2px !important;
+                      }
+                      
+                      /* Make Details rows tighter for print */
+                      #bulkPrintArea .card-details-row {
+                        margin-bottom: 6px !important;
+                        gap: 10px !important;
+                      }
+                      #bulkPrintArea .card-details-row span {
+                        font-size: 14px !important;
+                        width: auto !important;
+                        min-width: fit-content !important;
+                      }
+                      #bulkPrintArea .card-details-row input {
+                        font-size: 14px !important;
+                        height: 26px !important;
+                        padding: 2px 6px !important;
+                      }
+                      
+                      /* Sizing and padding of Marks Table */
+                      #bulkPrintArea .card-marks-table {
+                        margin-top: 4px !important;
+                      }
+                      #bulkPrintArea .card-marks-table th {
+                        padding: 4px !important;
+                        font-size: 14px !important;
+                      }
+                      #bulkPrintArea .card-marks-table td {
+                        padding: 3px !important;
+                        font-size: 14px !important;
+                      }
+                      
+                      /* Tighter Pass/Fail status container */
+                      #bulkPrintArea .card-status-container {
+                        margin: 6px auto !important;
+                        padding: 4px !important;
+                        font-size: 16px !important;
+                        width: 60% !important;
+                        gap: 20px !important;
+                        display: flex !important;
+                      }
+                      #bulkPrintArea .card-status-container span {
+                        padding: 1px 12px !important;
+                      }
+                      
+                      /* Signatures section */
+                      #bulkPrintArea .card-signatures-container {
+                        padding-bottom: 10px !important;
+                        font-size: 14px !important;
+                        display: flex !important;
+                      }
+                      
                       #logoContainer, #logoContainer * , #logoContainer img, #urduLogoImg, .logo-container, .logo-container img {
                         background-color: transparent !important;
                         background: transparent !important;
@@ -3234,6 +3342,7 @@ export default function PrincipalDashboard({
                     return (
                       <div 
                         key={res.id || index}
+                        className="printable-card-item"
                         style={{
                           width: '900px',
                           margin: '0 auto 40px auto', 
@@ -3249,6 +3358,7 @@ export default function PrincipalDashboard({
                       >
                         {/* Curved ellipse ribbon */}
                         <div
+                          className="card-ribbon-container"
                           style={{
                             position: 'relative',
                             height: '280px',
@@ -3272,6 +3382,7 @@ export default function PrincipalDashboard({
                           </div>
                           
                           <div 
+                            className="card-logo-wrapper"
                             style={{
                               position: 'absolute',
                               left: '10px',
@@ -3296,6 +3407,7 @@ export default function PrincipalDashboard({
                           </div>
 
                           <div 
+                            className="card-header-center"
                             style={{
                               position: 'absolute',
                               left: '50%',
@@ -3343,6 +3455,7 @@ export default function PrincipalDashboard({
                           </div>
 
                           <div 
+                            className="card-student-photo"
                             style={{
                               position: 'absolute',
                               top: '60px',
@@ -3373,7 +3486,7 @@ export default function PrincipalDashboard({
                         {/* Student Details Fields Grid - Beautifully Aligned */}
                         {/* Student Details Fields - Beautifully Aligned Rows */}
                         {/* Row 1 */}
-                        <div style={{ display: 'flex', gap: '15px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
+                        <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                           <div style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
                             <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Student Name:</span> 
                             <input 
@@ -3393,7 +3506,7 @@ export default function PrincipalDashboard({
                         </div>
 
                         {/* Row 2 */}
-                        <div style={{ display: 'flex', gap: '15px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
+                        <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                           <div style={{ flex: '2.4', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
                             <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Mother Name:</span> 
                             <input 
@@ -3429,7 +3542,7 @@ export default function PrincipalDashboard({
                         </div>
 
                         {/* Address full width block underneath */}
-                        <div style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
+                        <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                           <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
                             <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Address:</span> 
                             <input 
@@ -3441,7 +3554,7 @@ export default function PrincipalDashboard({
                         </div>
 
                         {/* Rainbow marks sheet table */}
-                        <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', background: 'white', border: '2px solid #1e5631' }}>
+                        <table className="card-marks-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', background: 'white', border: '2px solid #1e5631' }}>
                           <thead>
                             <tr>
                               <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '60px' }}>S.R.</th>
@@ -3513,6 +3626,7 @@ export default function PrincipalDashboard({
 
                         {/* PASS/FAIL box indicators */}
                         <div 
+                          className="card-status-container"
                           style={{
                             margin: '15px auto', 
                             width: '70%', 
@@ -3547,7 +3661,7 @@ export default function PrincipalDashboard({
 
                         {/* Signatures and seals */}
                         <div 
-                          className="footer-sign"
+                          className="footer-sign card-signatures-container"
                           style={{
                             marginTop: 'auto',
                             display: 'flex',
