@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
 import { doc, updateDoc, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { getSchoolClasses } from '../data';
 import DuaAuth, { DuaStudent } from './DuaAuth';
 
 export default function DuaPage() {
@@ -13,6 +14,14 @@ export default function DuaPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [memorizedDuas, setMemorizedDuas] = useState<number[]>([]);
+  const [selectedClassTab, setSelectedClassTab] = useState<string>('');
+
+  // Auto-set selected class tab to student's own class on login
+  useEffect(() => {
+    if (student?.className) {
+      setSelectedClassTab(student.className);
+    }
+  }, [student]);
 
   // Real-time listener for students to calculate ranks
   useEffect(() => {
@@ -176,7 +185,7 @@ export default function DuaPage() {
   const currentLevel = getLevel(memorizedDuas.length);
 
   // Compute Top Student Per Class Leaderboard
-  const topStudentsByClass = Object.values(
+  const topStudentsByClass: DuaStudent[] = (Object.values(
     allStudents.reduce((acc, s) => {
       if ((s.memorizedDuas?.length || 0) === 0) return acc;
       const score = s.memorizedDuas?.length || 0;
@@ -185,7 +194,7 @@ export default function DuaPage() {
       }
       return acc;
     }, {} as Record<string, DuaStudent>)
-  ).sort((a, b) => (b.memorizedDuas?.length || 0) - (a.memorizedDuas?.length || 0));
+  ) as DuaStudent[]).sort((a, b) => (b.memorizedDuas?.length || 0) - (a.memorizedDuas?.length || 0));
 
   const topStudent = topStudentsByClass.length > 0 ? topStudentsByClass[0] : null;
 
@@ -434,6 +443,238 @@ export default function DuaPage() {
         </div>
         
       </div>
+
+      {/* 🏆 Detailed Class-by-Class Leaderboards Section */}
+      <div className="mt-12 bg-white dark:bg-slate-900 border-4 border-amber-450/40 dark:border-amber-500/20 rounded-[2.5rem] p-6 md:p-10 shadow-2xl relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute top-0 left-0 w-48 h-48 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-4 border-slate-100 dark:border-slate-800 pb-6 mb-8 relative z-10 animate-fade-in">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-gradient-to-br from-amber-450 to-yellow-500 text-white rounded-2xl shadow-md">
+              <Trophy className="w-8 h-8" />
+            </div>
+            <div>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-slate-850 dark:text-amber-100 tracking-tight">
+                कक्षावार रैंकिंग बोर्ड
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-extrabold tracking-wide uppercase">
+                Class-wise Adventure Leaderboard
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 px-4 py-2 rounded-xl text-sm font-bold border border-emerald-200">
+            <Users className="w-4 h-4" /> Total Adventurers: <span className="font-extrabold text-lg ml-1">{allStudents.length}</span>
+          </div>
+        </div>
+
+        {/* Class Selection Tabs */}
+        <div className="mb-8 relative z-10">
+          <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5">
+            <BookOpen className="w-4 h-4 text-emerald-500" /> कक्षा चुनें (Choose Class to View Leaderboard)
+          </p>
+          
+          <div className="flex gap-2 overflow-x-auto pb-3 pt-1 scroll-smooth hide-scrollbar -mx-2 px-2">
+            {getSchoolClasses().map((className) => {
+              const classStudents = allStudents.filter(s => s.className === className);
+              const totalDuasInClass = classStudents.reduce((sum, s) => sum + (s.memorizedDuas?.length || 0), 0);
+              const isActive = selectedClassTab === className;
+              
+              return (
+                <button
+                  key={className}
+                  onClick={() => setSelectedClassTab(className)}
+                  className={`flex-shrink-0 px-4 py-3 rounded-2xl font-bold text-sm tracking-wide transition-all duration-300 border-2 border-b-4 flex items-center gap-2 cursor-pointer ${
+                    isActive
+                      ? 'bg-emerald-600 text-white border-emerald-800 hover:bg-emerald-700 shadow-md scale-100'
+                      : 'bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-750 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+                  }`}
+                >
+                  <span className={`w-5 h-5 text-xs flex items-center justify-center rounded-lg font-black ${
+                    isActive ? 'bg-white text-emerald-700' : 'bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-400'
+                  }`}>
+                    {classStudents.length}
+                  </span>
+                  <span>Class {className}</span>
+                  {totalDuasInClass > 0 && (
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+                      isActive ? 'bg-emerald-800 text-emerald-100' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                    }`}>
+                      🔥 {totalDuasInClass}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Selected Class Performance & Rankings Card */}
+        <div className="relative z-10 w-full animate-fade-in-up">
+          {(() => {
+            const classStudentsList = allStudents
+              .filter(s => s.className === selectedClassTab)
+              .sort((a, b) => {
+                const scoreA = a.memorizedDuas?.length || 0;
+                const scoreB = b.memorizedDuas?.length || 0;
+                if (scoreB !== scoreA) {
+                  return scoreB - scoreA;
+                }
+                const rollA = parseInt(a.rollNo) || 0;
+                const rollB = parseInt(b.rollNo) || 0;
+                return rollA - rollB;
+              });
+
+            if (classStudentsList.length === 0) {
+              return (
+                <div className="text-center py-12 px-6 bg-slate-50 dark:bg-slate-850 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+                  <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                    <Users className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-700 dark:text-slate-205">कक्षा {selectedClassTab} में कोई छात्र नहीं है</h3>
+                  <p className="text-sm text-slate-500 mt-1 max-w-sm mx-auto">
+                    इस क्लास में अभी कोई छात्र पंजीकृत नहीं है। प्रगति देखने के लिए नया छात्र पंजीकृत करें।
+                  </p>
+                </div>
+              );
+            }
+
+            // Calculations for Stats
+            const classTotalDuas = classStudentsList.reduce((sum, s) => sum + (s.memorizedDuas?.length || 0), 0);
+            const classAvgDuas = (classTotalDuas / classStudentsList.length).toFixed(1);
+            const classChampion = classStudentsList[0];
+
+            return (
+              <div className="space-y-6">
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-955/20 dark:to-orange-950/10 p-5 rounded-3xl border border-amber-200/50 dark:border-amber-900/30 flex items-center gap-4 shadow-sm">
+                    <div className="p-3 bg-amber-500 text-white rounded-2xl">
+                      <Trophy className="w-6 h-6 animate-bounce" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-black text-amber-800 dark:text-amber-500 tracking-wider uppercase mb-0.5">Class Champion</h4>
+                      <p className="text-base font-black text-slate-800 dark:text-amber-300 truncate" title={classChampion.name}>{classChampion.name}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-bold">{classChampion.memorizedDuas?.length || 0} Duas Memorized</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-955/20 dark:to-teal-950/10 p-5 rounded-3xl border border-emerald-200/50 dark:border-emerald-900/30 flex items-center gap-4 shadow-sm">
+                    <div className="p-3 bg-emerald-500 text-white rounded-2xl">
+                      <Star className="w-6 h-6 fill-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-black text-emerald-800 dark:text-emerald-500 tracking-wider uppercase mb-0.5">Total Memorized</h4>
+                      <p className="text-2xl font-black text-slate-800 dark:text-slate-100">{classTotalDuas} <span className="text-xs font-bold text-slate-550">Duas</span></p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-bold">In Class {selectedClassTab}</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-955/20 dark:to-indigo-950/10 p-5 rounded-3xl border border-blue-200/50 dark:border-blue-900/30 flex items-center gap-4 shadow-sm">
+                    <div className="p-3 bg-blue-500 text-white rounded-2xl">
+                      <Award className="w-6 h-6 animate-pulse" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-black text-blue-850 dark:text-blue-400 tracking-wider uppercase mb-0.5">Average Progress</h4>
+                      <p className="text-2xl font-black text-slate-800 dark:text-slate-100">{classAvgDuas} <span className="text-xs font-bold text-slate-550">Duas / Student</span></p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-bold">{classStudentsList.length} Active Adventurers</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rank Table List */}
+                <div className="border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden bg-slate-50/50 dark:bg-slate-900/40">
+                  <div className="bg-slate-100 dark:bg-slate-800/80 px-6 py-4 grid grid-cols-12 gap-2 text-xs font-black text-slate-600 dark:text-slate-300 tracking-wider uppercase">
+                    <div className="col-span-2">Rank (रैंक)</div>
+                    <div className="col-span-1">Roll</div>
+                    <div className="col-span-5 sm:col-span-6">Student Name (नाम)</div>
+                    <div className="col-span-4 sm:col-span-3 text-right">Progress (याद हूई दुआएं)</div>
+                  </div>
+
+                  <div className="divide-y divide-slate-200 dark:divide-slate-850">
+                    {classStudentsList.map((s, idx) => {
+                      const isMe = s.code === student.code;
+                      const score = s.memorizedDuas?.length || 0;
+                      const userLevel = getLevel(score);
+                      const sProgressPercentage = (score / DAILY_DUAS.length) * 100;
+
+                      // Styles for top 3 places
+                      let rankStyle = "bg-slate-100 dark:bg-slate-805 text-slate-700 dark:text-slate-300";
+                      let rankText = `#${idx + 1}`;
+                      let rankBadge = null;
+
+                      if (idx === 0) {
+                        rankStyle = "bg-amber-100 text-amber-900 border-2 border-amber-400 font-extrabold";
+                        rankBadge = "🏆";
+                      } else if (idx === 1) {
+                        rankStyle = "bg-slate-205 text-slate-900 border-2 border-slate-400 font-extrabold";
+                        rankBadge = "🥈";
+                      } else if (idx === 2) {
+                        rankStyle = "bg-orange-100 text-orange-950 border-2 border-orange-300 font-extrabold";
+                        rankBadge = "🥉";
+                      }
+
+                      return (
+                        <div
+                          key={s.code}
+                          className={`px-6 py-4 grid grid-cols-12 gap-2 items-center transition-colors ${
+                            isMe 
+                              ? 'bg-emerald-500/10 border-l-4 border-l-emerald-500 dark:bg-emerald-950/30' 
+                              : 'hover:bg-slate-100/40 dark:hover:bg-slate-800/20'
+                          }`}
+                        >
+                          {/* Rank Badge */}
+                          <div className="col-span-2 flex items-center gap-1.5">
+                            <span className={`w-8 h-8 flex items-center justify-center rounded-xl text-xs font-extrabold ${rankStyle}`}>
+                              {rankBadge ? rankBadge : rankText}
+                            </span>
+                          </div>
+
+                          {/* Roll Number */}
+                          <div className="col-span-1 font-mono text-sm tracking-widest font-bold text-slate-500 dark:text-slate-400">
+                            {s.rollNo}
+                          </div>
+
+                          {/* Student Name */}
+                          <div className="col-span-5 sm:col-span-6 flex items-center gap-2">
+                            <span className="font-extrabold text-sm text-slate-800 dark:text-slate-100">
+                              {s.name}
+                            </span>
+                            {isMe && (
+                              <span className="bg-emerald-500 text-white font-black text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+                                You (आप)
+                              </span>
+                            )}
+                            <span className="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded-full bg-slate-205/65 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700 font-extrabold">
+                              {userLevel.title}
+                            </span>
+                          </div>
+
+                          {/* Score and Bar */}
+                          <div className="col-span-4 sm:col-span-3 text-right flex flex-col items-end gap-1.5">
+                            <span className="font-black text-sm text-emerald-600 dark:text-emerald-400">
+                              {score} / 80 <span className="text-[10px] font-bold text-slate-400">Duas</span>
+                            </span>
+                            <div className="w-full max-w-[120px] bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                              <div 
+                                className={`bg-gradient-to-r ${userLevel.color} h-full rounded-full`} 
+                                style={{ width: `${sProgressPercentage}%` }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      </div>
+
     </div>
   );
 }
