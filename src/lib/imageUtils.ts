@@ -33,7 +33,13 @@ export function compressBase64Image(base64: string, maxWidth: number, maxHeight:
       
       ctx.drawImage(img, 0, 0, width, height);
 
-      const output = canvas.toDataURL("image/jpeg", quality);
+      // Check original mime type to preserve transparency for PNG/Gif/Webp
+      const mimeMatch = base64.match(/^data:([^;]+);base64/);
+      const originalMime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+      const isTransparent = originalMime.includes('png') || originalMime.includes('gif') || originalMime.includes('webp');
+      
+      const format = isTransparent ? 'image/png' : 'image/jpeg';
+      const output = canvas.toDataURL(format, format === 'image/jpeg' ? quality : undefined);
       resolve(output);
     };
     img.onerror = () => reject(new Error("Failed to load image"));
@@ -73,8 +79,10 @@ export function resizeImage(file: File, maxWidth: number, maxHeight: number, qua
         ctx.drawImage(img, 0, 0, width, height);
 
         // ALWAYS compress heavily to respect the 1MB firestore limit.
-        // We use webp for better compression, falling back to jpeg.
-        const output = canvas.toDataURL("image/jpeg", quality);
+        // We use png for transparent images (e.g. PNG/GIF/WEBP) to preserve transparency, and jpeg for others.
+        const isTransparent = file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/webp' || file.name.toLowerCase().endsWith('.png');
+        const format = isTransparent ? 'image/png' : 'image/jpeg';
+        const output = canvas.toDataURL(format, format === 'image/jpeg' ? quality : undefined);
         resolve(output);
       };
       img.onerror = () => reject(new Error("Failed to load image"));
