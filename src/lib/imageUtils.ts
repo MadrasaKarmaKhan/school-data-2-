@@ -36,7 +36,22 @@ export function compressBase64Image(base64: string, maxWidth: number, maxHeight:
       // Check original mime type to preserve transparency for PNG/Gif/Webp
       const mimeMatch = base64.match(/^data:([^;]+);base64/);
       const originalMime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-      const isTransparent = originalMime.includes('png') || originalMime.includes('gif') || originalMime.includes('webp');
+      let isTransparent = originalMime.includes('png') || originalMime.includes('gif') || originalMime.includes('webp');
+      
+      // Also check raw canvas pixels for any transparent values
+      if (!isTransparent) {
+        try {
+          const imgData = ctx.getImageData(0, 0, width, height).data;
+          for (let i = 3; i < imgData.length; i += 4) {
+            if (imgData[i] < 255) {
+              isTransparent = true;
+              break;
+            }
+          }
+        } catch (e) {
+          // Ignore security errors
+        }
+      }
       
       const format = isTransparent ? 'image/png' : 'image/jpeg';
       const output = canvas.toDataURL(format, format === 'image/jpeg' ? quality : undefined);
@@ -80,7 +95,22 @@ export function resizeImage(file: File, maxWidth: number, maxHeight: number, qua
 
         // ALWAYS compress heavily to respect the 1MB firestore limit.
         // We use png for transparent images (e.g. PNG/GIF/WEBP) to preserve transparency, and jpeg for others.
-        const isTransparent = file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/webp' || file.name.toLowerCase().endsWith('.png');
+        let isTransparent = file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/webp' || (file.name && file.name.toLowerCase().endsWith('.png'));
+        
+        if (!isTransparent) {
+          try {
+            const imgData = ctx.getImageData(0, 0, width, height).data;
+            for (let i = 3; i < imgData.length; i += 4) {
+              if (imgData[i] < 255) {
+                isTransparent = true;
+                break;
+              }
+            }
+          } catch (e) {
+            // Ignore
+          }
+        }
+
         const format = isTransparent ? 'image/png' : 'image/jpeg';
         const output = canvas.toDataURL(format, format === 'image/jpeg' ? quality : undefined);
         resolve(output);
