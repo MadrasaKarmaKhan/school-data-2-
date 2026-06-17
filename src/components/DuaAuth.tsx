@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { getSchoolClasses } from '../data';
-import { Sparkles, Key, UserPlus, LogIn, Award, Copy, Check, Info } from 'lucide-react';
+import { Sparkles, Key, UserPlus, LogIn, Award, Copy, Check, Info, Search, HelpCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
 import confetti from 'canvas-confetti';
 
@@ -19,7 +19,7 @@ interface DuaAuthProps {
 }
 
 export default function DuaAuth({ onLogin }: DuaAuthProps) {
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [mode, setMode] = useState<'login' | 'register' | 'find-code'>('login');
   
   // Login State
   const [loginCode, setLoginCode] = useState('');
@@ -32,6 +32,15 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
   const [regCodeOut, setRegCodeOut] = useState('');
   const [regError, setRegError] = useState('');
   const [copied, setCopied] = useState(false);
+
+  // Find Code State (Forgot Code)
+  const [findClass, setFindClass] = useState(getSchoolClasses()[0]);
+  const [findRoll, setFindRoll] = useState('');
+  const [findName, setFindName] = useState('');
+  const [findError, setFindError] = useState('');
+  const [findResults, setFindResults] = useState<Array<{ code: string; name: string; rollNo: string; className: string }>>([]);
+  const [searched, setSearched] = useState(false);
+  const [copiedFoundCode, setCopiedFoundCode] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -135,6 +144,70 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
       setRegError('Could not register. Please try again.');
     }
     setLoading(false);
+  };
+
+  const handleFindCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!findRoll.trim() && !findName.trim()) {
+      setFindError('Please enter details to search (लिखें: अपना रोल नंबर या नाम)');
+      return;
+    }
+    setLoading(true);
+    setFindError('');
+    setFindResults([]);
+    setSearched(true);
+
+    try {
+      const q = query(
+        collection(db, 'students'),
+        where('className', '==', findClass)
+      );
+      const querySnapshot = await getDocs(q);
+      const matched: Array<{ code: string; name: string; rollNo: string; className: string }> = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const studentName = data.name || '';
+        const studentRoll = data.rollNo || '';
+        
+        let isMatch = true;
+
+        if (findRoll.trim()) {
+          const normInputRoll = findRoll.trim().replace(/^0+/, '').toLowerCase();
+          const normStudentRoll = String(studentRoll).trim().replace(/^0+/, '').toLowerCase();
+          if (normInputRoll !== normStudentRoll) {
+            isMatch = false;
+          }
+        }
+
+        if (findName.trim()) {
+          const normInputName = findName.trim().toLowerCase();
+          const normStudentName = studentName.trim().toLowerCase();
+          if (!normStudentName.includes(normInputName)) {
+            isMatch = false;
+          }
+        }
+
+        if (isMatch) {
+          matched.push({
+            code: doc.id,
+            name: studentName,
+            rollNo: String(studentRoll),
+            className: data.className || ''
+          });
+        }
+      });
+
+      setFindResults(matched);
+      if (matched.length === 0) {
+        setFindError('No matching student found. Please check spelling, Class, or Roll No. (कोई छात्र नहीं मिला, कृपया स्पेलिंग या रोल नंबर जांचें)');
+      }
+    } catch (err) {
+      console.error(err);
+      setFindError('Connection error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (regCodeOut) {
@@ -255,20 +328,38 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
 
   return (
     <div className="max-w-md mx-auto mt-12 bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700 animate-fade-in">
-      <div className="flex border-b border-slate-200 dark:border-slate-700">
-        <button
-          onClick={() => setMode('login')}
-          className={`flex-1 py-4 font-bold text-center transition-colors flex justify-center items-center gap-2 ${mode === 'login' ? 'bg-emerald-50 dark:bg-emerald-900/20 border-b-4 border-emerald-500 text-emerald-700 dark:text-emerald-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
-        >
-          <LogIn className="w-5 h-5" /> Login Code
-        </button>
-        <button
-          onClick={() => setMode('register')}
-          className={`flex-1 py-4 font-bold text-center transition-colors flex justify-center items-center gap-2 ${mode === 'register' ? 'bg-amber-50 dark:bg-amber-900/20 border-b-4 border-amber-500 text-amber-700 dark:text-amber-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
-        >
-          <UserPlus className="w-5 h-5" /> New Student
-        </button>
-      </div>
+      {mode !== 'find-code' ? (
+        <div className="flex border-b border-slate-200 dark:border-slate-700">
+          <button
+            onClick={() => setMode('login')}
+            className={`flex-1 py-4 font-bold text-center transition-colors flex justify-center items-center gap-2 ${mode === 'login' ? 'bg-emerald-50 dark:bg-emerald-900/20 border-b-4 border-emerald-500 text-emerald-700 dark:text-emerald-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+          >
+            <LogIn className="w-5 h-5" /> Login Code
+          </button>
+          <button
+            onClick={() => setMode('register')}
+            className={`flex-1 py-4 font-bold text-center transition-colors flex justify-center items-center gap-2 ${mode === 'register' ? 'bg-amber-50 dark:bg-amber-900/20 border-b-4 border-amber-500 text-amber-700 dark:text-amber-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+          >
+            <UserPlus className="w-5 h-5" /> New Student
+          </button>
+        </div>
+      ) : (
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-slate-900/50 dark:to-slate-850 px-8 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <span className="font-extrabold text-slate-750 dark:text-amber-400 text-sm flex items-center gap-1.5 select-none">
+            <HelpCircle className="w-4.5 h-4.5 text-amber-500" /> Code Finder (अपना कोड ढूँढें)
+          </span>
+          <button
+            onClick={() => {
+              setMode('login');
+              setFindError('');
+              setSearched(false);
+            }}
+            className="text-xs font-black text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1 transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Back (पीछे)
+          </button>
+        </div>
+      )}
 
       <div className="p-8">
         {mode === 'login' ? (
@@ -278,10 +369,10 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
                 <Key className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
               <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">Enter Your Code</h3>
-              <p className="text-sm text-slate-500 mt-2">Enter the 6-digit code you received when registering.</p>
+              <p className="text-sm text-slate-500 mt-2 font-medium">Enter the 6-digit code you received when registering.</p>
             </div>
             
-            {loginError && <p className="text-red-500 text-sm text-center font-bold">{loginError}</p>}
+            {loginError && <p className="text-red-500 text-sm text-center font-bold bg-rose-50 dark:bg-rose-950/20 py-2 px-4 rounded-xl border border-rose-200 dark:border-rose-900/30">{loginError}</p>}
             
             <div>
               <input
@@ -301,8 +392,23 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
             >
               {loading ? 'Verifying...' : 'Login & Learn'} <Sparkles className="w-5 h-5" />
             </button>
+
+            {/* Link to Code Finder */}
+            <div className="text-center border-t border-slate-100 dark:border-slate-700/60 pt-4 mt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setFindError('');
+                  setSearched(false);
+                  setMode('find-code');
+                }}
+                className="text-xs font-black text-amber-600 dark:text-amber-400 hover:text-amber-500 duration-150 select-none hover:underline"
+              >
+                Forgot your Login Code? Click here (अपना कोड ढूँढें)
+              </button>
+            </div>
           </form>
-        ) : (
+        ) : mode === 'register' ? (
           <form onSubmit={handleRegister} className="space-y-5">
             <div className="text-center mb-6">
               <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">Student Registration</h3>
@@ -357,6 +463,140 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
             >
               {loading ? 'Generating...' : 'Get My Code'}
             </button>
+          </form>
+        ) : (
+          /* CODE FINDER FORM */
+          <form onSubmit={handleFindCode} className="space-y-5">
+            <div className="text-center mb-6">
+              <div className="inline-block p-4 bg-amber-100 dark:bg-amber-950/50 rounded-full mb-3">
+                <Search className="w-8 h-8 text-amber-600 dark:text-amber-400" />
+              </div>
+              <h3 className="text-xl font-extrabold text-slate-800 dark:text-slate-100">Find My Code</h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-semibold leading-relaxed">
+                👉 Enter your Class and Roll Number or Name to recover your login code. <br />
+                👉 अपना कोड दोबारा जानने के लिए क्लास और रोल नंबर या नाम दर्ज करें।
+              </p>
+            </div>
+
+            {findError && (
+              <p className="text-red-500 text-xs text-center font-bold bg-rose-50 dark:bg-rose-950/20 p-2.5 rounded-xl border border-rose-200 dark:border-rose-900/30">
+                {findError}
+              </p>
+            )}
+
+            <div>
+              <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Select Class (क्लास का चयन करें)</label>
+              <select
+                value={findClass}
+                onChange={e => setFindClass(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:border-amber-500"
+              >
+                {getSchoolClasses().map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Roll No (रोल नंबर)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 5"
+                  value={findRoll}
+                  onChange={e => setFindRoll(e.target.value.replace(/\s/, ''))}
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Name (स्पेलिंग/नाम)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Fatima"
+                  value={findName}
+                  onChange={e => setFindName(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:border-amber-500"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50 mt-2 flex items-center justify-center gap-2"
+            >
+              <Search className="w-4.5 h-4.5" />
+              <span>{loading ? 'Searching...' : 'Find My Code (ढूंढें)'}</span>
+            </button>
+
+            {/* RESULTS FROM FIREBASE ACCORDION */}
+            {searched && findResults.length > 0 && (
+              <div className="mt-6 space-y-4 border-t border-slate-100 dark:border-slate-700 pt-5 text-left">
+                <h4 className="text-xs font-black text-emerald-600 dark:text-emerald-400 text-center uppercase tracking-wider animate-pulse">
+                  🎉 Code Found! (आपका कोड मिल गया)
+                </h4>
+                <div className="space-y-3">
+                  {findResults.map((st) => (
+                    <div 
+                      key={st.code} 
+                      className="bg-emerald-50/40 dark:bg-emerald-950/20 border-2 border-emerald-300 dark:border-emerald-900/40 p-4 rounded-2xl relative shadow-sm animate-scale-up"
+                    >
+                      <div className="mb-2">
+                        <p className="font-black text-slate-800 dark:text-slate-100 text-sm">
+                          {st.name}
+                        </p>
+                        <p className="text-[10px] font-bold text-slate-400">
+                          Class: {st.className} | Roll No: {st.rollNo}
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5 rounded-xl flex justify-between items-center bg-gradient-to-r">
+                        <span className="font-mono font-black text-2xl text-amber-600 dark:text-amber-400 tracking-widest pl-1">
+                          {st.code}
+                        </span>
+                        
+                        <div className="flex items-center gap-2">
+                          {/* Copy code button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(st.code);
+                              setCopiedFoundCode(st.code);
+                              setTimeout(() => setCopiedFoundCode(null), 2500);
+                            }}
+                            className={`p-2 rounded-lg border transition hover:scale-105 active:scale-95 ${
+                              copiedFoundCode === st.code
+                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-300'
+                                : 'bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-500 border-slate-200 dark:border-slate-75 *:'
+                            }`}
+                            title="Copy Code"
+                          >
+                            {copiedFoundCode === st.code ? (
+                              <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </button>
+
+                          {/* Login Now directly with this student */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setLoginCode(st.code);
+                              setMode('login');
+                            }}
+                            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs px-3.5 py-2 rounded-lg transition active:scale-95 duration-100 hover:scale-102"
+                          >
+                            Use Code (लॉग इन करें)
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </form>
         )}
       </div>
