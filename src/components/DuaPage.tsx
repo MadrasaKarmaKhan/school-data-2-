@@ -175,11 +175,11 @@ export default function DuaPage() {
 
   // Level Logic
   const getLevel = (count: number) => {
-    if (count >= 130) return { title: "Dua Legend", icon: <Crown className="w-6 h-6 text-pink-500 animate-bounce" />, color: "from-pink-500 to-purple-600" };
-    if (count >= 100) return { title: "Dua Master", icon: <Crown className="w-6 h-6 text-yellow-500" />, color: "from-yellow-400 to-amber-600" };
-    if (count >= 60) return { title: "Dua Scholar", icon: <Medal className="w-6 h-6 text-purple-500" />, color: "from-purple-400 to-indigo-600" };
-    if (count >= 30) return { title: "Dua Explorer", icon: <Flame className="w-6 h-6 text-orange-500" />, color: "from-orange-400 to-red-500" };
-    if (count >= 10) return { title: "Dua Learner", icon: <Star className="w-6 h-6 text-blue-500 fill-blue-500" />, color: "from-blue-400 to-cyan-500" };
+    if (count >= 180) return { title: "Dua Legend", icon: <Crown className="w-6 h-6 text-pink-500 animate-bounce" />, color: "from-pink-500 to-purple-600" };
+    if (count >= 130) return { title: "Dua Master", icon: <Crown className="w-6 h-6 text-yellow-500" />, color: "from-yellow-400 to-amber-600" };
+    if (count >= 80) return { title: "Dua Scholar", icon: <Medal className="w-6 h-6 text-purple-500" />, color: "from-purple-400 to-indigo-600" };
+    if (count >= 40) return { title: "Dua Explorer", icon: <Flame className="w-6 h-6 text-orange-500" />, color: "from-orange-400 to-red-500" };
+    if (count >= 15) return { title: "Dua Learner", icon: <Star className="w-6 h-6 text-blue-500 fill-blue-500" />, color: "from-blue-400 to-cyan-500" };
     return { title: "Dua Beginner", icon: <Sparkles className="w-6 h-6 text-emerald-500" />, color: "from-emerald-400 to-teal-500" };
   };
 

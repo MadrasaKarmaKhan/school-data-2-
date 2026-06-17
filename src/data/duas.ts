@@ -1,6 +1,7 @@
 import { NAMAZ_DUAS } from './namaz_duas';
 import { GENERAL_DUAS_1 } from './general_duas1';
 import { GENERAL_DUAS_2 } from './general_duas2';
+import { GENERAL_DUAS_3 } from './general_duas3';
 
 export interface Dua {
   id: number;
@@ -228,5 +229,6 @@ export const DAILY_DUAS: Dua[] = [
   ...BASE_DUAS,
   ...NAMAZ_DUAS,
   ...GENERAL_DUAS_1,
-  ...GENERAL_DUAS_2
+  ...GENERAL_DUAS_2,
+  ...GENERAL_DUAS_3
 ];
