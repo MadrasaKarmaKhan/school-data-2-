@@ -1,33 +1,39 @@
 {
-  "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/master/schema/blueprint.schema.json",
-  "collections": [
-    {
-      "collectionId": "students",
+  "entities": {
+    "student": {
+      "title": "Student Profile",
       "description": "Stores student profiles and their memorization progress",
-      "securityRules": {
-        "read": "true",
-        "create": "true",
-        "update": "true",
-        "delete": "false"
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name of student" },
+        "className": { "type": "string", "description": "Grade / Section name of student" },
+        "rollNo": { "type": "string", "description": "Roll number" },
+        "memorizedDuas": { "type": "array", "description": "Array of memorized dua IDs" }
       },
-      "fields": [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "className",
-          "type": "string"
-        },
-        {
-          "name": "rollNo",
-          "type": "string"
-        },
-        {
-          "name": "memorizedDuas",
-          "type": "array"
-        }
-      ]
+      "required": ["name", "className", "rollNo"]
+    },
+    "dua": {
+      "title": "Dua supplication",
+      "description": "Stores customized or added supplications",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "ID of the Dua" },
+        "title": { "type": "string", "description": "Title of supplication" },
+        "arabic": { "type": "string", "description": "Arabic original text" },
+        "translationHindi": { "type": "string", "description": "Translation in Devanagari" },
+        "translationUrdu": { "type": "string", "description": "Translation in Arabic script" }
+      },
+      "required": ["id", "title", "arabic"]
     }
-  ]
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": "student",
+      "description": "Stores progress tracking for registered students"
+    },
+    "/duas/{duaId}": {
+      "schema": "dua",
+      "description": "Custom supplications added dynamically"
+    }
+  }
 }

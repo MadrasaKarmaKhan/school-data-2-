@@ -7,6 +7,9 @@ import {
 import { Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName } from '../types';
 import { resizeImage } from '../lib/imageUtils';
 import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSessions } from '../data';
+import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { DAILY_DUAS } from '../data/duas';
 
 interface PrincipalDashboardProps {
   students: Student[];
@@ -126,7 +129,167 @@ export default function PrincipalDashboard({
   const [loginError, setLoginError] = useState('');
 
   // Active Management Tab inside ERP panel
-  const [erpTab, setErpTab] = useState<'analytics' | 'students' | 'results' | 'teachers' | 'admissions' | 'gallery' | 'news' | 'config'>('analytics');
+  const [erpTab, setErpTab] = useState<'analytics' | 'students' | 'results' | 'teachers' | 'admissions' | 'gallery' | 'news' | 'config' | 'duas-mgmt' | 'dua-students'>('analytics');
+
+  // --- Dua App Management States ---
+  const [duaStudents, setDuaStudents] = useState<any[]>([]);
+  const [selectedDuaClassFilter, setSelectedDuaClassFilter] = useState<string>('ALL');
+  const [duaSearchQuery, setDuaSearchQuery] = useState<string>('');
+  const [editingDuaStudent, setEditingDuaStudent] = useState<any | null>(null);
+
+  const [duas, setDuas] = useState<any[]>([]);
+  const [editingDua, setEditingDua] = useState<any | null>(null);
+  const [showAddDuaModal, setShowAddDuaModal] = useState<boolean>(false);
+  const [newDua, setNewDua] = useState<any>({
+    title: '',
+    arabic: '',
+    translationHindi: '',
+    translationUrdu: ''
+  });
+
+  // Real-time listener for Registered Children (Dua App Students)
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const unsub = onSnapshot(collection(db, 'students'), (snapshot) => {
+      const studs: any[] = [];
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        studs.push({
+          code: docSnap.id,
+          name: data.name || '',
+          className: data.className || '',
+          rollNo: data.rollNo || '',
+          memorizedDuas: data.memorizedDuas || []
+        });
+      });
+      setDuaStudents(studs);
+    }, (error) => {
+      console.error("Firestore loading error: ", error);
+    });
+    return () => unsub();
+  }, [isLoggedIn]);
+
+  // Real-time listener for Duas management
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const unsub = onSnapshot(collection(db, 'duas'), (snapshot) => {
+      const fbCustom: any[] = [];
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const idVal = Number(docSnap.id);
+        fbCustom.push({
+          id: isNaN(idVal) ? (data.id || Date.now()) : idVal,
+          title: data.title || '',
+          arabic: data.arabic || '',
+          translationHindi: data.translationHindi || '',
+          translationUrdu: data.translationUrdu || ''
+        });
+      });
+
+      let merged = [...DAILY_DUAS];
+      fbCustom.forEach(customDua => {
+        const idx = merged.findIndex(d => d.id === customDua.id);
+        if (idx !== -1) {
+          merged[idx] = customDua;
+        } else {
+          merged.push(customDua);
+        }
+      });
+
+      const uniqueMap = new Map<number, any>();
+      merged.forEach(d => uniqueMap.set(d.id, d));
+      const sorted = Array.from(uniqueMap.values()).sort((a, b) => a.id - b.id);
+      setDuas(sorted);
+    }, (error) => {
+      console.error("Firestore duas loading error: ", error);
+    });
+    return () => unsub();
+  }, [isLoggedIn]);
+
+  // Dua saving and operations handlers
+  const handleSaveDua = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingDua) return;
+    try {
+      await setDoc(doc(db, 'duas', String(editingDua.id)), {
+        id: editingDua.id,
+        title: editingDua.title,
+        arabic: editingDua.arabic,
+        translationHindi: editingDua.translationHindi,
+        translationUrdu: editingDua.translationUrdu
+      });
+      setEditingDua(null);
+      alert('Dua updated successfully! (दुआ सफलतापूर्वक सहेजी गई)');
+    } catch (err) {
+      console.error(err);
+      alert('Error updating Dua in database.');
+    }
+  };
+
+  const handleAddDua = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDua.title.trim() || !newDua.arabic.trim()) {
+      alert("Title and Arabic fields are required!");
+      return;
+    }
+    try {
+      const maxId = duas.length > 0 ? Math.max(...duas.map(d => Number(d.id) || 0)) : 0;
+      const nextId = maxId + 1;
+      await setDoc(doc(db, 'duas', String(nextId)), {
+        id: nextId,
+        title: newDua.title.trim(),
+        arabic: newDua.arabic.trim(),
+        translationHindi: newDua.translationHindi.trim(),
+        translationUrdu: newDua.translationUrdu.trim()
+      });
+      setShowAddDuaModal(false);
+      setNewDua({ title: '', arabic: '', translationHindi: '', translationUrdu: '' });
+      alert('New Dua added successfully! (नई दुआ सफलतापूर्वक जोड़ी गई)');
+    } catch (err) {
+      console.error(err);
+      alert('Error adding Dua to database.');
+    }
+  };
+
+  const handleDeleteDua = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this Dua? (क्या आप वाकई इस दुआ को हटाना चाहते हैं?)")) return;
+    try {
+      await deleteDoc(doc(db, 'duas', String(id)));
+      alert('Dua deleted successfully!');
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting Dua.');
+    }
+  };
+
+  const handleSaveDuaStudent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingDuaStudent) return;
+    try {
+      await setDoc(doc(db, 'students', editingDuaStudent.code), {
+        name: editingDuaStudent.name.trim(),
+        className: editingDuaStudent.className,
+        rollNo: editingDuaStudent.rollNo.trim(),
+        memorizedDuas: editingDuaStudent.memorizedDuas || []
+      });
+      setEditingDuaStudent(null);
+      alert('Student profile updated successfully! (बच्चे का प्रोफ़ाइल अपडेट हो गया)');
+    } catch (err) {
+      console.error(err);
+      alert('Database error. Could not update student.');
+    }
+  };
+
+  const handleDeleteDuaStudent = async (code: string) => {
+    if (!confirm("Remove this registered student from the Dua database? (क्या आप वाकई इस छात्र को हटाना चाहते हैं?)")) return;
+    try {
+      await deleteDoc(doc(db, 'students', code));
+      alert('Student removed successfully.');
+    } catch (err) {
+      console.error(err);
+      alert('Error removing student.');
+    }
+  };
 
   // Search filter modifiers
   const [studentSearch, setStudentSearch] = useState('');
@@ -1327,6 +1490,28 @@ export default function PrincipalDashboard({
             }`}
           >
             ⚙️ Systems Config
+          </button>
+
+          <button
+            onClick={() => setErpTab('duas-mgmt')}
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+              erpTab === 'duas-mgmt'
+                ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
+                : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
+            }`}
+          >
+            🕌 दुआ मैनेजमेंट (Manage Duas)
+          </button>
+
+          <button
+            onClick={() => setErpTab('dua-students')}
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+              erpTab === 'dua-students'
+                ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
+                : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
+            }`}
+          >
+            📖 पंजीकृत छात्र (Registered Kids)
           </button>
         </aside>
 
@@ -5630,6 +5815,465 @@ export default function PrincipalDashboard({
                 </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* DUAS MANAGEMENT PANEL */}
+          {erpTab === 'duas-mgmt' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-700/50 pb-4">
+                <div>
+                  <h3 className="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2">
+                    🕌 दुआ सूचि प्रबंधन (Manage Islamic Duas)
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Add new custom duas or edit any existing supplications in real-time. Students' app lists are updated immediately.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowAddDuaModal(true)}
+                  className="px-4 py-2.5 bg-emerald-650 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" /> नई दुआ जोड़ें (Add Dua)
+                </button>
+              </div>
+
+              {/* Grid of Duas */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {duas.map((dua) => {
+                  const isEditing = editingDua?.id === dua.id;
+                  return (
+                    <div 
+                      key={dua.id} 
+                      className={`p-5 rounded-2xl border transition-all ${
+                        isEditing 
+                          ? 'border-amber-400/70 bg-amber-50/50 dark:bg-amber-950/10' 
+                          : 'border-slate-150 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 hover:shadow-lg'
+                      }`}
+                    >
+                      {isEditing ? (
+                        <form onSubmit={handleSaveDua} className="space-y-4">
+                          <div className="flex items-center justify-between border-b border-amber-200 pb-2 mb-2">
+                            <span className="text-xs font-extrabold text-amber-700">EDIT DUAA #{dua.id}</span>
+                            <div className="flex gap-2">
+                              <button 
+                                type="submit" 
+                                className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-black flex items-center gap-1 cursor-pointer"
+                              >
+                                Save (सहेजें)
+                              </button>
+                              <button 
+                                type="button" 
+                                onClick={() => setEditingDua(null)}
+                                className="px-3 py-1 bg-slate-200 hover:bg-slate-350 dark:bg-slate-850 dark:hover:bg-slate-750 text-slate-800 dark:text-white rounded-lg text-[10px]"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2 text-xs">
+                            <div>
+                              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Dua Title (शीर्षक / नाम)</label>
+                              <input 
+                                type="text" 
+                                required
+                                value={editingDua.title}
+                                onChange={(e) => setEditingDua({ ...editingDua, title: e.target.value })}
+                                className="w-full px-3 py-2 bg-white dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg text-slate-800 dark:text-white font-bold"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Arabic Text (अरबी में दुआ)</label>
+                              <textarea
+                                required
+                                rows={2}
+                                value={editingDua.arabic}
+                                onChange={(e) => setEditingDua({ ...editingDua, arabic: e.target.value })}
+                                className="w-full p-2 text-right dir-rtl text-lg font-serif bg-white dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg text-slate-800 dark:text-white"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Hindi Translation (हिंदी अनुवाद)</label>
+                              <textarea
+                                rows={2}
+                                value={editingDua.translationHindi}
+                                onChange={(e) => setEditingDua({ ...editingDua, translationHindi: e.target.value })}
+                                className="w-full p-2 bg-white dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg text-slate-800 dark:text-white font-medium"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Urdu Translation (उर्दू अनुवाद)</label>
+                              <textarea
+                                rows={2}
+                                value={editingDua.translationUrdu}
+                                onChange={(e) => setEditingDua({ ...editingDua, translationUrdu: e.target.value })}
+                                className="w-full p-2 bg-white dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-lg text-slate-800 dark:text-white font-medium"
+                              />
+                            </div>
+                          </div>
+                        </form>
+                      ) : (
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between gap-2 border-b border-slate-100 dark:border-slate-805 pb-2">
+                            <div>
+                              <span className="text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded mr-1.5">
+                                #{dua.id}
+                              </span>
+                              <h4 className="text-sm font-bold text-slate-850 dark:text-slate-150 inline">
+                                {dua.title}
+                              </h4>
+                            </div>
+                            <div className="flex gap-2 flex-shrink-0">
+                              <button
+                                onClick={() => setEditingDua({ ...dua })}
+                                className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                                title="Edit Supplication"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              {dua.id > 150 && ( // Allow delete only for user-custom added duas
+                                <button
+                                  onClick={() => handleDeleteDua(dua.id)}
+                                  className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                                  title="Delete custom Supplication"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          <p className="font-serif text-right text-lg text-slate-900 dark:text-white leading-loose select-all dir-rtl py-1 bg-slate-50 dark:bg-slate-905 px-3 rounded-xl border border-slate-100 dark:border-slate-850 animate-pulse-once">
+                            {dua.arabic}
+                          </p>
+
+                          <div className="space-y-1.5 text-xs">
+                            {dua.translationHindi && (
+                              <p className="text-slate-650 dark:text-slate-300 leading-relaxed">
+                                <strong className="text-[10px] text-amber-600/90 dark:text-amber-400 font-mono uppercase mr-1.5 font-bold">Hindi:</strong> {dua.translationHindi}
+                              </p>
+                            )}
+                            {dua.translationUrdu && (
+                              <p className="text-slate-650 dark:text-slate-300 leading-relaxed text-right dir-rtl font-serif">
+                                <strong className="text-[10px] text-emerald-650 dark:text-emerald-400 font-mono uppercase ml-1.5 font-bold">Urdu:</strong> {dua.translationUrdu}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Add Dua Modal */}
+              {showAddDuaModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                  <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 max-w-xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 animate-scale-in">
+                    <div className="flex items-center justify-between border-b pb-3">
+                      <h4 className="font-black text-slate-850 dark:text-white flex items-center gap-1.5 text-base">
+                        🕌 दुआ जोड़ें (Add Supplication)
+                      </h4>
+                      <button 
+                        onClick={() => setShowAddDuaModal(false)}
+                        className="p-1 text-slate-550 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleAddDua} className="space-y-4">
+                      <div className="space-y-3 text-xs">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-bold">Dua Title (नाम * )</label>
+                          <input 
+                            type="text" 
+                            required
+                            placeholder="e.g. खाने से पहले की दुआ (Dua before eating)"
+                            value={newDua.title}
+                            onChange={(e) => setNewDua({ ...newDua, title: e.target.value })}
+                            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-805 rounded-xl text-slate-850 dark:text-white font-bold"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-bold">Arabic Text (अरबी में पाठ * )</label>
+                          <textarea
+                            required
+                            rows={3}
+                            placeholder="بِسْمِ اللَّهِ وَعَلَى بَرَكَةِ اللَّهِ"
+                            value={newDua.arabic}
+                            onChange={(e) => setNewDua({ ...newDua, arabic: e.target.value })}
+                            className="w-full p-2.5 text-right font-serif text-lg bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-805 rounded-xl text-slate-850 dark:text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-bold">Hindi Translation (हिंदी अनुवाद)</label>
+                          <textarea
+                            rows={2.5}
+                            placeholder="अल्लाह के नाम से और अल्लाह की बरकत पर..."
+                            value={newDua.translationHindi}
+                            onChange={(e) => setNewDua({ ...newDua, translationHindi: e.target.value })}
+                            className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-855 rounded-xl text-slate-850 dark:text-white font-medium"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-bold">Urdu Translation (उर्दू अनुवाद)</label>
+                          <textarea
+                            rows={2.5}
+                            placeholder="..."
+                            value={newDua.translationUrdu}
+                            onChange={(e) => setNewDua({ ...newDua, translationUrdu: e.target.value })}
+                            className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-255 dark:border-slate-855 rounded-xl text-slate-850 dark:text-white font-medium"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 justify-end pt-3 border-t">
+                        <button
+                          type="button"
+                          onClick={() => setShowAddDuaModal(false)}
+                          className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-850 dark:text-slate-200 text-xs font-bold rounded-xl"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-5 py-2 bg-emerald-650 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow cursor-pointer transition-all"
+                        >
+                          Dua Add (सुरक्षित करें)
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* DUA REGISTERED STUDENTS PANEL */}
+          {erpTab === 'dua-students' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="border-b border-slate-100 dark:border-slate-700/50 pb-4">
+                <h3 className="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2">
+                  🎓 दुआ पंजीकृत छात्र (Dua Registered Students)
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Students registered inside the mobile Dua learning app. Organize and edit their profile data class-wise.
+                </p>
+              </div>
+
+              {/* Filters Header Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* Search query */}
+                <div className="relative col-span-1">
+                  <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="खोजें: छात्र का नाम / कोड..."
+                    value={duaSearchQuery}
+                    onChange={(e) => setDuaSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-white"
+                  />
+                </div>
+
+                {/* Class Wise Filter Selection */}
+                <div className="col-span-1">
+                  <select
+                    value={selectedDuaClassFilter}
+                    onChange={(e) => setSelectedDuaClassFilter(e.target.value)}
+                    className="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white font-bold text-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="ALL">सभी कक्षाएं (All Classes)</option>
+                    {customClasses.map((cls) => (
+                      <option key={cls} value={cls}>{cls}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Counter Stats Badge */}
+                <div className="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/70 dark:border-indigo-900 rounded-2xl p-2.5 flex items-center justify-between col-span-1 pl-4">
+                  <span className="text-xs font-black text-indigo-900 dark:text-indigo-200">Registered Kids:</span>
+                  <span className="px-2.5 py-1 bg-indigo-650 text-white rounded-xl text-xs font-black">
+                    {duaStudents.length}
+                  </span>
+                </div>
+              </div>
+
+              {/* Registered Kids Lists Grouped Class-Wise */}
+              {(() => {
+                // Filter student array first
+                const filteredList = duaStudents.filter(s => {
+                  const matchesSearch = s.name.toLowerCase().includes(duaSearchQuery.toLowerCase()) || 
+                                        s.code.toLowerCase().includes(duaSearchQuery.toLowerCase()) ||
+                                        s.rollNo.includes(duaSearchQuery);
+                  const matchesClass = selectedDuaClassFilter === 'ALL' || s.className === selectedDuaClassFilter;
+                  return matchesSearch && matchesClass;
+                });
+
+                if (filteredList.length === 0) {
+                  return (
+                    <div className="text-center py-12 border border-dashed rounded-3xl border-slate-200 dark:border-slate-800">
+                      <p className="text-slate-400 dark:text-slate-550 font-bold text-sm">इस फ़िल्टर में कोई छात्र पंजीकृत नहीं मिला...</p>
+                    </div>
+                  );
+                }
+
+                // Group entries by Class name
+                const groupedMap: Record<string, any[]> = {};
+                filteredList.forEach(stud => {
+                  const grp = stud.className || 'NOT_SPECIFIED';
+                  if (!groupedMap[grp]) groupedMap[grp] = [];
+                  groupedMap[grp].push(stud);
+                });
+
+                // Get class order based on school custom weights
+                const orderedClasses = Object.keys(groupedMap).sort((a, b) => {
+                  const wA = classWeights[a] || 999;
+                  const wB = classWeights[b] || 999;
+                  return wA - wB;
+                });
+
+                return (
+                  <div className="space-y-8">
+                    {orderedClasses.map(classNameKey => {
+                      const listInGroup = groupedMap[classNameKey];
+                      return (
+                        <div key={classNameKey} className="space-y-3 bg-white dark:bg-slate-900/60 p-5 rounded-3xl border border-slate-150 dark:border-slate-850 shadow-sm animate-fade-in">
+                          <div className="flex items-center justify-between border-b pb-2">
+                            <h4 className="text-sm font-black text-slate-850 dark:text-white flex items-center gap-2">
+                              ⭐ Class: <span className="text-emerald-750 dark:text-amber-400 font-extrabold">{classNameKey}</span>
+                              <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-650 px-2.5 py-0.5 rounded-full font-bold">
+                                {listInGroup.length} Students
+                              </span>
+                            </h4>
+                          </div>
+
+                          {/* Responsive student list grid */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {listInGroup.map(kid => (
+                              <div 
+                                key={kid.code} 
+                                className="bg-slate-50/40 dark:bg-slate-905 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner hover:border-emerald-500/50 transition-colors flex flex-col justify-between"
+                              >
+                                <div className="space-y-1.5">
+                                  <div className="flex justify-between items-start">
+                                    <h5 className="font-extrabold text-slate-900 dark:text-white text-xs">{kid.name}</h5>
+                                    <span className="text-[10px] font-mono bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-300 px-2 py-0.5 rounded-lg border border-purple-100 dark:border-purple-900">
+                                      Code: {kid.code}
+                                    </span>
+                                  </div>
+                                  <div className="text-[11px] font-bold text-slate-550 dark:text-slate-400 space-y-1">
+                                    <p>Roll No: <span className="text-slate-800 dark:text-slate-200">{kid.rollNo || "N/A"}</span></p>
+                                    <p>Memorized Duas: <span className="text-rose-600 font-black">{kid.memorizedDuas?.length || 0} sup</span></p>
+                                  </div>
+                                </div>
+
+                                <div className="flex gap-2 justify-end pt-3 border-t dark:border-slate-850 mt-3">
+                                  <button
+                                    onClick={() => setEditingDuaStudent({ ...kid })}
+                                    className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/20 text-slate-700 dark:text-slate-350 rounded-lg text-[10px] font-extrabold transition-all outline-none flex items-center gap-1 cursor-pointer"
+                                  >
+                                    <Edit2 className="w-2.5 h-2.5" /> Edit
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteDuaStudent(kid.code)}
+                                    className="p-1 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded transition-colors"
+                                    title="Delete user profile"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+
+              {/* Editing Student Modal Popup */}
+              {editingDuaStudent && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                  <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 animate-scale-in">
+                    <div className="flex items-center justify-between border-b pb-3">
+                      <h4 className="font-black text-slate-850 dark:text-white flex items-center gap-1.5 text-xs uppercase tracking-wider">
+                        ✏️ Edit Dua Student Profile
+                      </h4>
+                      <button 
+                        onClick={() => setEditingDuaStudent(null)}
+                        className="p-1 text-slate-550 dark:text-slate-400 hover:bg-slate-100 rounded-full"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleSaveDuaStudent} className="space-y-4">
+                      <div className="space-y-3 text-xs">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-bold">Student Name (नाम)</label>
+                          <input 
+                            type="text" 
+                            required
+                            value={editingDuaStudent.name}
+                            onChange={(e) => setEditingDuaStudent({ ...editingDuaStudent, name: e.target.value })}
+                            className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-850 dark:text-white font-bold"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-bold">Class Roll Number</label>
+                          <input 
+                            type="text" 
+                            value={editingDuaStudent.rollNo}
+                            onChange={(e) => setEditingDuaStudent({ ...editingDuaStudent, rollNo: e.target.value })}
+                            className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-850 dark:text-white font-mono font-bold"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 font-bold">Assigned Class Name</label>
+                          <select
+                            value={editingDuaStudent.className}
+                            onChange={(e) => setEditingDuaStudent({ ...editingDuaStudent, className: e.target.value })}
+                            className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-850 dark:text-white font-bold"
+                          >
+                            {customClasses.map((cls) => (
+                              <option key={cls} value={cls}>{cls}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Unique App Login Code (Readonly)</label>
+                          <input 
+                            type="text" 
+                            readOnly
+                            disabled
+                            value={editingDuaStudent.code}
+                            className="w-full px-3 py-2 bg-slate-105 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-500 font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2.5 justify-end pt-3 border-t">
+                        <button
+                          type="button"
+                          onClick={() => setEditingDuaStudent(null)}
+                          className="px-3 py-1.5 bg-slate-50 dark:bg-slate-850 text-slate-705 dark:text-slate-200 text-xs font-bold rounded-lg"
+                        >
+                          Close
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-4 py-1.5 bg-emerald-650 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg cursor-pointer"
+                        >
+                          Update Profile (सहेजें)
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </main>
