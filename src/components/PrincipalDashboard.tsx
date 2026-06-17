@@ -784,7 +784,10 @@ export default function PrincipalDashboard({
 
   // Result CRUD functions With Auto Grade Computation
   const getAdminTotalMarks = () => {
-    return getClassSubjects(adminSclass).reduce((sum, sub) => sum + (Number(adminMarks[sub]) || 0), 0);
+    return getClassSubjects(adminSclass).reduce((sum, sub) => {
+      const val = adminMarks[sub] !== undefined ? adminMarks[sub] : 75;
+      return sum + (Number(val) || 0);
+    }, 0);
   };
 
   const handleClearAll = () => {
@@ -829,7 +832,8 @@ export default function PrincipalDashboard({
 
     const cleanedMarks: Record<string, number> = {};
     subsList.forEach(sub => {
-      cleanedMarks[sub] = Number(adminMarks[sub]) || 0;
+      const val = adminMarks[sub] !== undefined ? adminMarks[sub] : 75;
+      cleanedMarks[sub] = Number(val) || 0;
     });
 
     const newResultRecord: Result = {
