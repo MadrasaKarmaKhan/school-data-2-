@@ -9,6 +9,9 @@ import { resizeImage } from '../lib/imageUtils';
 import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSessions } from '../data';
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { initAuth, googleSignIn, logoutGoogle } from '../lib/googleAuth';
+import { appendResultToSheet } from '../lib/googleSheets';
+import type { User } from 'firebase/auth';
 import { DAILY_DUAS } from '../data/duas';
 
 interface PrincipalDashboardProps {
@@ -127,6 +130,18 @@ export default function PrincipalDashboard({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+
+  // Google Sheets Sync State
+  const [googleUser, setGoogleUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const unsub = initAuth(
+      (user) => setGoogleUser(user),
+      () => setGoogleUser(null)
+    );
+    return () => { unsub(); };
+  }, [isLoggedIn]);
 
   // Active Management Tab inside ERP panel
   const [erpTab, setErpTab] = useState<'analytics' | 'students' | 'results' | 'teachers' | 'admissions' | 'gallery' | 'news' | 'config' | 'duas-mgmt' | 'dua-students'>('analytics');
@@ -875,6 +890,13 @@ export default function PrincipalDashboard({
     setResults(updatedResults);
     localStorage.setItem("madarsa_records", JSON.stringify(updatedResults));
 
+    // Append to Google Sheets if authorized
+    if (googleUser) {
+      appendResultToSheet(newResultRecord).catch(err => {
+        console.error("Failed to sync to Google Sheets:", err);
+      });
+    }
+
     // Upsert Student profile
     const studentIdx = students.findIndex(s => s.rollNo.toString().trim() === adminRollno.toString().trim());
     if (studentIdx === -1) {
@@ -1399,12 +1421,28 @@ export default function PrincipalDashboard({
             Manage student databases, publish results certificates, evaluate online admissions, and curate homepage parameters.
           </p>
         </div>
-        <button
-          onClick={() => setIsLoggedIn(false)}
-          className="px-4 py-2 bg-red-650 hover:bg-red-750 text-white text-xs font-bold rounded-xl shadow cursor-pointer transition-colors"
-        >
-          Secured Sign Out
-        </button>
+        <div className="flex items-center gap-3">
+          {googleUser ? (
+            <div className="px-3 py-1.5 bg-green-500/20 border border-green-500 text-green-300 text-[10px] font-bold rounded-lg flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+              Google Sheets Sync Active
+            </div>
+          ) : (
+            <button
+              onClick={() => googleSignIn()}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow cursor-pointer transition-colors"
+            >
+              Sign in with Google (Enable Sync)
+            </button>
+          )}
+
+          <button
+            onClick={() => setIsLoggedIn(false)}
+            className="px-4 py-2 bg-red-650 hover:bg-red-750 text-white text-xs font-bold rounded-xl shadow cursor-pointer transition-colors"
+          >
+            Secured Sign Out
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
