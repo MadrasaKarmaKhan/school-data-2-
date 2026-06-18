@@ -1437,8 +1437,8 @@ export default function PrincipalDashboard({
                   }
                 } catch (error: any) {
                   console.error(error);
-                  if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/web-storage-unsupported') {
-                    alert("Google Sign-In usually requires opening the app in a new tab because it doesn't support iframes.\n\nPlease click the top-right 'Open in new tab' ↗️ icon to complete sign-in.");
+                  if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/web-storage-unsupported' || error.code === 'auth/cancelled-popup-request') {
+                    alert("Google Sign-In requires opening the app in a new tab due to cross-origin popup restrictions.\n\nPlease click the top-right 'Open in new tab' ↗️ icon to complete sign-in.");
                   } else {
                     alert("Sign in failed: " + error.message);
                   }
