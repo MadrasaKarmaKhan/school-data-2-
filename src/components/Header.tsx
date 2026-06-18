@@ -287,23 +287,6 @@ export default function Header({
               </button>
             );
           })}
-
-          {/* Quick Help & Donation jump anchor */}
-          <button
-            onClick={() => {
-              setCurrentTab('home');
-              setTimeout(() => {
-                const element = document.getElementById('donate');
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-              }, 200);
-            }}
-            className="py-1.5 px-2.5 md:px-4 rounded-lg flex items-center gap-1.5 text-[12px] md:text-[14px] font-bold tracking-tight text-amber-700 bg-amber-100/80 hover:bg-amber-100 dark:text-amber-300 dark:bg-amber-950/45 border border-amber-300 dark:border-amber-800 hover:scale-105 transition-all cursor-pointer shadow-sm"
-          >
-            <Heart className="w-3.5 h-3.5 md:w-4 md:h-4 fill-amber-500 text-amber-500 animate-pulse" />
-            <span>Donate (मदद करें)</span>
-          </button>
         </div>
       </nav>
     </header>

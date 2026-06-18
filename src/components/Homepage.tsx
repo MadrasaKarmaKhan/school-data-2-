@@ -406,7 +406,7 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
       </section>
 
       {/* 💰 Madrasa Support & Donation (Sadqat & Zakat) Section */}
-      <section id="donate" className="scroll-mt-20 space-y-8 bg-white dark:bg-slate-900 border border-emerald-500/10 dark:border-emerald-500/5 p-6 md:p-10 rounded-3xl shadow-xl relative overflow-hidden">
+      <section id="donate" className="hidden">
         {/* Top golden decorative line */}
         <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-600 via-amber-400 to-emerald-700"></div>
 
