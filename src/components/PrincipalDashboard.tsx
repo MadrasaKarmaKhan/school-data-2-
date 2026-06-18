@@ -1429,7 +1429,21 @@ export default function PrincipalDashboard({
             </div>
           ) : (
             <button
-              onClick={() => googleSignIn()}
+              onClick={async () => {
+                try {
+                  const res = await googleSignIn();
+                  if (res) {
+                    setGoogleUser(res.user);
+                  }
+                } catch (error: any) {
+                  console.error(error);
+                  if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/web-storage-unsupported') {
+                    alert("Google Sign-In usually requires opening the app in a new tab because it doesn't support iframes.\n\nPlease click the top-right 'Open in new tab' ↗️ icon to complete sign-in.");
+                  } else {
+                    alert("Sign in failed: " + error.message);
+                  }
+                }
+              }}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow cursor-pointer transition-colors"
             >
               Sign in with Google (Enable Sync)
