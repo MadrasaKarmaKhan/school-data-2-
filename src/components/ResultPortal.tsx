@@ -210,16 +210,17 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
   // Maps stored marks to the 10 standard subjects gracefully
   const getSubjectMark = (res: Result, subject: string, index: number): number => {
-    if (res.marks[subject] !== undefined) {
-      return Number(res.marks[subject]) || 0;
+    const marksData = res.marks || {};
+    if (marksData[subject] !== undefined) {
+      return Number(marksData[subject]) || 0;
     }
-    const keys = Object.keys(res.marks);
-    const values = Object.values(res.marks);
+    const keys = Object.keys(marksData);
+    const values = Object.values(marksData);
 
     // Substring search (e.g. "Quranic Tajweed" -> "Quran")
     const matchKey = keys.find(k => k.toLowerCase().includes(subject.toLowerCase()) || subject.toLowerCase().includes(k.toLowerCase()));
     if (matchKey !== undefined) {
-      return Number(res.marks[matchKey]) || 0;
+      return Number(marksData[matchKey]) || 0;
     }
 
     // Fallback to absolute index mapping
@@ -481,8 +482,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     
     // Sort all by accumulated total
     const sorted = [...filteredByClass].sort((a,b) => {
-      const totalA = Object.values(a.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
-      const totalB = Object.values(b.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
+      const totalA = Object.values(a.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
+      const totalB = Object.values(b.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
       return totalB - totalA;
     });
 

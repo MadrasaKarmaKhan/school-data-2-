@@ -867,8 +867,8 @@ export default function PrincipalDashboard({
 
     // Sort by total obtained score descending to determine ranks
     updatedResults.sort((a,b) => {
-      const totalA = Object.values(a.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
-      const totalB = Object.values(b.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
+      const totalA = Object.values(a.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
+      const totalB = Object.values(b.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
       return totalB - totalA;
     });
 
@@ -1127,7 +1127,7 @@ export default function PrincipalDashboard({
       
       let tot = 0;
       subs.forEach(s => {
-        const val = r.marks[s] !== undefined ? Number(r.marks[s]) : 75;
+        const val = (r.marks && r.marks[s] !== undefined) ? Number(r.marks[s]) : 75;
         row[s] = val;
         tot += val;
       });
@@ -1187,9 +1187,9 @@ export default function PrincipalDashboard({
       const newMarks: { [sub: string]: number } = {};
       getClassSubjects(normClass).forEach((sub, i) => {
         let val = 75;
-        if (match.marks[sub] !== undefined) {
+        if (match.marks && match.marks[sub] !== undefined) {
           val = Number(match.marks[sub]);
-        } else {
+        } else if (match.marks) {
           // Fallback parsing
           const keys = Object.keys(match.marks);
           const values = Object.values(match.marks);
@@ -2683,7 +2683,7 @@ export default function PrincipalDashboard({
                           {(() => {
                             const currentTotal = getAdminTotalMarks();
                             const classResults = results.filter(r => r.className === adminSclass);
-                            const totals = classResults.map(r => getClassSubjects(adminSclass).reduce((sum, sub) => sum + (Number(r.marks[sub]) || 0), 0));
+                            const totals = classResults.map(r => getClassSubjects(adminSclass).reduce((sum, sub) => sum + (Number((r.marks || {})[sub]) || 0), 0));
                             if (!totals.includes(currentTotal)) totals.push(currentTotal);
                             totals.sort((a,b) => b-a);
                             const unique = [...new Set(totals)];
@@ -3064,13 +3064,13 @@ export default function PrincipalDashboard({
                             if (weightA !== weightB) {
                               return weightA - weightB;
                             }
-                            const totalA = Object.values(a.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
-                            const totalB = Object.values(b.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
+                            const totalA = Object.values(a.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
+                            const totalB = Object.values(b.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
                             return totalB - totalA;
                           });
 
                         return filteredResults.map((r) => {
-                          const total = Object.values(r.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
+                          const total = Object.values(r.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
                           const numSubs = getClassSubjects(r.className).length;
                           const maxScore = numSubs * 100;
                           const isChecked = selectedRolls.includes(r.rollNo.toString().trim());
@@ -3082,8 +3082,8 @@ export default function PrincipalDashboard({
                             normalizeSession(item.session) === normalizeSession(savedRecordsYearFilter)
                           );
                           const sortedClassResults = [...classResults].sort((a, b) => {
-                            const totA = Object.values(a.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
-                            const totB = Object.values(b.marks).reduce((sum, v) => sum + (Number(v)||0), 0);
+                            const totA = Object.values(a.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
+                            const totB = Object.values(b.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
                             return totB - totA;
                           });
                           const classRankIndex = sortedClassResults.findIndex(item => item.rollNo === r.rollNo);
@@ -3338,14 +3338,15 @@ export default function PrincipalDashboard({
                     const subjects = getClassSubjects(res.className);
                     const totalScore = subjects.reduce((sum, sub, i) => {
                       let markVal = 75;
-                      if (res.marks[sub] !== undefined) {
-                        markVal = Number(res.marks[sub]) || 0;
+                      const resMarks = res.marks || {};
+                      if (resMarks[sub] !== undefined) {
+                        markVal = Number(resMarks[sub]) || 0;
                       } else {
-                        const keys = Object.keys(res.marks);
-                        const values = Object.values(res.marks);
+                        const keys = Object.keys(resMarks);
+                        const values = Object.values(resMarks);
                         const matchKey = keys.find(k => k.toLowerCase().includes(sub.toLowerCase()) || sub.toLowerCase().includes(k.toLowerCase()));
                         if (matchKey !== undefined) {
-                          markVal = Number(res.marks[matchKey]) || 0;
+                          markVal = Number(resMarks[matchKey]) || 0;
                         } else if (i < values.length) {
                           markVal = Number(values[i]) || 0;
                         }
@@ -3580,13 +3581,14 @@ export default function PrincipalDashboard({
                           <tbody>
                             {subjects.map((sub, idx) => {
                               let mValue = 75;
-                              if (res.marks[sub] !== undefined) {
-                                mValue = Number(res.marks[sub]) || 0;
+                              const resMarks = res.marks || {};
+                              if (resMarks[sub] !== undefined) {
+                                mValue = Number(resMarks[sub]) || 0;
                               } else {
-                                const keys = Object.keys(res.marks);
-                                const values = Object.values(res.marks);
+                                const keys = Object.keys(resMarks);
+                                const values = Object.values(resMarks);
                                 const match = keys.find(k => k.toLowerCase().includes(sub.toLowerCase()) || sub.toLowerCase().includes(k.toLowerCase()));
-                                if (match !== undefined) mValue = Number(res.marks[match]) || 0;
+                                if (match !== undefined) mValue = Number(resMarks[match]) || 0;
                                 else if (idx < values.length) mValue = Number(values[idx]) || 0;
                               }
 
