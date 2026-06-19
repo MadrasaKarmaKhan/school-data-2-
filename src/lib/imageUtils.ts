@@ -30,7 +30,7 @@ export function compressBase64Image(base64: string, maxWidth: number, maxHeight:
 
       const ctx = canvas.getContext("2d");
       if (!ctx) return reject(new Error("Failed to get 2D context"));
-      
+
       ctx.drawImage(img, 0, 0, width, height);
 
       // Check original mime type to preserve transparency for PNG/Gif/Webp
@@ -90,7 +90,7 @@ export function resizeImage(file: File, maxWidth: number, maxHeight: number, qua
 
         const ctx = canvas.getContext("2d");
         if (!ctx) return reject(new Error("Failed to get 2D context"));
-        
+
         ctx.drawImage(img, 0, 0, width, height);
 
         // ALWAYS compress heavily to respect the 1MB firestore limit.

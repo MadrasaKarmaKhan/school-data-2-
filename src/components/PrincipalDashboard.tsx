@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName } from '../types';
 import { resizeImage } from '../lib/imageUtils';
+import { removeBlackBackground } from '../lib/removeBlack';
 import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSessions } from '../data';
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -2094,8 +2095,6 @@ export default function PrincipalDashboard({
                     {/* Left Stamp click Logo */}
                     <div 
                       id="logoContainer" 
-                      onClick={() => document.getElementById('adminLogoUploadInput')?.click()}
-                      title="Click to Upload Custom Crest Logo"
                       style={{
                         position: 'absolute',
                         left: '10px',
@@ -2106,19 +2105,44 @@ export default function PrincipalDashboard({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        cursor: 'pointer',
                         border: '1.5px dashed #a5d6a7'
                       }}
                     >
-                      {adminSchoolLogo ? (
-                        <img src={adminSchoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
-                      ) : (
-                        <div className="w-[150px] h-[150px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
-                          <span className="text-[28px]">🕌</span>
-                          <span className="text-[10px] font-black leading-tight text-[#1e5631]">Click to Upload</span>
-                          <span className="text-[9px] font-bold text-[#1e5631]">school_logo.png</span>
-                          <span className="text-[8px] text-[#1e5631] opacity-75">(Transparent PNG Only)</span>
-                        </div>
+                      <div className="absolute inset-0 cursor-pointer flex flex-col items-center justify-center p-2 text-center" onClick={() => document.getElementById('adminLogoUploadInput')?.click()} title="Click to Upload Custom Crest Logo">
+                        {adminSchoolLogo ? (
+                          <img src={adminSchoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
+                        ) : (
+                          <div className="w-[150px] h-[150px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
+                            <span className="text-[28px]">🕌</span>
+                            <span className="text-[10px] font-black leading-tight text-[#1e5631]">Click to Upload</span>
+                            <span className="text-[9px] font-bold text-[#1e5631]">school_logo.png</span>
+                            <span className="text-[8px] text-[#1e5631] opacity-75">(Transparent PNG Only)</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {adminSchoolLogo && (
+                        <button
+                          type="button"
+                          title="Remove Magic Black Background from Logo"
+                          className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] px-2 py-1 rounded-full shadow z-20 font-bold flex items-center gap-1 w-max"
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            try {
+                              const cleanUrl = await removeBlackBackground(adminSchoolLogo);
+                              localStorage.setItem("m_logo", cleanUrl);
+                              setAdminSchoolLogo(cleanUrl);
+                              setSchoolConfig(prev => ({
+                                ...prev,
+                                marksheetLogo: cleanUrl
+                              }));
+                            } catch (error) {
+                              console.error(error);
+                            }
+                          }}
+                        >
+                          <Sparkles size={10} className="inline mr-1" /> Remove Black BG
+                        </button>
                       )}
                     </div>
 
@@ -2135,27 +2159,52 @@ export default function PrincipalDashboard({
                         top: '10px'
                       }}
                     >
-                      <div 
-                        onClick={() => document.getElementById('adminUrduUploadInput')?.click()}
-                        title="Click to Upload Custom Urdu Banner"
-                        style={{ cursor: 'pointer' }}
-                      >
-                        {adminUrduLogo ? (
-                          <img 
-                            id="urduLogoImg" 
-                            src={adminUrduLogo} 
-                            alt="Urdu Name calligraphy" 
-                            style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
-                          />
-                        ) : (
-                          <div style={{ height: '110px' }} className="flex flex-col items-center justify-center p-2 border border-dashed border-emerald-600 rounded bg-[#fffdd0]/30">
-                            <span style={{ fontSize: '24px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>
-                              مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ
-                            </span>
-                            <span className="text-[10px] font-black text-emerald-800 uppercase tracking-wider">
-                              (Click to Upload Calligraphy Banner - Transparent PNG Only)
-                            </span>
-                          </div>
+                      <div className="relative">
+                        <div 
+                          onClick={() => document.getElementById('adminUrduUploadInput')?.click()}
+                          title="Click to Upload Custom Urdu Banner"
+                          style={{ cursor: 'pointer' }}
+                        >
+                          {adminUrduLogo ? (
+                            <img 
+                              id="urduLogoImg" 
+                              src={adminUrduLogo} 
+                              alt="Urdu Name calligraphy" 
+                              style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
+                            />
+                          ) : (
+                            <div style={{ height: '110px' }} className="flex flex-col items-center justify-center p-2 border border-dashed border-emerald-600 rounded bg-[#fffdd0]/30">
+                              <span style={{ fontSize: '24px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>
+                                مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ
+                              </span>
+                              <span className="text-[10px] font-black text-emerald-800 uppercase tracking-wider">
+                                (Click to Upload Calligraphy Banner - Transparent PNG Only)
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        {adminUrduLogo && (
+                          <button
+                            type="button"
+                            title="Remove Magic Black Background from Banner"
+                            className="absolute top-2 right-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] px-2 py-1 rounded-full shadow z-20 font-bold flex items-center gap-1 w-max"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              try {
+                                const cleanUrl = await removeBlackBackground(adminUrduLogo);
+                                localStorage.setItem("m_urdu_logo", cleanUrl);
+                                setAdminUrduLogo(cleanUrl);
+                                setSchoolConfig(prev => ({
+                                  ...prev,
+                                  calligraphyBanner: cleanUrl
+                                }));
+                              } catch (error) {
+                                console.error(error);
+                              }
+                            }}
+                          >
+                            <Sparkles size={10} className="inline mr-1" /> Remove Black BG
+                          </button>
                         )}
                       </div>
                       <div style={{ fontSize: '30px', fontWeight: 900, color: '#0000FF', marginTop: '-5px' }}>

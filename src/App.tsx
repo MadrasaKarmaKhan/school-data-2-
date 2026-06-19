@@ -76,7 +76,7 @@ export default function App() {
     return loaded.filter(Boolean).map(r => ({
       ...r,
       rollNo: String(r.rollNo || ''),
-      studentName: String(r.studentName || r.name || ''),
+      studentName: String(r.studentName || (r as any).name || ''),
       examType: r.examType || 'Annual',
       className: normalizeClassName(r.className) as ClassName,
       marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
