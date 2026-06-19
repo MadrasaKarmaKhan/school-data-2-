@@ -154,7 +154,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
       let ul = config?.calligraphyBanner || localStorage.getItem("m_urdu_logo");
       if (ul) {
-        setUrduLogo(await removeBlackBackground(ul));
+        setUrduLogo(ul);
       }
     };
     
