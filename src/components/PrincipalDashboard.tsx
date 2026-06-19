@@ -3010,8 +3010,8 @@ export default function PrincipalDashboard({
                                     const matchesYear = normalizeSession(r.session) === normalizeSession(savedRecordsYearFilter);
                                     const matchesClass = adminResultClassFilter === 'ALL' || r.className === adminResultClassFilter;
                                     const matchesSearch = !resultSearch.trim() || 
-                                      r.studentName.toLowerCase().includes(resultSearch.toLowerCase()) || 
-                                      r.rollNo.toString().toLowerCase().includes(resultSearch.toLowerCase());
+                                      String(r.studentName || '').toLowerCase().includes(resultSearch.toLowerCase()) || 
+                                      String(r.rollNo || '').toLowerCase().includes(resultSearch.toLowerCase());
                                     return matchesExam && matchesYear && matchesClass && matchesSearch;
                                   });
                                 return filteredResults.length > 0 && filteredResults.every(r => selectedRolls.includes(r.rollNo.toString().trim()));
@@ -3024,8 +3024,8 @@ export default function PrincipalDashboard({
                                   const matchesYear = normalizeSession(r.session) === normalizeSession(savedRecordsYearFilter);
                                   const matchesClass = adminResultClassFilter === 'ALL' || r.className === adminResultClassFilter;
                                   const matchesSearch = !resultSearch.trim() || 
-                                    r.studentName.toLowerCase().includes(resultSearch.toLowerCase()) || 
-                                    r.rollNo.toString().toLowerCase().includes(resultSearch.toLowerCase());
+                                    String(r.studentName || '').toLowerCase().includes(resultSearch.toLowerCase()) || 
+                                    String(r.rollNo || '').toLowerCase().includes(resultSearch.toLowerCase());
                                   return matchesExam && matchesYear && matchesClass && matchesSearch;
                                 });
                               const filteredRolls = filteredResults.map(r => r.rollNo.toString().trim());
@@ -3054,8 +3054,8 @@ export default function PrincipalDashboard({
                             const matchesYear = normalizeSession(r.session) === normalizeSession(savedRecordsYearFilter);
                             const matchesClass = adminResultClassFilter === 'ALL' || r.className === adminResultClassFilter;
                             const matchesSearch = !resultSearch.trim() || 
-                              r.studentName.toLowerCase().includes(resultSearch.toLowerCase()) || 
-                              r.rollNo.toString().toLowerCase().includes(resultSearch.toLowerCase());
+                              String(r.studentName || '').toLowerCase().includes(resultSearch.toLowerCase()) || 
+                              String(r.rollNo || '').toLowerCase().includes(resultSearch.toLowerCase());
                             return matchesExam && matchesYear && matchesClass && matchesSearch;
                           })
                           .sort((a, b) => {

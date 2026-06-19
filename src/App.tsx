@@ -73,9 +73,13 @@ export default function App() {
         loaded = INITIAL_RESULTS;
       }
     }
-    return loaded.map(r => ({
+    return loaded.filter(Boolean).map(r => ({
       ...r,
-      className: normalizeClassName(r.className) as ClassName
+      rollNo: String(r.rollNo || ''),
+      studentName: String(r.studentName || r.name || ''),
+      examType: r.examType || 'Annual',
+      className: normalizeClassName(r.className) as ClassName,
+      marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
     }));
   });
   const [teachers, setTeachers] = useState<Teacher[]>(() => getStoredData('nu_teachers', INITIAL_TEACHERS));
@@ -127,7 +131,7 @@ export default function App() {
     });
     const unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
       if (data && Array.isArray(data) && !isLoggedInRef.current) {
-        const mapped = data.map(r => ({ ...r, className: normalizeClassName(r.className) as ClassName }));
+        const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
         setResults(mapped);
       }
     });
@@ -178,8 +182,10 @@ export default function App() {
 
         if (data && Array.isArray(data) && data.length > 0) {
           // Verify we have results from Google Sheets
-          const mapped = data.map((r: any) => ({
+          const mapped = data.filter(Boolean).map((r: any) => ({
             ...r,
+            rollNo: String(r.rollNo || ''),
+            studentName: String(r.studentName || ''),
             className: (r.className || "EDADIA"), 
             // Google sheets might return marks as a string if not stringified as JSON.
             marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
