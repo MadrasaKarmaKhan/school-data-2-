@@ -901,7 +901,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     }}
                   >
                     {schoolLogo ? (
-                      <img src={schoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
+                      <img src={schoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent', mixBlendMode: 'multiply' }} />
                     ) : (
                       <div className="w-[150px] h-[150px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
                         <span className="text-[34px]">🕌</span>
@@ -930,7 +930,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                           id="urduLogoImg" 
                           src={urduLogo} 
                           alt="Urdu Name calligraphy" 
-                          style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
+                          style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', mixBlendMode: 'multiply' }} 
                         />
                       ) : (
                         <div style={{ height: '110px' }} className="flex items-center justify-center p-2">
@@ -1061,12 +1061,12 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 </div>
 
                 {/* Row 2 */}
-                <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
-                  <div style={{ flex: '2.4', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Mother Name:</span> 
+                <div className="card-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
+                  <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontSize: '15px', fontWeight: 800, width: '110px', display: 'inline-block' }}>Mother Name:</span> 
                     <div 
                       style={{ 
-                        fontSize: '17px', 
+                        fontSize: '16px', 
                         fontWeight: 900, 
                         border: '1.5px solid #1e5631', 
                         borderRadius: '4px', 
@@ -1089,8 +1089,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                       </span>
                     </div>
                   </div>
-                  <div style={{ width: '180px', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    <span style={{ fontSize: '16px', fontWeight: 800 }}>D.O.B:</span> 
+                  <div style={{ width: '145px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                     <div 
                       style={{ 
                         fontSize: '16px', 
@@ -1116,8 +1116,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                       </span>
                     </div>
                   </div>
-                  <div style={{ width: '175px', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                     <span style={{ fontSize: '16px', fontWeight: 800 }}>Class:</span> 
+                  <div style={{ width: '145px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                     <span style={{ fontSize: '15px', fontWeight: 800 }}>Class:</span> 
                      <div 
                        style={{ 
                          fontSize: '16px', 
@@ -1143,8 +1143,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                        </span>
                      </div>
                   </div>
-                  <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    <span style={{ fontSize: '16px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
+                  <div style={{ width: '105px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
                     <div 
                       style={{ 
                         fontSize: '16px', 
