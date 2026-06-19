@@ -147,6 +147,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     // Load custom logos from cloud config first, then fall back to local storage
     if (config?.marksheetLogo) {
       setSchoolLogo(config.marksheetLogo);
+    } else if (config?.logoUrl) {
+      setSchoolLogo(config.logoUrl);
     } else {
       const logo = localStorage.getItem("m_logo");
       if (logo) setSchoolLogo(logo);
@@ -856,7 +858,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     style={{
                       position: 'absolute',
                       top: '10px',
-                      right: '165px',
+                      right: '22px',
                       fontSize: '14px',
                       color: '#1b5e20',
                       fontWeight: 800,
