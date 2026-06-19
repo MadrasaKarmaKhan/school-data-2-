@@ -4,6 +4,7 @@ import { Result, ClassName, SchoolConfig } from '../types';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { getClassSubjects, getSchoolClasses, getSchoolSessions } from '../data';
+import { removeBlackBackground } from '../lib/removeBlack';
 
 interface ResultPortalProps {
   results: Result[];
@@ -145,21 +146,19 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
   useEffect(() => {
     // Load custom logos from cloud config first, then fall back to local storage
-    if (config?.marksheetLogo) {
-      setSchoolLogo(config.marksheetLogo);
-    } else if (config?.logoUrl) {
-      setSchoolLogo(config.logoUrl);
-    } else {
-      const logo = localStorage.getItem("m_logo");
-      if (logo) setSchoolLogo(logo);
-    }
+    const loadLogos = async () => {
+      let sl = config?.marksheetLogo || config?.logoUrl || localStorage.getItem("m_logo");
+      if (sl) {
+        setSchoolLogo(await removeBlackBackground(sl));
+      }
 
-    if (config?.calligraphyBanner) {
-      setUrduLogo(config.calligraphyBanner);
-    } else {
-      const uLogo = localStorage.getItem("m_urdu_logo");
-      if (uLogo) setUrduLogo(uLogo);
-    }
+      let ul = config?.calligraphyBanner || localStorage.getItem("m_urdu_logo");
+      if (ul) {
+        setUrduLogo(await removeBlackBackground(ul));
+      }
+    };
+    
+    loadLogos();
   }, [searchTriggered, config]);
 
   const classes = getSchoolClasses() as ClassName[];
