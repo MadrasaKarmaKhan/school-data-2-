@@ -901,7 +901,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     }}
                   >
                     {schoolLogo ? (
-                      <img src={schoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent', mixBlendMode: 'multiply' }} />
+                      <img src={schoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
                     ) : (
                       <div className="w-[150px] h-[150px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
                         <span className="text-[34px]">🕌</span>
@@ -930,7 +930,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                           id="urduLogoImg" 
                           src={urduLogo} 
                           alt="Urdu Name calligraphy" 
-                          style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', mixBlendMode: 'multiply' }} 
+                          style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                         />
                       ) : (
                         <div style={{ height: '110px' }} className="flex items-center justify-center p-2">

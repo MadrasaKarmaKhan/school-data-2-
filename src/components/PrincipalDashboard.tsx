@@ -2111,7 +2111,7 @@ export default function PrincipalDashboard({
                       }}
                     >
                       {adminSchoolLogo ? (
-                        <img src={adminSchoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent', mixBlendMode: 'multiply' }} />
+                        <img src={adminSchoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
                       ) : (
                         <div className="w-[150px] h-[150px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
                           <span className="text-[28px]">🕌</span>
@@ -2145,7 +2145,7 @@ export default function PrincipalDashboard({
                             id="urduLogoImg" 
                             src={adminUrduLogo} 
                             alt="Urdu Name calligraphy" 
-                            style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', mixBlendMode: 'multiply' }} 
+                            style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                           />
                         ) : (
                           <div style={{ height: '110px' }} className="flex flex-col items-center justify-center p-2 border border-dashed border-emerald-600 rounded bg-[#fffdd0]/30">
@@ -2276,18 +2276,18 @@ export default function PrincipalDashboard({
                   </div>
 
                   {/* Row 2 */}
-                  <div style={{ display: 'flex', gap: '15px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
-                    <div style={{ flex: '2.4', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                      <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Mother Name:</span> 
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
+                    <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '15px', fontWeight: 800, width: '110px', display: 'inline-block' }}>Mother Name:</span> 
                       <input 
                         value={adminMname}
                         onChange={(e) => setAdminMname(e.target.value)}
                         placeholder="E.g. Fatima Khatoon"
-                        style={{ fontSize: '17px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
+                        style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                       />
                     </div>
-                    <div style={{ width: '180px', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                      <span style={{ fontSize: '16px', fontWeight: 800 }}>D.O.B:</span> 
+                    <div style={{ width: '145px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                      <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                       <input 
                         value={adminDob}
                         onChange={(e) => setAdminDob(e.target.value)}
@@ -2295,8 +2295,8 @@ export default function PrincipalDashboard({
                         style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                       />
                     </div>
-                    <div style={{ width: '175px', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                      <span style={{ fontSize: '16px', fontWeight: 800 }}>Class:</span> 
+                    <div style={{ width: '145px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                      <span style={{ fontSize: '15px', fontWeight: 800 }}>Class:</span> 
                       <select 
                         value={adminSclass}
                         onChange={(e) => {
@@ -2316,8 +2316,8 @@ export default function PrincipalDashboard({
                         ))}
                       </select>
                     </div>
-                    <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                      <span style={{ fontSize: '16px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
+                    <div style={{ width: '105px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                      <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
                       <input 
                         value={adminRollno}
                         onChange={(e) => setAdminRollno(e.target.value.replace(/\D/g, ''))}
@@ -3411,7 +3411,7 @@ export default function PrincipalDashboard({
                             }}
                           >
                             {adminSchoolLogo ? (
-                              <img src={adminSchoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent', mixBlendMode: 'multiply' }} />
+                              <img src={adminSchoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
                             ) : (
                               <div className="w-[150px] h-[150px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
                                 <span className="text-[28px]">🕌</span>
@@ -3438,7 +3438,7 @@ export default function PrincipalDashboard({
                                 <img 
                                   src={adminUrduLogo} 
                                   alt="Urdu Name calligraphy" 
-                                  style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', mixBlendMode: 'multiply' }} 
+                                  style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                                 />
                               ) : (
                                 <div style={{ height: '110px' }} className="flex items-center justify-center p-2">
