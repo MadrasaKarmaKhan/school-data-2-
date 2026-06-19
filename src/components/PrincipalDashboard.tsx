@@ -9,9 +9,6 @@ import { resizeImage } from '../lib/imageUtils';
 import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSessions } from '../data';
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { initAuth, googleSignIn, logoutGoogle } from '../lib/googleAuth';
-import { appendResultToSheet } from '../lib/googleSheets';
-import type { User } from 'firebase/auth';
 import { DAILY_DUAS } from '../data/duas';
 
 interface PrincipalDashboardProps {
@@ -130,18 +127,6 @@ export default function PrincipalDashboard({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-
-  // Google Sheets Sync State
-  const [googleUser, setGoogleUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    if (!isLoggedIn) return;
-    const unsub = initAuth(
-      (user) => setGoogleUser(user),
-      () => setGoogleUser(null)
-    );
-    return () => { unsub(); };
-  }, [isLoggedIn]);
 
   // Active Management Tab inside ERP panel
   const [erpTab, setErpTab] = useState<'analytics' | 'students' | 'results' | 'teachers' | 'admissions' | 'gallery' | 'news' | 'config' | 'duas-mgmt' | 'dua-students'>('analytics');
@@ -890,11 +875,16 @@ export default function PrincipalDashboard({
     setResults(updatedResults);
     localStorage.setItem("madarsa_records", JSON.stringify(updatedResults));
 
-    // Append to Google Sheets if authorized
-    if (googleUser) {
-      appendResultToSheet(newResultRecord).catch(err => {
-        console.error("Failed to sync to Google Sheets:", err);
-      });
+    // Webhook Sync
+    const webhookUrl = schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
+    if (webhookUrl) {
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(newResultRecord)
+      }).catch(err => console.error("Webhook failed", err));
     }
 
     // Upsert Student profile
@@ -1422,34 +1412,6 @@ export default function PrincipalDashboard({
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {googleUser ? (
-            <div className="px-3 py-1.5 bg-green-500/20 border border-green-500 text-green-300 text-[10px] font-bold rounded-lg flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-              Google Sheets Sync Active
-            </div>
-          ) : (
-            <button
-              onClick={async () => {
-                try {
-                  const res = await googleSignIn();
-                  if (res) {
-                    setGoogleUser(res.user);
-                  }
-                } catch (error: any) {
-                  console.error(error);
-                  if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/web-storage-unsupported' || error.code === 'auth/cancelled-popup-request') {
-                    alert("Google Sign-In requires opening the app in a new tab due to cross-origin popup restrictions.\n\nPlease click the top-right 'Open in new tab' ↗️ icon to complete sign-in.");
-                  } else {
-                    alert("Sign in failed: " + error.message);
-                  }
-                }
-              }}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow cursor-pointer transition-colors"
-            >
-              Sign in with Google (Enable Sync)
-            </button>
-          )}
-
           <button
             onClick={() => setIsLoggedIn(false)}
             className="px-4 py-2 bg-red-650 hover:bg-red-750 text-white text-xs font-bold rounded-xl shadow cursor-pointer transition-colors"
@@ -5537,6 +5499,56 @@ export default function PrincipalDashboard({
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+                  <h4 className="text-sm font-extrabold text-blue-700 dark:text-blue-400 flex items-center gap-1.5 uppercase tracking-wider border-b border-slate-100 dark:border-slate-850 pb-2">
+                    📊 Google Sheets Integration (Auto-Sync)
+                  </h4>
+                  <p className="text-xs text-slate-500 font-medium">
+                    To save records automatically without a login popup, create a Google Apps Script Web App that accepts POST requests, and paste the URL below. It will receive a JSON payload with the result data whenever you save.
+                  </p>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-600 dark:text-slate-300">Google Apps Script Webhook URL</label>
+                    <input
+                      type="url"
+                      value={schoolConfig.googleSheetsWebhookUrl || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, googleSheetsWebhookUrl: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white font-mono text-xs"
+                      placeholder="https://script.google.com/macros/s/AKfycby.../exec"
+                    />
+                  </div>
+                  <div className="mt-4 flex max-w-sm gap-2">
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const webhookUrl = schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
+                        if (!webhookUrl) return alert("Please enter Webhook URL first.");
+                        if (!confirm(`Are you sure you want to sync ALL ${results.length} results to Google Sheets? This might take a moment.`)) return;
+                        
+                        let success = 0;
+                        let errs = 0;
+                        // To avoid rate limiting, we do a simple sequential batch or just parallel if it's fine. Google Apps Script can handle some load, but let's do sequential.
+                        for (const result of results) {
+                          try {
+                            await fetch(webhookUrl, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                              body: JSON.stringify(result)
+                            });
+                            success++;
+                          } catch (e) {
+                            errs++;
+                            console.error("Sync error:", e);
+                          }
+                        }
+                        alert(`Sync Complete!\nSuccessfully exported: ${success}\nErrors: ${errs}`);
+                      }}
+                      className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow cursor-pointer transition-colors"
+                    >
+                      Sync ALL Results to Google Sheets
+                    </button>
                   </div>
                 </div>
 

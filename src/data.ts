@@ -6,6 +6,7 @@ export const INITIAL_CONFIG: SchoolConfig = {
   tagline: "Inspiring Excellence in Islamic Knowledge and Modern Education",
   principalName: "Hazrat Maulana Mufti Muhammad Shafiullah Sahib",
   principalMessage: "Dear Students, Parents, and Well-wishers, Welcome to Madrasa Arabia Noorul Uloom. Our mission is to nurture the hearts and minds of the next generation with authentic Islamic values alongside high-quality modern academic streams. We strive to develop righteous characters who excel in science, computer technology, and Quranic wisdom. May Allah accept our humble efforts.",
+  googleSheetsWebhookUrl: "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec",
   principalPhotoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=350",
   contactPhone: "+91 9193984452",
   contactEmail: "info@noorululoom.edu",

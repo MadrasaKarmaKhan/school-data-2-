@@ -1,0 +1,192 @@
+27:  schoolConfig: SchoolConfig;
+112:  schoolConfig, setSchoolConfig,
+673:    if (schoolConfig?.marksheetLogo) {
+674:      setAdminSchoolLogo(schoolConfig.marksheetLogo);
+680:    if (schoolConfig?.calligraphyBanner) {
+681:      setAdminUrduLogo(schoolConfig.calligraphyBanner);
+686:  }, [schoolConfig]);
+879:    if (schoolConfig.googleSheetsWebhookUrl) {
+880:      fetch(schoolConfig.googleSheetsWebhookUrl, {
+4362:                        value={schoolConfig.schoolName}
+4363:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, schoolName: e.target.value })}
+4372:                        value={schoolConfig.schoolNameArabic}
+4373:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, schoolNameArabic: e.target.value })}
+4383:                        value={schoolConfig.admissionNotice || ""}
+4384:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionNotice: e.target.value })}
+4394:                        value={schoolConfig.principalName}
+4395:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, principalName: e.target.value })}
+4403:                        {schoolConfig.principalPhotoUrl && (
+4405:                            src={schoolConfig.principalPhotoUrl}
+4419:                                setSchoolConfig({ ...schoolConfig, principalPhotoUrl: url });
+4431:                        {schoolConfig.principalPhotoUrl && (
+4434:                            onClick={() => setSchoolConfig({ ...schoolConfig, principalPhotoUrl: "" })}
+4446:                        {schoolConfig.logoUrl ? (
+4448:                            src={schoolConfig.logoUrl}
+4466:                                setSchoolConfig({ ...schoolConfig, logoUrl: url });
+4478:                        {schoolConfig.logoUrl && (
+4481:                            onClick={() => setSchoolConfig({ ...schoolConfig, logoUrl: "" })}
+4491:                        value={schoolConfig.logoUrl || ""}
+4492:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, logoUrl: e.target.value })}
+4501:                        value={schoolConfig.principalMessage}
+4502:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, principalMessage: e.target.value })}
+4511:                        value={schoolConfig.contactPhone}
+4512:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, contactPhone: e.target.value })}
+4522:                        value={schoolConfig.contactEmail}
+4523:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, contactEmail: e.target.value })}
+4532:                        value={schoolConfig.address}
+4533:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, address: e.target.value })}
+4542:                        value={schoolConfig.whatsappNumber}
+4543:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, whatsappNumber: e.target.value })}
+4559:                        {schoolConfig.heroBg1 && (
+4561:                            src={schoolConfig.heroBg1}
+4575:                                setSchoolConfig({ ...schoolConfig, heroBg1: url });
+4587:                        {schoolConfig.heroBg1 && (
+4590:                            onClick={() => setSchoolConfig({ ...schoolConfig, heroBg1: "" })}
+4600:    value={schoolConfig.heroBg1 || ""}
+4601:    onChange={(e) => setSchoolConfig({ ...schoolConfig, heroBg1: e.target.value })}
+4609:                        {schoolConfig.heroBg2 && (
+4611:                            src={schoolConfig.heroBg2}
+4625:                                setSchoolConfig({ ...schoolConfig, heroBg2: url });
+4637:                        {schoolConfig.heroBg2 && (
+4640:                            onClick={() => setSchoolConfig({ ...schoolConfig, heroBg2: "" })}
+4650:    value={schoolConfig.heroBg2 || ""}
+4651:    onChange={(e) => setSchoolConfig({ ...schoolConfig, heroBg2: e.target.value })}
+4659:                        {schoolConfig.heroBg3 && (
+4661:                            src={schoolConfig.heroBg3}
+4675:                                setSchoolConfig({ ...schoolConfig, heroBg3: url });
+4687:                        {schoolConfig.heroBg3 && (
+4690:                            onClick={() => setSchoolConfig({ ...schoolConfig, heroBg3: "" })}
+4700:    value={schoolConfig.heroBg3 || ""}
+4701:    onChange={(e) => setSchoolConfig({ ...schoolConfig, heroBg3: e.target.value })}
+4724:                            value={schoolConfig.historyHeader || ""}
+4725:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, historyHeader: e.target.value })}
+4733:                            value={schoolConfig.historyText || ""}
+4734:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, historyText: e.target.value })}
+4749:                            value={schoolConfig.missionHeader || ""}
+4750:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, missionHeader: e.target.value })}
+4758:                            value={schoolConfig.missionText || ""}
+4759:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, missionText: e.target.value })}
+4774:                            value={schoolConfig.visionHeader || ""}
+4775:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, visionHeader: e.target.value })}
+4783:                            value={schoolConfig.visionText || ""}
+4784:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, visionText: e.target.value })}
+4805:                          value={schoolConfig.prog1Title || ""}
+4806:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, prog1Title: e.target.value })}
+4811:                          value={schoolConfig.prog1Text || ""}
+4812:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, prog1Text: e.target.value })}
+4824:                          value={schoolConfig.prog2Title || ""}
+4825:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, prog2Title: e.target.value })}
+4830:                          value={schoolConfig.prog2Text || ""}
+4831:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, prog2Text: e.target.value })}
+4843:                          value={schoolConfig.prog3Title || ""}
+4844:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, prog3Title: e.target.value })}
+4849:                          value={schoolConfig.prog3Text || ""}
+4850:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, prog3Text: e.target.value })}
+4862:                          value={schoolConfig.prog4Title || ""}
+4863:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, prog4Title: e.target.value })}
+4868:                          value={schoolConfig.prog4Text || ""}
+4869:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, prog4Text: e.target.value })}
+4891:                            value={schoolConfig.fac1Title || ""}
+4892:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, fac1Title: e.target.value })}
+4899:                            {schoolConfig.fac1Img && (
+4901:                                src={schoolConfig.fac1Img}
+4915:                                setSchoolConfig({ ...schoolConfig, fac1Img: url });
+4927:                            {schoolConfig.fac1Img && (
+4930:                                onClick={() => setSchoolConfig({ ...schoolConfig, fac1Img: "" })}
+4940:    value={schoolConfig.fac1Img || ""}
+4941:    onChange={(e) => setSchoolConfig({ ...schoolConfig, fac1Img: e.target.value })}
+4950:                          value={schoolConfig.fac1Text || ""}
+4951:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, fac1Text: e.target.value })}
+4965:                            value={schoolConfig.fac2Title || ""}
+4966:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, fac2Title: e.target.value })}
+4973:                            {schoolConfig.fac2Img && (
+4975:                                src={schoolConfig.fac2Img}
+4989:                                setSchoolConfig({ ...schoolConfig, fac2Img: url });
+5001:                            {schoolConfig.fac2Img && (
+5004:                                onClick={() => setSchoolConfig({ ...schoolConfig, fac2Img: "" })}
+5014:    value={schoolConfig.fac2Img || ""}
+5015:    onChange={(e) => setSchoolConfig({ ...schoolConfig, fac2Img: e.target.value })}
+5024:                          value={schoolConfig.fac2Text || ""}
+5025:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, fac2Text: e.target.value })}
+5039:                            value={schoolConfig.fac3Title || ""}
+5040:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, fac3Title: e.target.value })}
+5047:                            {schoolConfig.fac3Img && (
+5049:                                src={schoolConfig.fac3Img}
+5063:                                setSchoolConfig({ ...schoolConfig, fac3Img: url });
+5075:                            {schoolConfig.fac3Img && (
+5078:                                onClick={() => setSchoolConfig({ ...schoolConfig, fac3Img: "" })}
+5088:    value={schoolConfig.fac3Img || ""}
+5089:    onChange={(e) => setSchoolConfig({ ...schoolConfig, fac3Img: e.target.value })}
+5098:                          value={schoolConfig.fac3Text || ""}
+5099:                          onChange={(e) => setSchoolConfig({ ...schoolConfig, fac3Text: e.target.value })}
+5118:                        value={schoolConfig.admissionNotice || ""}
+5119:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionNotice: e.target.value })}
+5130:                        value={schoolConfig.establishedYear || ""}
+5131:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, establishedYear: e.target.value })}
+5140:                        value={schoolConfig.principalSub || ""}
+5141:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, principalSub: e.target.value })}
+5150:                        value={schoolConfig.principalTitleHeading || ""}
+5151:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, principalTitleHeading: e.target.value })}
+5160:                        value={schoolConfig.principalLedgerTag || ""}
+5161:                        onChange={(e) => setSchoolConfig({ ...schoolConfig, principalLedgerTag: e.target.value })}
+5178:                                value={schoolConfig.topper1Heading || ""}
+5179:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, topper1Heading: e.target.value })}
+5186:                              value={schoolConfig.topper1Name || ""}
+5187:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper1Name: e.target.value })}
+5193:                              value={schoolConfig.topper1Badge || ""}
+5194:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper1Badge: e.target.value })}
+5200:                              value={schoolConfig.topper1Blurb || ""}
+5201:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper1Blurb: e.target.value })}
+5214:                                value={schoolConfig.topper2Heading || ""}
+5215:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, topper2Heading: e.target.value })}
+5222:                              value={schoolConfig.topper2Name || ""}
+5223:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper2Name: e.target.value })}
+5229:                              value={schoolConfig.topper2Badge || ""}
+5230:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper2Badge: e.target.value })}
+5236:                              value={schoolConfig.topper2Blurb || ""}
+5237:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper2Blurb: e.target.value })}
+5250:                                value={schoolConfig.topper3Heading || ""}
+5251:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, topper3Heading: e.target.value })}
+5258:                              value={schoolConfig.topper3Name || ""}
+5259:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper3Name: e.target.value })}
+5265:                              value={schoolConfig.topper3Badge || ""}
+5266:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper3Badge: e.target.value })}
+5272:                              value={schoolConfig.topper3Blurb || ""}
+5273:                              onChange={(e) => setSchoolConfig({ ...schoolConfig, topper3Blurb: e.target.value })}
+5290:                            value={schoolConfig.aboutText || ""}
+5291:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, aboutText: e.target.value })}
+5300:                            value={schoolConfig.footerCreditTag || ""}
+5301:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, footerCreditTag: e.target.value })}
+5310:                            value={schoolConfig.mottoArabic || ""}
+5311:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, mottoArabic: e.target.value })}
+5320:                            value={schoolConfig.mottoEnglish || ""}
+5321:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, mottoEnglish: e.target.value })}
+5330:                            value={schoolConfig.topMarqueeText || ""}
+5331:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, topMarqueeText: e.target.value })}
+5340:                            value={schoolConfig.bottomMarqueeText || ""}
+5341:                            onChange={(e) => setSchoolConfig({ ...schoolConfig, bottomMarqueeText: e.target.value })}
+5357:                                value={schoolConfig.bankName || ""}
+5358:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, bankName: e.target.value })}
+5367:                                value={schoolConfig.accountName || ""}
+5368:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, accountName: e.target.value })}
+5377:                                value={schoolConfig.accountNumber || ""}
+5378:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, accountNumber: e.target.value })}
+5387:                                value={schoolConfig.ifscCode || ""}
+5388:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, ifscCode: e.target.value })}
+5397:                                value={schoolConfig.upiId || ""}
+5398:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, upiId: e.target.value })}
+5406:                                {schoolConfig.qrCodeUrl ? (
+5408:                                    src={schoolConfig.qrCodeUrl}
+5425:                                setSchoolConfig({ ...schoolConfig, qrCodeUrl: url });
+5438:                                  {schoolConfig.qrCodeUrl && (
+5441:                                      onClick={() => setSchoolConfig({ ...schoolConfig, qrCodeUrl: "" })}
+5461:                                value={schoolConfig.donateSectionTitle || ""}
+5462:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, donateSectionTitle: e.target.value })}
+5471:                                value={schoolConfig.donateSectionSubtitle || ""}
+5472:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, donateSectionSubtitle: e.target.value })}
+5481:                                value={schoolConfig.whySupportHeading || ""}
+5482:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, whySupportHeading: e.target.value })}
+5491:                                value={schoolConfig.whySupportText || ""}
+5492:                                onChange={(e) => setSchoolConfig({ ...schoolConfig, whySupportText: e.target.value })}
+5515:                      value={schoolConfig.googleSheetsWebhookUrl || ""}
+5516:                      onChange={(e) => setSchoolConfig({ ...schoolConfig, googleSheetsWebhookUrl: e.target.value })}
