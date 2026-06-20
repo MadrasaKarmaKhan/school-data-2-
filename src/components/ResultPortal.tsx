@@ -300,22 +300,26 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     background-color: white !important;
                     width: 100vw !important;
                     height: 100vh !important;
+                    overflow: hidden !important;
                   }
                   #card-printed-view {
                     position: absolute !important;
                     top: 0 !important;
-                    left: 0 !important;
-                    right: 0 !important;
-                    bottom: 0 !important;
+                    left: 50% !important;
+                    margin-left: -450px !important;
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                    margin-right: 0 !important;
                     transform: none !important;
+                    zoom: 0.7 !important;
+                    transform-origin: top center !important;
                     border: 5px solid #1e5631 !important;
                     background-color: white !important;
-                    margin: 0 !important;
                     padding: 20px !important;
-                    width: 100% !important;
-                    height: 100% !important;
-                    max-width: 100% !important;
-                    max-height: 100% !important;
+                    width: 900px !important;
+                    height: 1311px !important;
+                    max-width: none !important;
+                    max-height: none !important;
                   }
                   @page {
                     size: A4 portrait;
@@ -540,16 +544,19 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           #card-printed-view {
             position: absolute !important;
             top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
+            left: 50% !important;
+            margin-left: -450px !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            margin-right: 0 !important;
             transform: none !important;
-            margin: 0 !important;
+            zoom: 0.7 !important;
+            transform-origin: top center !important;
             padding: 20px !important;
-            width: 100% !important;
-            height: 100% !important; 
-            max-width: 100% !important;
-            max-height: 100% !important;
+            width: 900px !important;
+            height: 1311px !important; 
+            max-width: none !important;
+            max-height: none !important;
             border: 5px solid #1e5631 !important;
             box-shadow: none !important;
             background: white !important;
