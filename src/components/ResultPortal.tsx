@@ -311,7 +311,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     margin-bottom: 0 !important;
                     margin-right: 0 !important;
                     transform: none !important;
-                    zoom: 0.7 !important;
+                    zoom: 0.62 !important;
                     transform-origin: top center !important;
                     border: 5px solid #1e5631 !important;
                     background-color: white !important;
@@ -550,7 +550,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             margin-bottom: 0 !important;
             margin-right: 0 !important;
             transform: none !important;
-            zoom: 0.7 !important;
+            zoom: 0.62 !important;
             transform-origin: top center !important;
             padding: 20px !important;
             width: 900px !important;
