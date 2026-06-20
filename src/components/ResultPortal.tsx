@@ -543,9 +543,21 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             box-sizing: border-box !important;
             display: flex !important;
             flex-direction: column !important;
-            justify-content: space-between !important; 
+            justify-content: space-between !important;
+            transform: scale(0.81) !important;
             transform-origin: top center !important;
-            /* Allow browser to scale this 900x1311 block down to the page size */
+          }
+          #card-printed-view #topSpace {
+            background: linear-gradient(90deg, #fdfbf7, #fffdd0, #fdfbf7) !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          #card-printed-view table {
+            margin-top: 4px !important;
+          }
+          #card-printed-view table th, #card-printed-view table td {
+            text-align: center !important;
+            vertical-align: middle !important;
           }
           
           #logoContainer, #logoContainer * , #logoContainer img, #urduLogoImg, .logo-container, .logo-container img {
@@ -1107,10 +1119,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', background: 'white', border: '2px solid #1e5631' }}>
                   <thead>
                     <tr>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '60px' }}>S.R.</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900 }}>Subject</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '100px' }}>Max</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '160px' }}>Marks Obtained</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '60px' }}>S.R.</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900 }}>Subject</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '100px' }}>Max</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '160px' }}>Marks Obtained</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1120,10 +1132,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                       return (
                         <tr key={sub} style={{ backgroundColor: color }}>
-                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', fontFamily: 'sans-serif' }}>{idx + 1}</td>
-                          <td className="subject-name" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 950, fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#000000' }}>{sub}</td>
-                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900 }}>100</td>
-                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000' }}>{mark}</td>
+                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontWeight: 900, color: '#000000', fontFamily: 'sans-serif' }}>{idx + 1}</td>
+                          <td className="subject-name" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontWeight: 950, fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#000000' }}>{sub}</td>
+                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', color: '#000000', fontWeight: 900 }}>100</td>
+                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontWeight: 900, color: '#000000' }}>{mark}</td>
                         </tr>
                       );
                     })}
@@ -1131,17 +1143,17 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   <tfoot>
                     {/* Autocalculated Row Total */}
                     <tr style={{ background: '#f9fff9' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Total</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900 }}>{getClassSubjects(foundResult.className).length * 100}</th>
-                      <th id="total" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000' }}>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Total</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', color: '#000000', fontWeight: 900 }}>{getClassSubjects(foundResult.className).length * 100}</th>
+                      <th id="total" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontWeight: 900, color: '#000000' }}>
                         {getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0)}
                       </th>
                     </tr>
                     
                     {/* Autocalculated Percentage */}
                     <tr style={{ background: '#f9fff9' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Percentage</th>
-                      <th colSpan={2} id="percent" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000' }}>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Percentage</th>
+                      <th colSpan={2} id="percent" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontWeight: 900, color: '#000000' }}>
                         {getClassSubjects(foundResult.className).length > 0 ? (
                           (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length).toFixed(2)
                         ) : '0.00'}%
@@ -1150,16 +1162,16 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                     {/* Student Rank relative to active database */}
                     <tr style={{ backgroundColor: '#fffdd0' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Rank</th>
-                      <th colSpan={2} id="rank" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, color: '#000000' }}>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Rank</th>
+                      <th colSpan={2} id="rank" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '18px', fontWeight: 900, color: '#000000' }}>
                         {getAutocalculatedRank(foundResult)}
                       </th>
                     </tr>
 
                     {/* Calculated Division Row */}
                     <tr style={{ backgroundColor: '#fffdd0' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Division</th>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, color: '#000000', fontStyle: 'italic' }}>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Division</th>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', verticalAlign: 'middle', fontSize: '18px', fontWeight: 900, color: '#000000', fontStyle: 'italic' }}>
                         {foundResult.division || ""}
                       </th>
                     </tr>
