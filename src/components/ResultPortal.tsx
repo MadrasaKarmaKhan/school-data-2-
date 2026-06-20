@@ -300,24 +300,22 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     background-color: white !important;
                   }
                   #card-printed-view {
-                    position: absolute !important;
+                    position: relative !important;
                     top: 0 !important;
-                    left: 50% !important;
-                    transform: translateX(-50%) scale(0.77) !important;
-                    transform-origin: top center !important;
+                    left: 0 !important;
+                    transform: none !important;
                     border: 5px solid #1e5631 !important;
                     background-color: white !important;
                     margin: 0 !important;
                     padding: 20px !important;
                     width: 900px !important;
-                    max-width: none !important;
                     height: 1311px !important;
-                    min-height: none !important;
+                    max-width: none !important;
                     max-height: none !important;
                   }
                   @page {
                     size: A4 portrait;
-                    margin: 5mm;
+                    margin: 0mm;
                   }
                 }
               </style>
@@ -536,17 +534,15 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             visibility: visible !important;
           }
           #card-printed-view {
-            position: absolute !important;
+            position: relative !important;
             top: 0 !important;
-            left: 50% !important;
-            transform: translateX(-50%) scale(0.77) !important;
-            transform-origin: top center !important;
+            left: 0 !important;
+            transform: none !important;
             margin: 0 !important;
             padding: 20px !important;
             width: 900px !important;
-            max-width: none !important;
             height: 1311px !important; 
-            min-height: none !important;
+            max-width: none !important;
             max-height: none !important;
             border: 5px solid #1e5631 !important;
             box-shadow: none !important;
@@ -586,7 +582,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           }
           @page {
             size: A4 portrait;
-            margin: 5mm;
+            margin: 0mm;
           }
         }
       `}} />
