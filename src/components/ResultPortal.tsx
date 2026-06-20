@@ -279,9 +279,6 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   padding: 0;
                   background-color: white !important;
                   color: black !important;
-                  display: flex;
-                  justify-content: center;
-                  align-items: flex-start;
                   -webkit-print-color-adjust: exact !important;
                   print-color-adjust: exact !important;
                 }
@@ -290,7 +287,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   margin: 0 auto !important;
                   border: 5px solid #1e5631 !important;
                   width: 900px !important;
-                  min-height: 1311px !important;
+                  height: 1311px !important;
                   display: flex !important;
                   flex-direction: column !important;
                   box-sizing: border-box !important;
@@ -303,15 +300,20 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     background-color: white !important;
                   }
                   #card-printed-view {
+                    position: absolute !important;
+                    top: 0 !important;
+                    left: 50% !important;
+                    transform: translateX(-50%) scale(0.77) !important;
+                    transform-origin: top center !important;
                     border: 5px solid #1e5631 !important;
                     background-color: white !important;
-                    margin: 0 auto !important;
+                    margin: 0 !important;
+                    padding: 20px !important;
                     width: 900px !important;
                     max-width: none !important;
                     height: 1311px !important;
                     min-height: none !important;
                     max-height: none !important;
-                    zoom: 0.81 !important;
                   }
                   @page {
                     size: A4 portrait;
@@ -534,14 +536,18 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             visibility: visible !important;
           }
           #card-printed-view {
-            position: relative !important;
-            margin: 0 auto !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 50% !important;
+            transform: translateX(-50%) scale(0.77) !important;
+            transform-origin: top center !important;
+            margin: 0 !important;
+            padding: 20px !important;
             width: 900px !important;
             max-width: none !important;
             height: 1311px !important; 
             min-height: none !important;
             max-height: none !important;
-            zoom: 0.81 !important;
             border: 5px solid #1e5631 !important;
             box-shadow: none !important;
             background: white !important;
