@@ -298,20 +298,24 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     padding: 0;
                     margin: 0;
                     background-color: white !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
                   }
                   #card-printed-view {
-                    position: relative !important;
+                    position: absolute !important;
                     top: 0 !important;
                     left: 0 !important;
+                    right: 0 !important;
+                    bottom: 0 !important;
                     transform: none !important;
                     border: 5px solid #1e5631 !important;
                     background-color: white !important;
                     margin: 0 !important;
                     padding: 20px !important;
-                    width: 900px !important;
-                    height: 1311px !important;
-                    max-width: none !important;
-                    max-height: none !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    max-width: 100% !important;
+                    max-height: 100% !important;
                   }
                   @page {
                     size: A4 portrait;
@@ -534,16 +538,18 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             visibility: visible !important;
           }
           #card-printed-view {
-            position: relative !important;
+            position: absolute !important;
             top: 0 !important;
             left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
             transform: none !important;
             margin: 0 !important;
             padding: 20px !important;
-            width: 900px !important;
-            height: 1311px !important; 
-            max-width: none !important;
-            max-height: none !important;
+            width: 100% !important;
+            height: 100% !important; 
+            max-width: 100% !important;
+            max-height: 100% !important;
             border: 5px solid #1e5631 !important;
             box-shadow: none !important;
             background: white !important;
