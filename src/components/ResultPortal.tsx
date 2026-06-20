@@ -154,7 +154,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
       let ul = config?.calligraphyBanner || localStorage.getItem("m_urdu_logo");
       if (ul) {
-        setUrduLogo(await removeBlackBackground(ul));
+        setUrduLogo(ul);
       }
     };
     
@@ -528,123 +528,24 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             visibility: visible !important;
           }
           #card-printed-view {
-            position: absolute !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            height: 277mm !important; /* Forces vertical height to fit exactly onto one A4 page with 10mm margins */
-            min-height: 277mm !important;
-            max-height: 277mm !important;
+            position: relative !important;
+            margin: 0 auto !important;
+            width: 900px !important;
+            max-width: 900px !important;
+            height: 1311px !important; 
+            min-height: 1311px !important;
+            max-height: 1311px !important;
             border: 5px solid #1e5631 !important;
             box-shadow: none !important;
-            margin: 0 !important;
-            padding: 12px 15px !important; /* Slightly more compact padding to save space */
             background: white !important;
             background-color: white !important;
             color: black !important;
             box-sizing: border-box !important;
             display: flex !important;
             flex-direction: column !important;
-            justify-content: space-between !important; /* Distribute items evenly and nicely */
-          }
-          #card-printed-view #topSpace {
-            background: linear-gradient(90deg, #fdfbf7, #fffdd0, #fdfbf7) !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            height: 195px !important; /* Shrunk from 280px to save massive vertical space */
-            margin: -12px -15px 12px -15px !important;
-            padding: 8px !important;
-          }
-          #card-printed-view #logoContainer {
-            background-color: transparent !important;
-            background: transparent !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            width: 120px !important; /* Shrunk from 170px to fit on narrow width */
-            height: 120px !important;
-            top: 35px !important;
-            left: 10px !important;
-          }
-          #card-printed-view #logoContainer img {
-            max-width: 100% !important;
-            max-height: 100% !important;
-          }
-          #card-printed-view #photoBox {
-            width: 100px !important; /* Shrunk from 130px x 150px to save space */
-            height: 115px !important;
-            top: 40px !important;
-            right: 10px !important;
-          }
-          #card-printed-view #headerDraggable {
-            width: 70% !important; /* Centered narrow width to prevent overlapping of logos on printing */
-            top: 5px !important;
-          }
-          #card-printed-view #headerDraggable img {
-            max-height: 90px !important; /* Scale calligraphy image appropriately */
-            margin-bottom: 2px !important;
-          }
-          #card-printed-view #headerDraggable div:nth-child(2) {
-            font-size: 21px !important; /* MADARSA ARABIA NOORUL ULOOM */
-            font-weight: 900 !important;
-            margin-top: -2px !important;
-          }
-          #card-printed-view #headerDraggable div:nth-child(3) {
-            font-size: 16px !important; /* Karma Khan... Address */
-            font-weight: bold !important;
-          }
-          #card-printed-view #headerDraggable div:nth-child(4) {
-            font-size: 14px !important; /* Exam Type - Session label */
-            padding: 1px 15px !important;
-            border-radius: 12px !important;
-            margin-top: 2px !important;
-          }
-          
-          /* Make Details rows tighter for print */
-          #card-printed-view .card-details-row {
-            margin-bottom: 6px !important;
-            gap: 10px !important;
-          }
-          #card-printed-view .card-details-row span {
-            font-size: 14px !important;
-            width: auto !important;
-            min-width: fit-content !important;
-          }
-          #card-printed-view .card-details-row div {
-            font-size: 14px !important;
-            height: 26px !important;
-            padding: 2px 6px !important;
-          }
-          
-          /* Sizing and padding of Marks Table */
-          #card-printed-view table {
-            margin-top: 4px !important;
-          }
-          #card-printed-view table th {
-            padding: 4px !important;
-            font-size: 14px !important;
-          }
-          #card-printed-view table td {
-            padding: 3px !important;
-            font-size: 14px !important;
-          }
-          
-          /* Tighter Pass/Fail status container */
-          #card-printed-view #resultBox {
-            margin: 6px auto !important;
-            padding: 4px !important;
-            font-size: 16px !important;
-            width: 60% !important;
-            gap: 20px !important;
-          }
-          #card-printed-view #resultBox span {
-            padding: 1px 12px !important;
-          }
-          
-          /* Signatures section */
-          #card-printed-view .footer-sign {
-            padding-bottom: 10px !important;
-            font-size: 14px !important;
+            justify-content: space-between !important; 
+            transform-origin: top center !important;
+            /* Allow browser to scale this 900x1311 block down to the page size */
           }
           
           #logoContainer, #logoContainer * , #logoContainer img, #urduLogoImg, .logo-container, .logo-container img {
@@ -662,7 +563,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           }
           @page {
             size: A4 portrait;
-            margin: 10mm;
+            margin: 5mm;
           }
         }
       `}} />
