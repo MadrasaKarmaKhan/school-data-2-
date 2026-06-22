@@ -2211,10 +2211,10 @@ export default function PrincipalDashboard({
                           </button>
                         )}
                       </div>
-                      <div style={{ fontSize: '36px', fontWeight: 800, color: '#0000FF', marginTop: '-5px' }}>
+                      <div style={{ fontSize: '30px', fontWeight: 800, color: '#0000FF', marginTop: '-5px' }}>
                         MADARSA ARABIA NOORUL ULOOM
                       </div>
-                      <div style={{ fontSize: '28px', fontWeight: 700, color: '#0000FF' }}>
+                      <div style={{ fontSize: '22px', fontWeight: 700, color: '#0000FF' }}>
                         Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                       </div>
                       <div 
@@ -3409,10 +3409,10 @@ export default function PrincipalDashboard({
                                 </div>
                               )}
                             </div>
-                            <div style={{ fontSize: '36px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: '30px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
                               MADARSA ARABIA NOORUL ULOOM
                             </div>
-                            <div style={{ fontSize: '28px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: '22px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
                               Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                             </div>
                             <div 
