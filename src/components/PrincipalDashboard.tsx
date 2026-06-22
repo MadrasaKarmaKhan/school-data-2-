@@ -2174,10 +2174,10 @@ export default function PrincipalDashboard({
                               id="urduLogoImg" 
                               src={adminUrduLogo} 
                               alt="Urdu Name calligraphy" 
-                              style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', border: '3px solid #2e7d32' }} 
+                              style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                             />
                           ) : (
-                            <div style={{ height: '120px', border: '3px solid #2e7d32' }} className="flex flex-col items-center justify-center p-2 rounded bg-[#fffdd0]/30">
+                            <div style={{ height: '120px' }} className="flex flex-col items-center justify-center p-2 rounded bg-[#fffdd0]/30">
                               <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>
                                 مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ
                               </span>
@@ -2211,10 +2211,10 @@ export default function PrincipalDashboard({
                           </button>
                         )}
                       </div>
-                      <div style={{ fontSize: '28px', fontWeight: 800, color: '#0000FF', marginTop: '-5px' }}>
+                      <div style={{ fontSize: '26px', fontWeight: 800, color: '#0000FF', marginTop: '-5px' }}>
                         MADARSA ARABIA NOORUL ULOOM
                       </div>
-                      <div style={{ fontSize: '20px', fontWeight: 700, color: '#0000FF' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 700, color: '#0000FF' }}>
                         Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                       </div>
                       <div 
@@ -3401,18 +3401,18 @@ export default function PrincipalDashboard({
                                 <img 
                                   src={adminUrduLogo} 
                                   alt="Urdu Name calligraphy" 
-                                  style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', border: '3px solid #2e7d32' }} 
+                                  style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                                 />
                               ) : (
-                                <div style={{ height: '120px', border: '3px solid #2e7d32', width: '750px', margin: '0 auto' }} className="flex items-center justify-center p-2">
+                                <div style={{ height: '120px', width: '750px', margin: '0 auto' }} className="flex items-center justify-center p-2">
                                   <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif', whiteSpace: 'nowrap' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
                                 </div>
                               )}
                             </div>
-                            <div style={{ fontSize: '28px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: '26px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
                               MADARSA ARABIA NOORUL ULOOM
                             </div>
-                            <div style={{ fontSize: '20px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: '18px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
                               Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                             </div>
                             <div 

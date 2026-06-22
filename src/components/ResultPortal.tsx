@@ -837,10 +837,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                           id="urduLogoImg" 
                           src={urduLogo} 
                           alt="Urdu Name calligraphy" 
-                          style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', border: '3px solid #2e7d32' }} 
+                          style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                         />
                       ) : (
-                        <div style={{ height: '120px', border: '3px solid #2e7d32', width: '750px', margin: '0 auto' }} className="flex flex-col items-center justify-center p-2 rounded bg-[#fffdd0]/30">
+                        <div style={{ height: '120px', width: '750px', margin: '0 auto' }} className="flex flex-col items-center justify-center p-2 rounded bg-[#fffdd0]/30">
                           <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif', whiteSpace: 'nowrap' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
                         </div>
                       )}
