@@ -3211,14 +3211,11 @@ export default function PrincipalDashboard({
                         color-scheme: light !important;
                       }
                       html, body {
-                        width: 900px !important;
-                        min-width: 900px !important;
-                        max-width: 900px !important;
                         background: white !important;
                         background-color: white !important;
                         color: black !important;
                         padding: 0 !important;
-                        margin: 0 auto !important;
+                        margin: 0 !important;
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
                       }
@@ -3238,8 +3235,7 @@ export default function PrincipalDashboard({
                         position: absolute !important;
                         left: 0 !important;
                         top: 0 !important;
-                        width: 900px !important;
-                        max-width: 900px !important;
+                        width: 100% !important;
                         height: auto !important;
                         background: white !important;
                         background-color: white !important;
@@ -3278,105 +3274,6 @@ export default function PrincipalDashboard({
                         border-radius: 12px 12px 0 0 !important;
                         clip-path: ellipse(110% 100% at 50% 0%) !important;
                         border-bottom: 2px solid #a5d6a7 !important;
-                      }
-                      #bulkPrintArea .card-ribbon-container .card-logo-wrapper {
-                        background-color: transparent !important;
-                        background: transparent !important;
-                        -webkit-print-color-adjust: exact !important;
-                        print-color-adjust: exact !important;
-                        width: 120px !important; /* Shrunk from 170px to fit on narrow width */
-                        height: 120px !important;
-                        top: 35px !important;
-                        left: 10px !important;
-                        position: absolute !important;
-                      }
-                      #bulkPrintArea .card-ribbon-container .card-logo-wrapper img {
-                        max-width: 100% !important;
-                        max-height: 100% !important;
-                      }
-                      #bulkPrintArea .card-ribbon-container .card-student-photo {
-                        width: 100px !important; /* Shrunk from 130px x 150px to save space */
-                        height: 115px !important;
-                        top: 40px !important;
-                        right: 10px !important;
-                        position: absolute !important;
-                      }
-                      #bulkPrintArea .card-ribbon-container .card-header-center {
-                        width: 70% !important; /* Centered narrow width to prevent overlapping of logos on printing */
-                        top: 5px !important;
-                        position: absolute !important;
-                        left: 50% !important;
-                        transform: translateX(-50%) !important;
-                      }
-                      #bulkPrintArea .card-ribbon-container .card-header-center img {
-                        max-height: 90px !important; /* Scale calligraphy image appropriately */
-                        margin-bottom: 2px !important;
-                        display: block !important;
-                        margin: auto !important;
-                      }
-                      #bulkPrintArea .card-ribbon-container .card-header-center div:nth-child(2) {
-                        font-size: 21px !important; /* MADARSA ARABIA NOORUL ULOOM */
-                        font-weight: 900 !important;
-                        margin-top: -2px !important;
-                      }
-                      #bulkPrintArea .card-ribbon-container .card-header-center div:nth-child(3) {
-                        font-size: 16px !important; /* Karma Khan... Address */
-                        font-weight: bold !important;
-                      }
-                      #bulkPrintArea .card-ribbon-container .card-header-center div:nth-child(4) {
-                        font-size: 14px !important; /* Exam Type - Session label */
-                        padding: 1px 15px !important;
-                        border-radius: 12px !important;
-                        margin-top: 2px !important;
-                      }
-                      
-                      /* Make Details rows tighter for print */
-                      #bulkPrintArea .card-details-row {
-                        margin-bottom: 6px !important;
-                        gap: 10px !important;
-                      }
-                      #bulkPrintArea .card-details-row span {
-                        font-size: 14px !important;
-                        width: auto !important;
-                        min-width: fit-content !important;
-                      }
-                      #bulkPrintArea .card-details-row input {
-                        font-size: 14px !important;
-                        height: 26px !important;
-                        padding: 2px 6px !important;
-                      }
-                      
-                      /* Sizing and padding of Marks Table */
-                      #bulkPrintArea .card-marks-table {
-                        margin-top: 4px !important;
-                      }
-                      #bulkPrintArea .card-marks-table th {
-                        padding: 4px !important;
-                        font-size: 14px !important;
-                      }
-                      #bulkPrintArea .card-marks-table td {
-                        padding: 3px !important;
-                        font-size: 14px !important;
-                      }
-                      
-                      /* Tighter Pass/Fail status container */
-                      #bulkPrintArea .card-status-container {
-                        margin: 6px auto !important;
-                        padding: 4px !important;
-                        font-size: 16px !important;
-                        width: 60% !important;
-                        gap: 20px !important;
-                        display: flex !important;
-                      }
-                      #bulkPrintArea .card-status-container span {
-                        padding: 1px 12px !important;
-                      }
-                      
-                      /* Signatures section */
-                      #bulkPrintArea .card-signatures-container {
-                        padding-bottom: 10px !important;
-                        font-size: 14px !important;
-                        display: flex !important;
                       }
                       
                       #logoContainer, #logoContainer * , #logoContainer img, #urduLogoImg, .logo-container, .logo-container img {
