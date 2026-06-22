@@ -3210,12 +3210,15 @@ export default function PrincipalDashboard({
                       :root {
                         color-scheme: light !important;
                       }
-                      body {
+                      html, body {
+                        width: 900px !important;
+                        min-width: 900px !important;
+                        max-width: 900px !important;
                         background: white !important;
                         background-color: white !important;
                         color: black !important;
                         padding: 0 !important;
-                        margin: 0 !important;
+                        margin: 0 auto !important;
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
                       }
@@ -3235,7 +3238,8 @@ export default function PrincipalDashboard({
                         position: absolute !important;
                         left: 0 !important;
                         top: 0 !important;
-                        width: 100% !important;
+                        width: 900px !important;
+                        max-width: 900px !important;
                         height: auto !important;
                         background: white !important;
                         background-color: white !important;
@@ -3456,9 +3460,9 @@ export default function PrincipalDashboard({
                             style={{
                               position: 'absolute',
                               left: '10px',
-                              top: '50px',
-                              width: '170px',
-                              height: '170px',
+                              top: '40px',
+                              width: '185px',
+                              height: '185px',
                               zIndex: '10',
                               display: 'flex',
                               alignItems: 'center',
@@ -3468,10 +3472,10 @@ export default function PrincipalDashboard({
                             {adminSchoolLogo ? (
                               <img src={adminSchoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
                             ) : (
-                              <div className="w-[150px] h-[150px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
-                                <span className="text-[34px]">🕌</span>
-                                <span className="text-[11px] font-black leading-tight text-[#1e5631]">NOORUL ULOOM</span>
-                                <span className="text-[9px] font-bold text-[#1e5631]">KARMALHAN</span>
+                              <div className="w-[170px] h-[170px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
+                                <span className="text-[40px]">🕌</span>
+                                <span className="text-[12px] font-black leading-tight text-[#1e5631]">NOORUL ULOOM</span>
+                                <span className="text-[10px] font-bold text-[#1e5631]">KARMALHAN</span>
                               </div>
                             )}
                           </div>
@@ -3493,30 +3497,30 @@ export default function PrincipalDashboard({
                                 <img 
                                   src={adminUrduLogo} 
                                   alt="Urdu Name calligraphy" 
-                                  style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
+                                  style={{ maxWidth: '800px', height: '140px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                                 />
                               ) : (
-                                <div style={{ height: '110px' }} className="flex items-center justify-center p-2">
-                                  <span style={{ fontSize: '32px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
+                                <div style={{ height: '120px' }} className="flex items-center justify-center p-2">
+                                  <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
                                 </div>
                               )}
                             </div>
-                            <div style={{ fontSize: '30px', fontWeight: 900, color: '#0000FF', marginTop: '-5px' }}>
+                            <div style={{ fontSize: '36px', fontWeight: 900, color: '#0000FF', marginTop: '-5px' }}>
                               MADARSA ARABIA NOORUL ULOOM
                             </div>
-                            <div style={{ fontSize: '24px', fontWeight: 800, color: '#0000FF' }}>
+                            <div style={{ fontSize: '28px', fontWeight: 800, color: '#0000FF' }}>
                               Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                             </div>
                             <div 
                               style={{
-                                fontSize: '22px', 
-                                marginTop: '5px', 
+                                fontSize: '24px', 
+                                marginTop: '8px', 
                                 background: '#FFFDD0', 
                                 color: '#000000', 
                                 display: 'inline-block', 
-                                padding: '2px 25px', 
+                                padding: '4px 28px', 
                                 borderRadius: '18px', 
-                                border: '1px solid #1e5631',
+                                border: '2px solid #1e5631',
                                 fontWeight: 900
                               }}
                             >
@@ -3528,11 +3532,11 @@ export default function PrincipalDashboard({
                             className="card-student-photo"
                             style={{
                               position: 'absolute',
-                              top: '60px',
+                              top: '50px',
                               right: '15px',
-                              width: '130px',
-                              height: '150px',
-                              border: '2px solid #2e7d32',
+                              width: '150px',
+                              height: '170px',
+                              border: '3px solid #2e7d32',
                               background: '#ffffff',
                               display: 'flex',
                               alignItems: 'center',
