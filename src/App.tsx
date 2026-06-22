@@ -210,7 +210,7 @@ export default function App() {
   useEffect(() => { 
     setStoredData('nu_students', students); 
     if (isLoggedIn) {
-      const timer = setTimeout(() => syncToFirebase('schoolData', 'students', students), 2000);
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'students', students), 5000);
       return () => clearTimeout(timer);
     }
   }, [students, isLoggedIn]);
@@ -219,7 +219,7 @@ export default function App() {
     setStoredData('nu_results', results);
     localStorage.setItem("madarsa_records", JSON.stringify(results));
     if (isLoggedIn) {
-      const timer = setTimeout(() => syncToFirebase('schoolData', 'results', results), 2000);
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'results', results), 5000);
       return () => clearTimeout(timer);
     }
   }, [results, isLoggedIn]);
@@ -227,7 +227,7 @@ export default function App() {
   useEffect(() => { 
     setStoredData('nu_teachers', teachers); 
     if (isLoggedIn) {
-      const timer = setTimeout(() => syncToFirebase('schoolData', 'teachers', teachers), 2000);
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'teachers', teachers), 5000);
       return () => clearTimeout(timer);
     }
   }, [teachers, isLoggedIn]);
@@ -235,7 +235,7 @@ export default function App() {
   useEffect(() => { 
     setStoredData('nu_admissions', admissions); 
     if (isLoggedIn) {
-      const timer = setTimeout(() => syncToFirebase('schoolData', 'admissions', admissions), 2000);
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'admissions', admissions), 5000);
       return () => clearTimeout(timer);
     }
   }, [admissions, isLoggedIn]);
@@ -243,7 +243,7 @@ export default function App() {
   useEffect(() => { 
     setStoredData('nu_gallery', gallery); 
     if (isLoggedIn) {
-      const timer = setTimeout(() => syncToFirebase('schoolData', 'gallery', gallery), 2000);
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'gallery', gallery), 5000);
       return () => clearTimeout(timer);
     }
   }, [gallery, isLoggedIn]);
@@ -251,7 +251,7 @@ export default function App() {
   useEffect(() => { 
     setStoredData('nu_news', news); 
     if (isLoggedIn) {
-      const timer = setTimeout(() => syncToFirebase('schoolData', 'news', news), 2000);
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'news', news), 5000);
       return () => clearTimeout(timer);
     }
   }, [news, isLoggedIn]);
@@ -259,7 +259,7 @@ export default function App() {
   useEffect(() => { 
     setStoredData('nu_config', schoolConfig); 
     if (isLoggedIn) {
-      const timer = setTimeout(() => syncToFirebase('schoolData', 'config', schoolConfig), 2000);
+      const timer = setTimeout(() => syncToFirebase('schoolData', 'config', schoolConfig), 5000);
       return () => clearTimeout(timer);
     }
   }, [schoolConfig, isLoggedIn]);
