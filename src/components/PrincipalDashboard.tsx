@@ -3236,10 +3236,10 @@ export default function PrincipalDashboard({
                         visibility: visible !important;
                       }
                       #bulkPrintArea {
-                        position: relative !important;
-                        margin: 0 auto !important;
-                        width: 900px !important;
-                        max-width: 900px !important;
+                        position: absolute !important;
+                        left: 0 !important;
+                        top: 0 !important;
+                        width: 100% !important;
                         height: auto !important;
                         background: white !important;
                         background-color: white !important;
@@ -3390,7 +3390,7 @@ export default function PrincipalDashboard({
                               position: 'absolute',
                               left: '50%',
                               transform: 'translateX(-50%)',
-                              width: '85%',
+                              width: '100%',
                               textAlign: 'center',
                               zIndex: '5',
                               top: '10px'
@@ -3404,15 +3404,15 @@ export default function PrincipalDashboard({
                                   style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', border: '3px solid #2e7d32' }} 
                                 />
                               ) : (
-                                <div style={{ height: '120px', border: '3px solid #2e7d32' }} className="flex items-center justify-center p-2">
-                                  <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
+                                <div style={{ height: '120px', border: '3px solid #2e7d32', width: '750px', margin: '0 auto' }} className="flex items-center justify-center p-2">
+                                  <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif', whiteSpace: 'nowrap' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
                                 </div>
                               )}
                             </div>
-                            <div style={{ fontSize: '36px', fontWeight: 800, color: '#0000FF', marginTop: '-5px' }}>
+                            <div style={{ fontSize: '36px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
                               MADARSA ARABIA NOORUL ULOOM
                             </div>
-                            <div style={{ fontSize: '28px', fontWeight: 700, color: '#0000FF' }}>
+                            <div style={{ fontSize: '28px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
                               Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                             </div>
                             <div 

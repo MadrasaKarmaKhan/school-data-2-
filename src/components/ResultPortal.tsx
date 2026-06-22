@@ -290,7 +290,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   margin: 0 auto !important;
                   border: 5px solid #1e5631 !important;
                   width: 900px !important;
+                  max-width: 900px !important;
+                  height: 1311px !important;
                   min-height: 1311px !important;
+                  max-height: 1311px !important;
                   display: flex !important;
                   flex-direction: column !important;
                   box-sizing: border-box !important;
@@ -699,14 +702,18 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 className="bg-white text-black font-sans font-bold shadow-2xl relative select-none rounded-[16px]"
                 style={{
                   width: '900px',
+                  maxWidth: '900px',
+                  height: '1311px',
+                  minHeight: '1311px',
+                  maxHeight: '1311px',
                   margin: 'auto',
                   background: '#ffffff',
                   border: '5px solid #1e5631',
                   padding: '20px',
-                  minHeight: '1311px',
                   display: 'flex',
                   flexDirection: 'column',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  overflow: 'hidden'
                 }}
               >
                 {/* Header Curved Ribbon */}
@@ -818,7 +825,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                       position: 'absolute',
                       left: '50%',
                       transform: 'translateX(-50%)',
-                      width: '85%',
+                      width: '100%',
                       textAlign: 'center',
                       zIndex: '5',
                       top: '10px'
@@ -830,18 +837,18 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                           id="urduLogoImg" 
                           src={urduLogo} 
                           alt="Urdu Name calligraphy" 
-                          style={{ maxWidth: '800px', height: '140px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
+                          style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', border: '3px solid #2e7d32' }} 
                         />
                       ) : (
-                        <div style={{ height: '120px' }} className="flex items-center justify-center p-2">
-                          <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
+                        <div style={{ height: '120px', border: '3px solid #2e7d32', width: '750px', margin: '0 auto' }} className="flex flex-col items-center justify-center p-2 rounded bg-[#fffdd0]/30">
+                          <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif', whiteSpace: 'nowrap' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
                         </div>
                       )}
                     </div>
-                    <div style={{ fontSize: '36px', fontWeight: 900, color: '#0000FF', marginTop: '-5px' }}>
+                    <div style={{ fontSize: '36px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
                       MADARSA ARABIA NOORUL ULOOM
                     </div>
-                    <div style={{ fontSize: '28px', fontWeight: 800, color: '#0000FF' }}>
+                    <div style={{ fontSize: '28px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
                       Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                     </div>
                     <div 
