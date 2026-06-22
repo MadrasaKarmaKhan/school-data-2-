@@ -3232,10 +3232,10 @@ export default function PrincipalDashboard({
                         visibility: visible !important;
                       }
                       #bulkPrintArea {
-                        position: absolute !important;
-                        left: 0 !important;
-                        top: 0 !important;
-                        width: 100% !important;
+                        position: relative !important;
+                        margin: 0 auto !important;
+                        width: 900px !important;
+                        max-width: 900px !important;
                         height: auto !important;
                         background: white !important;
                         background-color: white !important;
