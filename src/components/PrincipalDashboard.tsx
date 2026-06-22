@@ -3394,18 +3394,18 @@ export default function PrincipalDashboard({
                                 <img 
                                   src={adminUrduLogo} 
                                   alt="Urdu Name calligraphy" 
-                                  style={{ maxWidth: '800px', height: '140px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
+                                  style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent', border: '3px solid #2e7d32' }} 
                                 />
                               ) : (
-                                <div style={{ height: '120px' }} className="flex items-center justify-center p-2">
+                                <div style={{ height: '120px', border: '3px solid #2e7d32' }} className="flex items-center justify-center p-2">
                                   <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
                                 </div>
                               )}
                             </div>
-                            <div style={{ fontSize: '36px', fontWeight: 900, color: '#0000FF', marginTop: '-5px' }}>
+                            <div style={{ fontSize: '36px', fontWeight: 800, color: '#0000FF', marginTop: '-5px' }}>
                               MADARSA ARABIA NOORUL ULOOM
                             </div>
-                            <div style={{ fontSize: '28px', fontWeight: 800, color: '#0000FF' }}>
+                            <div style={{ fontSize: '28px', fontWeight: 700, color: '#0000FF' }}>
                               Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                             </div>
                             <div 
