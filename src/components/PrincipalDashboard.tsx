@@ -3243,22 +3243,22 @@ export default function PrincipalDashboard({
                         box-sizing: border-box !important;
                       }
                       #bulkPrintArea .printable-card-item {
-                        width: 210mm !important;
-                        max-width: 210mm !important;
-                        height: 297mm !important; /* Forces vertical height to fit exactly onto one A4 page */
-                        min-height: 297mm !important;
-                        max-height: 297mm !important;
-                        margin: 0 !important;
+                        width: 900px !important;
+                        max-width: 900px !important;
+                        height: 1311px !important;
+                        min-height: 1311px !important;
+                        max-height: 1311px !important;
+                        margin: 0 auto !important;
                         page-break-after: always !important;
                         box-shadow: none !important;
                         border: 5px solid #1e5631 !important;
                         box-sizing: border-box !important;
-                        transform: none !important;
+                        transform-origin: top center !important;
                         display: flex !important;
                         flex-direction: column !important;
                         background: white !important;
                         background-color: white !important;
-                        padding: 15px !important;
+                        padding: 20px !important;
                         justify-content: space-between !important;
                         position: relative !important;
                         overflow: hidden !important;
@@ -3267,11 +3267,13 @@ export default function PrincipalDashboard({
                         background: linear-gradient(90deg, #fdfbf7, #fffdd0, #fdfbf7) !important;
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
-                        height: 195px !important; /* Shrunk from 280px to save massive vertical space */
-                        margin: -15px -15px 12px -15px !important;
-                        padding: 8px !important;
+                        height: 280px !important;
+                        margin: -20px -20px 30px -20px !important;
+                        padding: 15px !important;
                         position: relative !important;
-                        border-radius: 0 !important;
+                        border-radius: 12px 12px 0 0 !important;
+                        clip-path: ellipse(110% 100% at 50% 0%) !important;
+                        border-bottom: 2px solid #a5d6a7 !important;
                       }
                       #bulkPrintArea .card-ribbon-container .card-logo-wrapper {
                         background-color: transparent !important;
@@ -3381,7 +3383,7 @@ export default function PrincipalDashboard({
                       }
                       @page {
                         size: A4 portrait;
-                        margin: 0;
+                        margin: 5mm;
                       }
                     }
                   `}} />
@@ -3410,12 +3412,12 @@ export default function PrincipalDashboard({
                         key={res.id || index}
                         className="printable-card-item"
                         style={{
-                          width: '210mm',
+                          width: '900px',
                           margin: '0 auto 40px auto', 
                           background: '#ffffff',
                           border: '5px solid #1e5631',
-                          padding: '15px',
-                          minHeight: '297mm',
+                          padding: '20px',
+                          minHeight: '1311px',
                           display: 'flex',
                           flexDirection: 'column',
                           pageBreakAfter: 'always',
@@ -3429,10 +3431,10 @@ export default function PrincipalDashboard({
                           className="card-ribbon-container"
                           style={{
                             position: 'relative',
-                            height: '240px', /* Need to shrink height relative to 210mm width to keep proportions */
-                            marginBottom: '20px',
+                            height: '280px',
+                            marginBottom: '30px',
                             background: 'linear-gradient(90deg, #fdfbf7, #fffdd0, #fdfbf7)',
-                            margin: '-15px -15px 20px -15px',
+                            margin: '-20px -20px 30px -20px',
                             padding: '15px',
                             borderRadius: '12px 12px 0 0',
                             clipPath: 'ellipse(110% 100% at 50% 0%)',
@@ -3443,7 +3445,7 @@ export default function PrincipalDashboard({
                             Reg. No: <span style={{ color: '#000000' }}>{res.regNo || "G- 59313"}</span>
                           </div>
                           <div 
-                            className="absolute top-2.5 right-[19px] text-[22px] font-black z-[15] text-[#1b5e20]" 
+                            className="absolute top-[10px] right-[22px] text-[14px] font-black z-[15] text-[#1b5e20] flex gap-1 items-center" 
                             style={{ direction: 'rtl', fontFamily: '"Urdu Typesetting", "Sakkal Majalla", serif' }}
                           >
                             رکنیت نمبر: <span style={{ color: '#1b5e20', fontFamily: 'sans-serif' }}>{res.udise || "4053"}</span>
@@ -3454,9 +3456,9 @@ export default function PrincipalDashboard({
                             style={{
                               position: 'absolute',
                               left: '10px',
-                              top: '35px',
-                              width: '120px',
-                              height: '120px',
+                              top: '50px',
+                              width: '170px',
+                              height: '170px',
                               zIndex: '10',
                               display: 'flex',
                               alignItems: 'center',
@@ -3466,10 +3468,10 @@ export default function PrincipalDashboard({
                             {adminSchoolLogo ? (
                               <img src={adminSchoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
                             ) : (
-                              <div className="w-[120px] h-[120px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
-                                <span className="text-[24px]">🕌</span>
-                                <span className="text-[9px] font-black leading-tight text-[#1e5631]">NOORUL ULOOM</span>
-                                <span className="text-[8px] font-bold text-[#1e5631]">KARMALHAN</span>
+                              <div className="w-[150px] h-[150px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
+                                <span className="text-[34px]">🕌</span>
+                                <span className="text-[11px] font-black leading-tight text-[#1e5631]">NOORUL ULOOM</span>
+                                <span className="text-[9px] font-bold text-[#1e5631]">KARMALHAN</span>
                               </div>
                             )}
                           </div>
@@ -3480,10 +3482,10 @@ export default function PrincipalDashboard({
                               position: 'absolute',
                               left: '50%',
                               transform: 'translateX(-50%)',
-                              width: '70%',
+                              width: '85%',
                               textAlign: 'center',
                               zIndex: '5',
-                              top: '5px'
+                              top: '10px'
                             }}
                           >
                             <div>
@@ -3491,29 +3493,29 @@ export default function PrincipalDashboard({
                                 <img 
                                   src={adminUrduLogo} 
                                   alt="Urdu Name calligraphy" 
-                                  style={{ maxWidth: '100%', height: '90px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
+                                  style={{ maxWidth: '800px', height: '130px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                                 />
                               ) : (
-                                <div style={{ height: '90px' }} className="flex items-center justify-center p-2">
-                                  <span style={{ fontSize: '26px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
+                                <div style={{ height: '110px' }} className="flex items-center justify-center p-2">
+                                  <span style={{ fontSize: '32px', color: '#1b5e20', fontFamily: 'Georgia, serif' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
                                 </div>
                               )}
                             </div>
-                            <div style={{ fontSize: '21px', fontWeight: 900, color: '#0000FF', marginTop: '-2px' }}>
+                            <div style={{ fontSize: '30px', fontWeight: 900, color: '#0000FF', marginTop: '-5px' }}>
                               MADARSA ARABIA NOORUL ULOOM
                             </div>
-                            <div style={{ fontSize: '16px', fontWeight: 800, color: '#0000FF' }}>
+                            <div style={{ fontSize: '24px', fontWeight: 800, color: '#0000FF' }}>
                               Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                             </div>
                             <div 
                               style={{
-                                fontSize: '14px', 
-                                marginTop: '2px', 
+                                fontSize: '22px', 
+                                marginTop: '5px', 
                                 background: '#FFFDD0', 
                                 color: '#000000', 
                                 display: 'inline-block', 
-                                padding: '1px 15px', 
-                                borderRadius: '12px', 
+                                padding: '2px 25px', 
+                                borderRadius: '18px', 
                                 border: '1px solid #1e5631',
                                 fontWeight: 900
                               }}
@@ -3526,10 +3528,10 @@ export default function PrincipalDashboard({
                             className="card-student-photo"
                             style={{
                               position: 'absolute',
-                              top: '40px',
-                              right: '10px',
-                              width: '100px',
-                              height: '115px',
+                              top: '60px',
+                              right: '15px',
+                              width: '130px',
+                              height: '150px',
                               border: '2px solid #2e7d32',
                               background: '#ffffff',
                               display: 'flex',
