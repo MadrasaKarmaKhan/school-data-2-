@@ -996,7 +996,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                       </span>
                     </div>
                   </div>
-                  <div style={{ width: '145px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <div style={{ width: '165px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                     <div 
                       style={{ 
