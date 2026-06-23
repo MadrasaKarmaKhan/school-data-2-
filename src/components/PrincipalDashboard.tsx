@@ -2382,13 +2382,13 @@ export default function PrincipalDashboard({
 
                   {/* Address full width block underneath */}
                   <div style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
-                    <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                      <span style={{ fontSize: '17px', fontWeight: 800, width: '85px', display: 'inline-block' }}>Address:</span> 
+                    <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '17px', fontWeight: 800, width: '75px', display: 'inline-block' }}>Address:</span> 
                       <input 
                         value={adminAddress}
                         onChange={(e) => setAdminAddress(e.target.value)}
                         placeholder="Village & Post, District Sant Kabir Nagar"
-                        style={{ fontSize: '16px', fontWeight: 950, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
+                        style={{ fontSize: '15px', fontWeight: 950, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                       />
                     </div>
                   </div>
@@ -3521,12 +3521,12 @@ export default function PrincipalDashboard({
 
                         {/* Address full width block underneath */}
                         <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
-                          <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                            <span style={{ fontSize: '17px', fontWeight: 800, width: '85px', display: 'inline-block' }}>Address:</span> 
+                          <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
+                            <span style={{ fontSize: '17px', fontWeight: 800, width: '75px', display: 'inline-block' }}>Address:</span> 
                             <input 
                               readOnly 
                               value={res.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH"} 
-                              style={{ fontSize: '16px', fontWeight: 950, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
+                              style={{ fontSize: '15px', fontWeight: 950, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                             />
                           </div>
                         </div>

@@ -1088,11 +1088,11 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                 {/* Address full width block underneath */}
                 <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
-                  <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '17px', fontWeight: 800, width: '85px', display: 'inline-block' }}>Address:</span> 
+                  <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontSize: '17px', fontWeight: 800, width: '75px', display: 'inline-block' }}>Address:</span> 
                     <div 
                       style={{ 
-                        fontSize: '16px', 
+                        fontSize: '15px', 
                         fontWeight: 900, 
                         border: '1.5px solid #1e5631', 
                         borderRadius: '4px', 
