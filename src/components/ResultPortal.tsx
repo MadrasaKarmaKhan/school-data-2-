@@ -940,7 +940,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      <span style={{ position: 'relative', top: '-1.5px', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {foundResult.studentName.toUpperCase()}
                       </span>
                     </div>
@@ -967,7 +967,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      <span style={{ position: 'relative', top: '-1.5px', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {foundResult.fatherName.toUpperCase()}
                       </span>
                     </div>
@@ -998,7 +998,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      <span style={{ position: 'relative', top: '-1.5px', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {(foundResult.motherName || "ZAREENA KHATOON").toUpperCase()}
                       </span>
                     </div>
@@ -1025,7 +1025,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      <span style={{ position: 'relative', top: '-1.5px', display: 'inline-block' }}>
+                      <span style={{ display: 'inline-block' }}>
                         {foundResult.dateOfBirth || "12-04-2011"}
                       </span>
                     </div>
@@ -1052,7 +1052,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                          textOverflow: 'ellipsis'
                        }}
                      >
-                       <span style={{ position: 'relative', top: '-1.5px', display: 'inline-block' }}>
+                       <span style={{ display: 'inline-block' }}>
                          {formatClassName(foundResult.className)}
                        </span>
                      </div>
@@ -1079,7 +1079,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      <span style={{ position: 'relative', top: '-1.5px', display: 'inline-block' }}>
+                      <span style={{ display: 'inline-block' }}>
                         {foundResult.rollNo}
                       </span>
                     </div>
@@ -1110,7 +1110,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      <span style={{ position: 'relative', top: '-1.5px', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {foundResult.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH"}
                       </span>
                     </div>
