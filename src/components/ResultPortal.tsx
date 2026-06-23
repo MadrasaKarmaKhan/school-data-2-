@@ -265,6 +265,12 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           throw new Error("Iframe document not available");
         }
 
+        // Collect all styles and links from the parent document to ensure tailwind works
+        let parentStyles = '';
+        document.querySelectorAll('style, link[rel="stylesheet"]').forEach(node => {
+          parentStyles += node.outerHTML;
+        });
+
         // Write base HTML with fonts
         iframeDoc.open();
         iframeDoc.write(`
@@ -272,6 +278,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           <html>
             <head>
               <title>Print Marksheet - Noorul Uloom</title>
+              ${parentStyles}
               <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;650;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet" />
               <style>
                 body {
