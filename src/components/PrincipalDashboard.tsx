@@ -2331,7 +2331,7 @@ export default function PrincipalDashboard({
                   {/* Row 2 */}
                   <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                     <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
-                      <span style={{ fontSize: '15px', fontWeight: 800, width: '110px', display: 'inline-block' }}>Mother Name:</span> 
+                      <span style={{ fontSize: '15px', fontWeight: 800, width: '105px', display: 'inline-block' }}>Mother Name:</span> 
                       <input 
                         value={adminMname}
                         onChange={(e) => setAdminMname(e.target.value)}
@@ -2339,7 +2339,7 @@ export default function PrincipalDashboard({
                         style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                       />
                     </div>
-                    <div style={{ width: '165px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    <div style={{ width: '185px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                       <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                       <input 
                         value={adminDob}
@@ -3486,14 +3486,14 @@ export default function PrincipalDashboard({
                         {/* Row 2 */}
                         <div className="card-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                           <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
-                            <span style={{ fontSize: '15px', fontWeight: 800, width: '110px', display: 'inline-block' }}>Mother Name:</span> 
+                            <span style={{ fontSize: '15px', fontWeight: 800, width: '105px', display: 'inline-block' }}>Mother Name:</span> 
                             <input 
                               readOnly 
                               value={(res.motherName || "ZAREENA KHATOON").toUpperCase()} 
                               style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                             />
                           </div>
-                          <div style={{ width: '165px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                          <div style={{ width: '185px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                             <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                             <input 
                               readOnly 
