@@ -2369,7 +2369,7 @@ export default function PrincipalDashboard({
                         ))}
                       </select>
                     </div>
-                    <div style={{ width: '105px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                       <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
                       <input 
                         value={adminRollno}
@@ -3509,7 +3509,7 @@ export default function PrincipalDashboard({
                               style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000', textAlign: 'center' }}
                             />
                           </div>
-                          <div style={{ width: '105px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                          <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                             <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
                             <input 
                               readOnly 

@@ -1057,7 +1057,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                        </span>
                      </div>
                   </div>
-                  <div style={{ width: '105px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
                     <div 
                       style={{ 
