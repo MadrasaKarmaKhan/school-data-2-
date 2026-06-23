@@ -13,6 +13,8 @@ interface AdmissionFormProps {
   gallery?: GalleryItem[];
 }
 
+import { printBlankAdmissionForm } from '../utils/printBlankAdmissionForm';
+
 export function formatClassName(className: string | undefined): string {
   if (!className) return "";
   return String(className).replace(/(\d+)(ST|ND|RD|TH)/gi, (match, num, suffix) => {
@@ -376,6 +378,14 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
         <p className="text-xs md:text-sm text-slate-550 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
           Fill out the secure admission docket below for quick processing. All student profiles catalogued here are transmitted directly to the Principal's ERP desktop board.
         </p>
+        <div className="pt-4 flex justify-center">
+          <button
+            onClick={printBlankAdmissionForm}
+            className="px-6 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-800 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer"
+          >
+            <Printer className="w-4 h-4" /> Download Blank Offline Form (खाली फॉर्म प्रिंट करें)
+          </button>
+        </div>
       </div>
 
       {/* Tab Switcher */}
