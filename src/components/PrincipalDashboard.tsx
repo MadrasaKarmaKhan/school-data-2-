@@ -2383,7 +2383,7 @@ export default function PrincipalDashboard({
                   {/* Address full width block underneath */}
                   <div style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                     <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                      <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Address:</span> 
+                      <span style={{ fontSize: '17px', fontWeight: 800, width: '85px', display: 'inline-block' }}>Address:</span> 
                       <input 
                         value={adminAddress}
                         onChange={(e) => setAdminAddress(e.target.value)}
@@ -3522,7 +3522,7 @@ export default function PrincipalDashboard({
                         {/* Address full width block underneath */}
                         <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                           <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                            <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Address:</span> 
+                            <span style={{ fontSize: '17px', fontWeight: 800, width: '85px', display: 'inline-block' }}>Address:</span> 
                             <input 
                               readOnly 
                               value={res.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH"} 
