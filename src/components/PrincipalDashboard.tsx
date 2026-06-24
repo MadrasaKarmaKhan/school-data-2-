@@ -1297,7 +1297,12 @@ export default function PrincipalDashboard({
   // Website Config update
   const handleUpdateConfig = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Website general configuration saved successfully!");
+    localStorage.setItem('nu_config', JSON.stringify(schoolConfig));
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
+    toast.innerText = 'Website configuration saved successfully!';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
   };
 
   // Gallery Add
@@ -4049,8 +4054,9 @@ export default function PrincipalDashboard({
                   <FileText className="w-5 h-5 text-emerald-600" /> Admission Portal Setup
                 </h3>
                 <button
+                  type="button"
                   onClick={async () => {
-                    setStoredData('nu_config', schoolConfig);
+                    localStorage.setItem('nu_config', JSON.stringify(schoolConfig));
                     const toast = document.createElement('div');
                     toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
                     toast.innerText = 'Admission Settings Saved Successfully!';
