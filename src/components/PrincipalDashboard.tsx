@@ -3925,7 +3925,11 @@ export default function PrincipalDashboard({
                         <div className="flex justify-between items-start gap-4 pb-2 border-b border-slate-100 dark:border-slate-800">
                           <div>
                             <strong className="text-base text-slate-900 dark:text-white block font-black">{item.studentName}</strong>
-                            <span className="text-[10px] text-slate-400 font-bold font-mono">APPLIED DATE: {item.applyDate}</span>
+                            <div className="flex gap-3">
+                              <span className="text-[10px] text-slate-400 font-bold font-mono">APPLIED DATE: {item.applyDate}</span>
+                              <span className="text-[10px] text-slate-400 font-bold font-mono">FORM ID: {item.formNumber || item.id}</span>
+                              <span className="text-[10px] text-slate-400 font-bold font-mono">TYPE: {item.admissionType === 'Old' ? 'Old (قدیم)' : 'New (جدید)'}</span>
+                            </div>
                           </div>
                           
                           <span className={`px-2.5 py-0.5 rounded-full font-bold text-[9px] uppercase tracking-wider ${
@@ -4546,6 +4550,78 @@ export default function PrincipalDashboard({
                         className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-855 dark:text-white font-mono"
                       />
                     </div>
+                  </div>
+                </div>
+
+                {/* SECTION 1.5: HEADER MENU & NAVIGATION CONFIG */}
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+                  <h4 className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider border-b border-slate-100 dark:border-slate-850 pb-2">
+                    🧭 Top Header Menu & Navigation Configuration
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs text-slate-700">
+                    {[
+                      { id: 'Home', label: 'Home Page' },
+                      { id: 'Dua', label: 'Daily Duas' },
+                      { id: 'Results', label: 'Exam Results' },
+                      { id: 'Admissions', label: 'Admissions' },
+                      { id: 'Donate', label: 'Donate' },
+                      { id: 'Cloud', label: 'Cloud Drive' },
+                      { id: 'Dashboard', label: 'Principal Panel' },
+                    ].map((nav) => (
+                      <div key={nav.id} className="p-3 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-950 space-y-3">
+                        <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                          {nav.label} Menu
+                        </label>
+                        <div className="space-y-2">
+                          <input
+                            type="text"
+                            placeholder={`${nav.label} Custom Text`}
+                            value={(schoolConfig as any)[`navMenu${nav.id}Text`] || ""}
+                            onChange={(e) => setSchoolConfig({ ...schoolConfig, [`navMenu${nav.id}Text`]: e.target.value })}
+                            className="w-full p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-800 dark:text-white"
+                          />
+                          <div className="flex items-center gap-3">
+                            {(schoolConfig as any)[`navMenu${nav.id}Icon`] && (
+                              <img
+                                src={(schoolConfig as any)[`navMenu${nav.id}Icon`]}
+                                alt={`${nav.label} Custom Photo`}
+                                className="w-8 h-8 object-cover rounded-full border border-slate-300 shadow-sm"
+                              />
+                            )}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              id={`navMenu${nav.id}UploadInput`}
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  resizeImage(file, 200, 200, 0.7).then((url) => {
+                                    setSchoolConfig({ ...schoolConfig, [`navMenu${nav.id}Icon`]: url });
+                                  }).catch(err => console.error("Compression failed", err));
+                                }
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => document.getElementById(`navMenu${nav.id}UploadInput`)?.click()}
+                              className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded cursor-pointer transition text-[10px]"
+                            >
+                              📤 Upload Photo
+                            </button>
+                            {(schoolConfig as any)[`navMenu${nav.id}Icon`] && (
+                              <button
+                                type="button"
+                                onClick={() => setSchoolConfig({ ...schoolConfig, [`navMenu${nav.id}Icon`]: "" })}
+                                className="text-[10px] text-rose-500 font-extrabold uppercase hover:underline cursor-pointer"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 

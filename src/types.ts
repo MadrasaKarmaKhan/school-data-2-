@@ -69,6 +69,8 @@ export interface AdmissionApplication {
   bloodGroup?: string;
   studentPhoto?: string;
   academicYear?: string;
+  admissionType?: 'New' | 'Old';
+  formNumber?: string;
   applyDate: string;
   status: 'pending' | 'approved' | 'rejected';
 }
@@ -143,6 +145,22 @@ export interface SchoolConfig {
   fac3Title?: string;
   fac3Img?: string;
   fac3Text?: string;
+
+  // Header Nav Customization
+  navMenuHomeText?: string;
+  navMenuHomeIcon?: string;
+  navMenuDuaText?: string;
+  navMenuDuaIcon?: string;
+  navMenuResultsText?: string;
+  navMenuResultsIcon?: string;
+  navMenuAdmissionsText?: string;
+  navMenuAdmissionsIcon?: string;
+  navMenuDonateText?: string;
+  navMenuDonateIcon?: string;
+  navMenuCloudText?: string;
+  navMenuCloudIcon?: string;
+  navMenuDashboardText?: string;
+  navMenuDashboardIcon?: string;
 
   // Extra config fields
   admissionNotice?: string;

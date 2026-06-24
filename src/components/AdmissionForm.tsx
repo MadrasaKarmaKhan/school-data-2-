@@ -54,7 +54,9 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
     gender: 'Male' as 'Male' | 'Female' | 'Other',
     previousSchool: '',
     studentPhoto: '',
-    academicYear: getCurrentSession()
+    academicYear: getCurrentSession(),
+    admissionType: 'New' as 'New' | 'Old',
+    formNumber: ''
   });
 
   const [addressFields, setAddressFields] = useState({
@@ -192,7 +194,9 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
         gender: formData.gender,
         previousSchool: formData.previousSchool.trim() || 'N/A',
         studentPhoto: formData.studentPhoto,
-        academicYear: formData.academicYear
+        academicYear: formData.academicYear,
+        admissionType: formData.admissionType,
+        formNumber: formData.formNumber.trim() || generatedId
       };
 
       onSubmit(payload);
@@ -640,6 +644,25 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Form Number (Optional)</span>
+                    <span className="font-urdu text-sm">فارم نمبر</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-3 text-slate-400">
+                      <FileText className="w-4 h-4" />
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="Leave blank for auto-generate"
+                      value={formData.formNumber}
+                      onChange={(e) => setFormData({ ...formData, formNumber: e.target.value })}
+                      className="w-full pl-9 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-850 dark:text-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
                     <span>Candidate Full Name *</span>
                     <span className="font-urdu text-sm">نام طالب علم / طالبہ</span>
                   </label>
@@ -721,7 +744,7 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                   </div>
                 </div>
 
-                <div className="space-y-1 col-span-1 sm:col-span-2">
+                <div className="space-y-1 col-span-1">
                   <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
                     <span>Academic Session Term *</span>
                     <span className="font-urdu text-sm">تعلیمی سال</span>
@@ -740,6 +763,29 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                       ))}
                     </select>
                     <span className="absolute right-3.5 top-3.5 pointer-events-none text-slate-400 text-[10px]">▼</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1 col-span-1">
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Admission Type *</span>
+                    <span className="font-urdu text-sm">داخلہ کی قسم (جدید / قدیم)</span>
+                  </label>
+                  <div className="grid grid-cols-2 gap-2 h-10">
+                    {['New', 'Old'].map(type => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, admissionType: type as 'New' | 'Old' })}
+                        className={`rounded-xl text-xs font-bold transition-all ${
+                          formData.admissionType === type
+                            ? 'bg-emerald-600 text-white shadow-md'
+                            : 'bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-850'
+                        }`}
+                      >
+                        {type === 'New' ? 'New (جدید)' : 'Old (قدیم)'}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>

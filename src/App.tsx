@@ -100,6 +100,14 @@ export default function App() {
     isLoggedInRef.current = isLoggedIn;
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    if (currentTab === 'donate') {
+      setTimeout(() => {
+        document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [currentTab]);
+
   // Initial loader and migration effect
   useEffect(() => {
     // Migrate old default address/phone if present in stored local storage config to ensure user immediately sees the new address
@@ -353,7 +361,7 @@ export default function App() {
 
       {/* Main dynamic section content area */}
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 w-full flex-grow">
-        {currentTab === 'home' && (
+        {(currentTab === 'home' || currentTab === 'donate') && (
           <Homepage
             config={schoolConfig}
             teachers={teachers}

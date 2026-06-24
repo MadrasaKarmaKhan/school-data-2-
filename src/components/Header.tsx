@@ -42,12 +42,13 @@ export default function Header({
   };
 
   const navItems = [
-    { id: 'home', label: 'Home Page', icon: School },
-    { id: 'dua', label: 'Daily Duas', icon: BookOpen },
-    { id: 'results', label: 'Exam Results', icon: GraduationCap },
-    { id: 'admissions', label: 'Admissions Open', icon: FileText },
-    { id: 'cloud', label: 'Cloud Drive System', icon: FileText },
-    { id: 'dashboard', label: isLoggedIn ? 'Principal Panel' : 'Principal Office', icon: ShieldAlert },
+    { id: 'home', label: config.navMenuHomeText || 'Home Page', icon: School, customIcon: config.navMenuHomeIcon },
+    { id: 'dua', label: config.navMenuDuaText || 'Daily Duas', icon: BookOpen, customIcon: config.navMenuDuaIcon },
+    { id: 'results', label: config.navMenuResultsText || 'Exam Results', icon: GraduationCap, customIcon: config.navMenuResultsIcon },
+    { id: 'admissions', label: config.navMenuAdmissionsText || 'Admissions Open', icon: FileText, customIcon: config.navMenuAdmissionsIcon },
+    { id: 'donate', label: config.navMenuDonateText || 'Donate', icon: Heart, customIcon: config.navMenuDonateIcon },
+    { id: 'cloud', label: config.navMenuCloudText || 'Cloud Drive System', icon: FileText, customIcon: config.navMenuCloudIcon },
+    { id: 'dashboard', label: config.navMenuDashboardText || (isLoggedIn ? 'Principal Panel' : 'Principal Office'), icon: ShieldAlert, customIcon: config.navMenuDashboardIcon },
   ];
 
   return (
@@ -279,7 +280,11 @@ export default function Header({
                     : 'text-slate-650 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-850'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isActive ? 'text-emerald-650 dark:text-amber-400 animate-pulse' : 'text-slate-400'}`} />
+                {item.customIcon ? (
+                  <img src={item.customIcon} alt={item.label} className="w-4 h-4 md:w-5 md:h-5 object-cover rounded-full" />
+                ) : (
+                  <Icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isActive ? 'text-emerald-650 dark:text-amber-400 animate-pulse' : 'text-slate-400'}`} />
+                )}
                 {item.label}
                 {isActive && (
                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-emerald-600 dark:bg-amber-400 rounded-full"></span>
