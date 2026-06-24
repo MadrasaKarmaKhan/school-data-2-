@@ -4067,6 +4067,24 @@ export default function PrincipalDashboard({
                 <h4 className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider border-b border-slate-100 dark:border-slate-850 pb-2">
                   📑 Admission Page Configuration
                 </h4>
+                <div className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 mb-6">
+                  <div className="flex-grow space-y-1 text-left">
+                    <p className="font-bold text-slate-800 dark:text-white">Admission Status</p>
+                    <p className="text-[10px] text-slate-500">Toggle whether new admissions are currently open or closed.</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      className="sr-only peer" 
+                      checked={schoolConfig.isAdmissionOpen ?? true}
+                      onChange={(e) => setSchoolConfig({...schoolConfig, isAdmissionOpen: e.target.checked})}
+                    />
+                    <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-slate-600 peer-checked:bg-emerald-600"></div>
+                  </label>
+                  <span className={`font-black text-xs ${schoolConfig.isAdmissionOpen !== false ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    {schoolConfig.isAdmissionOpen !== false ? 'OPEN' : 'CLOSED'}
+                  </span>
+                </div>
                 <div className="grid grid-cols-1 gap-5 text-xs text-slate-700">
                   <div className="space-y-1">
                     <label className="font-bold text-slate-650 dark:text-slate-300">Current Academic Session</label>

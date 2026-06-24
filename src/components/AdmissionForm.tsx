@@ -577,6 +577,16 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
             </div>
           )}
         </div>
+      ) : config?.isAdmissionOpen === false ? (
+        <div className="max-w-xl mx-auto p-10 bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-850 shadow-md text-center space-y-4">
+          <div className="w-16 h-16 bg-rose-50 dark:bg-rose-950/30 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BadgeAlert className="w-8 h-8" />
+          </div>
+          <h3 className="text-2xl font-black text-slate-850 dark:text-white">Admissions Currently Closed</h3>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            We are not accepting new admission applications at this time. Please check back later or contact the school office for further inquiries.
+          </p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         

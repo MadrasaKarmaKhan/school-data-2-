@@ -213,6 +213,7 @@ export interface SchoolConfig {
   admissionApplyTabLabel?: string;
   admissionTrackTabLabel?: string;
   admissionSessionLabel?: string;
+  isAdmissionOpen?: boolean;
 
   // Custom Logo URL
   logoUrl?: string;
