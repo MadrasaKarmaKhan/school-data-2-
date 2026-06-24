@@ -1250,14 +1250,41 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     marginTop: 'auto',
                     display: 'flex',
                     justifyContent: 'space-between',
+                    alignItems: 'flex-end',
                     padding: '0 40px',
                     paddingBottom: '30px',
                     color: '#1e5631',
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    height: '110px'
                   }}
                 >
-                  <div>Principal Signature: ___________________________</div>
-                  <div>Stamp:____________________________________</div>
+                  <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
+                    {config?.principalSignatureUrl ? (
+                      <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '160px', height: '65px', pointerEvents: 'none' }}>
+                        <img 
+                          src={config.principalSignatureUrl} 
+                          alt="Principal Signature" 
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                    ) : null}
+                    <div style={{ borderTop: '1.5px solid #1e5631', paddingTop: '4px', fontWeight: 900 }}>Principal Signature</div>
+                  </div>
+
+                  <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
+                    {config?.schoolStampUrl ? (
+                      <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '100px', height: '100px', pointerEvents: 'none' }}>
+                        <img 
+                          src={config.schoolStampUrl} 
+                          alt="School Stamp" 
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                    ) : null}
+                    <div style={{ borderTop: '1.5px solid #1e5631', paddingTop: '4px', fontWeight: 900 }}>Stamp / Seal</div>
+                  </div>
                 </div>
               </div>
             </div>

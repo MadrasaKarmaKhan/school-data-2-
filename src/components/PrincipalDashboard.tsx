@@ -2911,14 +2911,41 @@ export default function PrincipalDashboard({
                       marginTop: 'auto',
                       display: 'flex',
                       justifyContent: 'space-between',
+                      alignItems: 'flex-end',
                       padding: '0 40px',
                       paddingBottom: '30px',
                       color: '#1e5631',
-                      fontSize: '16px'
+                      fontSize: '16px',
+                      height: '110px'
                     }}
                   >
-                    <div>Principal Signature: ___________________________</div>
-                    <div>Stamp:____________________________________</div>
+                    <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
+                      {schoolConfig?.principalSignatureUrl ? (
+                        <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '160px', height: '65px', pointerEvents: 'none' }}>
+                          <img 
+                            src={schoolConfig.principalSignatureUrl} 
+                            alt="Principal Signature" 
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
+                      ) : null}
+                      <div style={{ borderTop: '1.5px solid #1e5631', paddingTop: '4px', fontWeight: 900 }}>Principal Signature</div>
+                    </div>
+
+                    <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
+                      {schoolConfig?.schoolStampUrl ? (
+                        <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '100px', height: '100px', pointerEvents: 'none' }}>
+                          <img 
+                            src={schoolConfig.schoolStampUrl} 
+                            alt="School Stamp" 
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
+                      ) : null}
+                      <div style={{ borderTop: '1.5px solid #1e5631', paddingTop: '4px', fontWeight: 900 }}>Stamp / Seal</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -3718,14 +3745,41 @@ export default function PrincipalDashboard({
                             marginTop: 'auto',
                             display: 'flex',
                             justifyContent: 'space-between',
+                            alignItems: 'flex-end',
                             padding: '0 40px',
                             paddingBottom: '30px',
                             color: '#1e5631',
-                            fontSize: '16px'
+                            fontSize: '16px',
+                            height: '110px'
                           }}
                         >
-                          <div>Principal Signature: ___________________________</div>
-                          <div>Stamp:____________________________________</div>
+                          <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
+                            {schoolConfig?.principalSignatureUrl ? (
+                              <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '160px', height: '65px', pointerEvents: 'none' }}>
+                                <img 
+                                  src={schoolConfig.principalSignatureUrl} 
+                                  alt="Principal Signature" 
+                                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                  referrerPolicy="no-referrer"
+                                />
+                              </div>
+                            ) : null}
+                            <div style={{ borderTop: '1.5px solid #1e5631', paddingTop: '4px', fontWeight: 900 }}>Principal Signature</div>
+                          </div>
+
+                          <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
+                            {schoolConfig?.schoolStampUrl ? (
+                              <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '100px', height: '100px', pointerEvents: 'none' }}>
+                                <img 
+                                  src={schoolConfig.schoolStampUrl} 
+                                  alt="School Stamp" 
+                                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                  referrerPolicy="no-referrer"
+                                />
+                              </div>
+                            ) : null}
+                            <div style={{ borderTop: '1.5px solid #1e5631', paddingTop: '4px', fontWeight: 900 }}>Stamp / Seal</div>
+                          </div>
                         </div>
                       </div>
                     );
@@ -4721,6 +4775,128 @@ export default function PrincipalDashboard({
                         placeholder="Or paste image URL (या लोगो का डायरेक्ट लिंक डालें)"
                         value={schoolConfig.logoUrl || ""}
                         onChange={(e) => setSchoolConfig({ ...schoolConfig, logoUrl: e.target.value })}
+                        className="w-full mt-1.5 p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-slate-50 dark:bg-slate-950 font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-bold text-slate-650 dark:text-slate-300 block mb-1">
+                        Principal Signature (प्रिंसिपल का हस्ताक्षर - पारदर्शी PNG)
+                      </label>
+                      <div className="flex items-center gap-3">
+                        {schoolConfig.principalSignatureUrl ? (
+                          <div className="p-1 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded">
+                            <img
+                              src={schoolConfig.principalSignatureUrl}
+                              alt="Principal Signature"
+                              className="w-16 h-8 object-contain"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-16 h-8 rounded border border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center text-slate-400 text-[9px] text-center leading-tight bg-slate-50 dark:bg-slate-950">
+                            No Sign
+                          </div>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/png"
+                          id="principalSignatureUploadInput"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              if (file.type !== "image/png") {
+                                alert("Please upload a transparent .png format signature to avoid background errors! (कृपया पारदर्शी .png सिग्नेचर अपलोड करें)");
+                              }
+                              resizeImage(file, 400, 200, 0.75).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, principalSignatureUrl: url });
+                              }).catch(e => console.error("Compression failed", e));
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('principalSignatureUploadInput')?.click()}
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg cursor-pointer transition text-[10px] flex items-center gap-1"
+                        >
+                          📤 Upload Signature (सिग्नेचर)
+                        </button>
+                        {schoolConfig.principalSignatureUrl && (
+                          <button
+                            type="button"
+                            onClick={() => setSchoolConfig({ ...schoolConfig, principalSignatureUrl: "" })}
+                            className="text-[10px] text-rose-500 font-extrabold uppercase tracking-wider hover:underline cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Or paste signature image URL (हस्ताक्षर का लिंक डालें)"
+                        value={schoolConfig.principalSignatureUrl || ""}
+                        onChange={(e) => setSchoolConfig({ ...schoolConfig, principalSignatureUrl: e.target.value })}
+                        className="w-full mt-1.5 p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-slate-50 dark:bg-slate-950 font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-bold text-slate-650 dark:text-slate-300 block mb-1">
+                        Madrasa Stamp / Seal (मदरसा मुहर / स्टैम्प - पारदर्शी PNG)
+                      </label>
+                      <div className="flex items-center gap-3">
+                        {schoolConfig.schoolStampUrl ? (
+                          <div className="p-1 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded">
+                            <img
+                              src={schoolConfig.schoolStampUrl}
+                              alt="Madrasa Stamp"
+                              className="w-12 h-12 object-contain"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-12 h-12 rounded border border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center text-slate-400 text-[9px] text-center leading-tight bg-slate-50 dark:bg-slate-950">
+                            No Stamp
+                          </div>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/png"
+                          id="schoolStampUploadInput"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              if (file.type !== "image/png") {
+                                alert("Please upload a transparent .png format stamp to avoid background errors! (कृपया पारदर्शी .png स्टैम्प अपलोड करें)");
+                              }
+                              resizeImage(file, 400, 400, 0.75).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, schoolStampUrl: url });
+                              }).catch(e => console.error("Compression failed", e));
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('schoolStampUploadInput')?.click()}
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg cursor-pointer transition text-[10px] flex items-center gap-1"
+                        >
+                          📤 Upload Stamp (मुहर)
+                        </button>
+                        {schoolConfig.schoolStampUrl && (
+                          <button
+                            type="button"
+                            onClick={() => setSchoolConfig({ ...schoolConfig, schoolStampUrl: "" })}
+                            className="text-[10px] text-rose-500 font-extrabold uppercase tracking-wider hover:underline cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Or paste stamp image URL (मुहर का लिंक डालें)"
+                        value={schoolConfig.schoolStampUrl || ""}
+                        onChange={(e) => setSchoolConfig({ ...schoolConfig, schoolStampUrl: e.target.value })}
                         className="w-full mt-1.5 p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-slate-50 dark:bg-slate-950 font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400"
                       />
                     </div>
