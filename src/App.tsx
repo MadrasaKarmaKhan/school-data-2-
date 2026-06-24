@@ -127,45 +127,55 @@ export default function App() {
     }
     
     // Subscribe to Firebase Firestore and populate states (only if not admin, to prevent race conditions where admin data is overwritten)
-    const unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
-      if (data) setSchoolConfig(data);
-    });
-    const unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
-      if (data) setTeachers(data);
-    });
-    const unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
-      if (data) setStudents(data);
-    });
-    const unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
-      if (data && Array.isArray(data)) {
-        const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
-        setResults(mapped);
-      }
-    });
-    const unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data) => {
-      if (data) setGallery(data);
-    });
-    const unsubNews = subscribeToFirebase('schoolData', 'news', (data) => {
-      if (data) setNews(data);
-    });
-    const unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data) => {
-      if (data) setAdmissions(data);
-    });
+    let unsubSchoolConfig: (() => void) | undefined;
+    let unsubTeachers: (() => void) | undefined;
+    let unsubStudents: (() => void) | undefined;
+    let unsubResults: (() => void) | undefined;
+    let unsubGallery: (() => void) | undefined;
+    let unsubNews: (() => void) | undefined;
+    let unsubAdmissions: (() => void) | undefined;
+
+    if (!isLoggedIn) {
+      unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
+        if (data) setSchoolConfig(data);
+      });
+      unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
+        if (data) setTeachers(data);
+      });
+      unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
+        if (data) setStudents(data);
+      });
+      unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
+        if (data && Array.isArray(data)) {
+          const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
+          setResults(mapped);
+        }
+      });
+      unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data) => {
+        if (data) setGallery(data);
+      });
+      unsubNews = subscribeToFirebase('schoolData', 'news', (data) => {
+        if (data) setNews(data);
+      });
+      unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data) => {
+        if (data) setAdmissions(data);
+      });
+    }
 
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1300);
     return () => {
       clearTimeout(timer);
-      unsubSchoolConfig();
-      unsubTeachers();
-      unsubStudents();
-      unsubResults();
-      unsubGallery();
-      unsubNews();
-      unsubAdmissions();
+      if (unsubSchoolConfig) unsubSchoolConfig();
+      if (unsubTeachers) unsubTeachers();
+      if (unsubStudents) unsubStudents();
+      if (unsubResults) unsubResults();
+      if (unsubGallery) unsubGallery();
+      if (unsubNews) unsubNews();
+      if (unsubAdmissions) unsubAdmissions();
     };
-  }, []);
+  }, [isLoggedIn]);
 
   // Sync results from Google Sheets
   useEffect(() => {

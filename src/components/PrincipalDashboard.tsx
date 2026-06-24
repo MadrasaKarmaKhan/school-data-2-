@@ -11,6 +11,7 @@ import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSe
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { DAILY_DUAS } from '../data/duas';
+import { syncToFirebase } from '../lib/firebaseUtils';
 
 interface PrincipalDashboardProps {
   students: Student[];
@@ -1295,9 +1296,12 @@ export default function PrincipalDashboard({
   };
 
   // Website Config update
-  const handleUpdateConfig = (e: React.FormEvent) => {
+  const handleUpdateConfig = async (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem('nu_config', JSON.stringify(schoolConfig));
+    if (isLoggedIn) {
+      await syncToFirebase('schoolData', 'config', schoolConfig);
+    }
     const toast = document.createElement('div');
     toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
     toast.innerText = 'Website configuration saved successfully!';
@@ -4057,6 +4061,9 @@ export default function PrincipalDashboard({
                   type="button"
                   onClick={async () => {
                     localStorage.setItem('nu_config', JSON.stringify(schoolConfig));
+                    if (isLoggedIn) {
+                      await syncToFirebase('schoolData', 'config', schoolConfig);
+                    }
                     const toast = document.createElement('div');
                     toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
                     toast.innerText = 'Admission Settings Saved Successfully!';

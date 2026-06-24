@@ -4,7 +4,7 @@ import {
   GraduationCap, Award, ShieldCheck, QrCode, Upload, Smartphone, 
   Heart, School, CreditCard, Printer, Check, Info, BadgeAlert
 } from 'lucide-react';
-import { AdmissionApplication, ClassName, GalleryItem } from '../types';
+import { AdmissionApplication, ClassName, GalleryItem, SchoolConfig } from '../types';
 import { getSchoolClasses, getSchoolSessions } from '../data';
 
 interface AdmissionFormProps {
