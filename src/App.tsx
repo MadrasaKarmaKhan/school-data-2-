@@ -129,28 +129,28 @@ export default function App() {
     
     // Subscribe to Firebase Firestore and populate states (only if not admin, to prevent race conditions where admin data is overwritten)
     const unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
-      if (data && !isLoggedInRef.current) setSchoolConfig(data);
+      if (data) setSchoolConfig(data);
     });
     const unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
-      if (data && !isLoggedInRef.current) setTeachers(data);
+      if (data) setTeachers(data);
     });
     const unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
-      if (data && !isLoggedInRef.current) setStudents(data);
+      if (data) setStudents(data);
     });
     const unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
-      if (data && Array.isArray(data) && !isLoggedInRef.current) {
+      if (data && Array.isArray(data)) {
         const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
         setResults(mapped);
       }
     });
     const unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data) => {
-      if (data && !isLoggedInRef.current) setGallery(data);
+      if (data) setGallery(data);
     });
     const unsubNews = subscribeToFirebase('schoolData', 'news', (data) => {
-      if (data && !isLoggedInRef.current) setNews(data);
+      if (data) setNews(data);
     });
     const unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data) => {
-      if (data && !isLoggedInRef.current) setAdmissions(data);
+      if (data) setAdmissions(data);
     });
 
     const timer = setTimeout(() => {
