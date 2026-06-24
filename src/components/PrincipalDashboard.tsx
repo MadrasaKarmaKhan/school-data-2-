@@ -3761,7 +3761,7 @@ export default function PrincipalDashboard({
                               if (file.type !== "image/png") {
                                 alert("Please select a transparent .png format photo only!");
                               }
-                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                              resizeImage(file, 300, 300, 0.6).then((url) => {
                                 setNewTeacher(prev => ({ ...prev, photoUrl: url }));
                               }).catch(e => console.error("Compression failed", e));
                             }
@@ -3834,7 +3834,7 @@ export default function PrincipalDashboard({
                               if (file.type !== "image/png") {
                                 alert("Please select a transparent .png format photo only!");
                               }
-                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                              resizeImage(file, 300, 300, 0.6).then((url) => {
                                 setEditingTeacher(prev => prev ? ({ ...prev, photoUrl: url }) : null);
                               }).catch(e => console.error("Compression failed", e));
                             }
