@@ -12,7 +12,7 @@ export const INITIAL_CONFIG: SchoolConfig = {
   contactEmail: "info@noorululoom.edu",
   address: "Noorul Uloom Campus Karma Khan District Sant Kabir Nagar Uttar Pradesh -272126",
   whatsappNumber: "+919193984452",
-  isAdmissionOpen: true,
+  isAdmissionOpen: false,
 
   // Default sliders
   heroBg1: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=1200",
