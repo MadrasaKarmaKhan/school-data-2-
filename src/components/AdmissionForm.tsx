@@ -55,7 +55,7 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
     gender: 'Male' as 'Male' | 'Female' | 'Other',
     previousSchool: '',
     studentPhoto: '',
-    academicYear: getCurrentSession(),
+    academicYear: config?.defaultAcademicSession || getCurrentSession(),
     admissionType: 'New' as 'New' | 'Old',
     formNumber: ''
   });
@@ -82,8 +82,12 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
   }, [addressFields]);
 
   const availableYears = React.useMemo(() => {
-    return getSchoolSessions().slice().reverse();
-  }, []);
+    const years = getSchoolSessions().slice().reverse();
+    if (config?.defaultAcademicSession && !years.includes(config.defaultAcademicSession)) {
+      years.unshift(config.defaultAcademicSession);
+    }
+    return years;
+  }, [config?.defaultAcademicSession]);
 
   const [submittedApp, setSubmittedApp] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -228,13 +232,13 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b-2 border-emerald-900/10">
             <div className="space-y-1.5 text-left">
               <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400 rounded text-[10px] font-black uppercase tracking-wider font-mono">
-                Official Registered Token
+                {config?.admissionRegisteredTokenLabel || "Official Registered Token"}
               </span>
               <h2 className="text-2xl md:text-3xl font-black text-slate-850 dark:text-white flex items-center gap-2">
-                JAMIA NOORUL ULOOM
+                {config?.admissionInstitutionName || "JAMIA NOORUL ULOOM"}
               </h2>
               <p className="text-xs text-slate-500 font-semibold tracking-wide">
-                Golaganj, Lucknow, Uttar Pradesh, India
+                {config?.admissionInstitutionAddress || "Golaganj, Lucknow, Uttar Pradesh, India"}
               </p>
             </div>
             
@@ -396,7 +400,7 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
       {/* Decorative Head Banner */}
       <div className="text-center mb-8 space-y-3">
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300/20 text-emerald-700 dark:text-emerald-400 rounded-full text-[10px] font-bold font-mono uppercase tracking-widest">
-          <GraduationCap className="w-4 h-4 animate-bounce" /> Academic Admission Session: {formData.academicYear}
+          <GraduationCap className="w-4 h-4 animate-bounce" /> {config?.admissionSessionLabel || "Academic Admission Session"}: {formData.academicYear}
         </div>
         <h2 className="text-3xl md:text-4xl font-black text-slate-850 dark:text-white tracking-tight">
           {config?.admissionFormTitle || "Jamia Noorul Uloom Portal"}
@@ -436,7 +440,7 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-semibold'
             }`}
           >
-            <Send className="w-4 h-4" /> Apply Online (दाखिला आवेदन)
+            <Send className="w-4 h-4" /> {config?.admissionApplyTabLabel || "Apply Online (दाखिला आवेदन)"}
           </button>
           <button
             type="button"
@@ -451,7 +455,7 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-semibold'
             }`}
           >
-            <ShieldCheck className="w-4 h-4" /> Check Status (स्थिति जांचें)
+            <ShieldCheck className="w-4 h-4" /> {config?.admissionTrackTabLabel || "Check Status (स्थिति जांचें)"}
           </button>
         </div>
       </div>
@@ -1087,10 +1091,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
               {/* ID Badge Heading */}
               <div className="text-center w-full pb-3 border-b border-white/10 mb-4 flex flex-col items-center gap-1">
                 <span className="px-2 py-0.5 bg-yellow-400 text-black text-[9px] font-black rounded tracking-widest font-mono uppercase">
-                  Candidate ID Badge
+                  {config?.admissionBadgeTitle || "Candidate ID Badge"}
                 </span>
-                <span className="text-xs font-black tracking-widest font-serif text-amber-400">JAMIA NOORUL ULOOM</span>
-                <span className="text-[8px] tracking-wide font-mono opacity-50">Lucknow Admission Desk</span>
+                <span className="text-xs font-black tracking-widest font-serif text-amber-400">{config?.admissionInstitutionName || "JAMIA NOORUL ULOOM"}</span>
+                <span className="text-[8px] tracking-wide font-mono opacity-50">{config?.admissionDeskName || "Lucknow Admission Desk"}</span>
               </div>
 
               {/* Portrait container */}

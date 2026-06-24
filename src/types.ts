@@ -204,6 +204,15 @@ export interface SchoolConfig {
   // Admission form settings
   admissionFormTitle?: string;
   admissionFormDescription?: string;
+  defaultAcademicSession?: string;
+  admissionInstitutionName?: string;
+  admissionInstitutionAddress?: string;
+  admissionBadgeTitle?: string;
+  admissionDeskName?: string;
+  admissionRegisteredTokenLabel?: string;
+  admissionApplyTabLabel?: string;
+  admissionTrackTabLabel?: string;
+  admissionSessionLabel?: string;
 
   // Custom Logo URL
   logoUrl?: string;

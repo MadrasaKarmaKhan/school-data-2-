@@ -132,7 +132,7 @@ export default function PrincipalDashboard({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // Active Management Tab inside ERP panel
-  const [erpTab, setErpTab] = useState<'analytics' | 'students' | 'results' | 'teachers' | 'admissions' | 'gallery' | 'news' | 'config' | 'duas-mgmt' | 'dua-students'>('analytics');
+  const [erpTab, setErpTab] = useState<'analytics' | 'students' | 'results' | 'teachers' | 'admissions' | 'admission_setup' | 'gallery' | 'news' | 'config' | 'duas-mgmt' | 'dua-students'>('analytics');
 
   // --- Dua App Management States ---
   const [duaStudents, setDuaStudents] = useState<any[]>([]);
@@ -1513,6 +1513,19 @@ export default function PrincipalDashboard({
                 {admissions.filter(a => a.status === 'pending').length}
               </span>
             )}
+          </button>
+
+          <button
+            onClick={() => setErpTab('admission_setup')}
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
+              erpTab === 'admission_setup'
+                ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
+                : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="Admission Portal Setup"
+          >
+            <span className="text-xl">⚙️</span>
+            {!isSidebarCollapsed && <span>Admission Settings</span>}
           </button>
 
           <button
@@ -4028,6 +4041,161 @@ export default function PrincipalDashboard({
             </div>
           )}
 
+          {/* ADMISSION SETUP */}
+          {erpTab === 'admission_setup' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-750">
+                <h3 className="font-extrabold text-lg text-slate-800 dark:text-white flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-emerald-600" /> Admission Portal Setup
+                </h3>
+                <button
+                  onClick={async () => {
+                    const pass = prompt("Enter admin password to save changes:");
+                    if (pass !== "admin123") return alert("Incorrect password");
+                    setStoredData('nu_config', schoolConfig);
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
+                    toast.innerText = 'Admission Settings Saved Successfully!';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 3000);
+                  }}
+                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-sm transition-all"
+                >
+                  Save Settings
+                </button>
+              </div>
+
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+                <h4 className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider border-b border-slate-100 dark:border-slate-850 pb-2">
+                  📑 Admission Page Configuration
+                </h4>
+                <div className="grid grid-cols-1 gap-5 text-xs text-slate-700">
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Current Academic Session</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 2026-2027"
+                      value={schoolConfig.defaultAcademicSession || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, defaultAcademicSession: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                    <p className="text-[10px] text-slate-500">This will be the default pre-filled session on the admission form.</p>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Admission Page Title</label>
+                    <input
+                      type="text"
+                      placeholder="Jamia Noorul Uloom Portal"
+                      value={schoolConfig.admissionFormTitle || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionFormTitle: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Admission Page Description</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Fill out the secure admission docket below..."
+                      value={schoolConfig.admissionFormDescription || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionFormDescription: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Admission Notice / Alert Box</label>
+                    <textarea
+                      rows={3}
+                      placeholder="e.g. Admission for Class 1 is now closed..."
+                      value={schoolConfig.admissionNotice || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionNotice: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Candidate ID Badge Text</label>
+                    <input
+                      type="text"
+                      placeholder="Candidate ID Badge"
+                      value={schoolConfig.admissionBadgeTitle || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionBadgeTitle: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Institution Name (Badge/Form)</label>
+                    <input
+                      type="text"
+                      placeholder="JAMIA NOORUL ULOOM"
+                      value={schoolConfig.admissionInstitutionName || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionInstitutionName: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Institution Address</label>
+                    <input
+                      type="text"
+                      placeholder="Golaganj, Lucknow, Uttar Pradesh, India"
+                      value={schoolConfig.admissionInstitutionAddress || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionInstitutionAddress: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Admission Desk Subtitle</label>
+                    <input
+                      type="text"
+                      placeholder="Lucknow Admission Desk"
+                      value={schoolConfig.admissionDeskName || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionDeskName: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Registered Token Label</label>
+                    <input
+                      type="text"
+                      placeholder="Official Registered Token"
+                      value={schoolConfig.admissionRegisteredTokenLabel || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionRegisteredTokenLabel: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Apply Tab Label</label>
+                    <input
+                      type="text"
+                      placeholder="Apply Online (दाखिला आवेदन)"
+                      value={schoolConfig.admissionApplyTabLabel || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionApplyTabLabel: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Track Tab Label</label>
+                    <input
+                      type="text"
+                      placeholder="Check Status (स्थिति जांचें)"
+                      value={schoolConfig.admissionTrackTabLabel || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionTrackTabLabel: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-650 dark:text-slate-300">Academic Session Badge Label</label>
+                    <input
+                      type="text"
+                      placeholder="Academic Admission Session"
+                      value={schoolConfig.admissionSessionLabel || ""}
+                      onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionSessionLabel: e.target.value })}
+                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* GALLERY MANAGEMENT */}
           {erpTab === 'gallery' && (
             <div className="space-y-6">
@@ -4636,45 +4804,6 @@ export default function PrincipalDashboard({
                         </div>
                       </div>
                     ))}
-                  </div>
-                </div>
-
-                {/* SECTION 1.6: ADMISSION PAGE CONFIGURATION */}
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
-                  <h4 className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider border-b border-slate-100 dark:border-slate-850 pb-2">
-                    📑 Admission Page Configuration
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs text-slate-700">
-                    <div className="space-y-1">
-                      <label className="font-bold text-slate-650 dark:text-slate-300">Admission Page Title</label>
-                      <input
-                        type="text"
-                        placeholder="Jamia Noorul Uloom Portal"
-                        value={schoolConfig.admissionFormTitle || ""}
-                        onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionFormTitle: e.target.value })}
-                        className="w-full p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="font-bold text-slate-650 dark:text-slate-300">Admission Page Description</label>
-                      <textarea
-                        rows={2}
-                        placeholder="Fill out the secure admission docket below..."
-                        value={schoolConfig.admissionFormDescription || ""}
-                        onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionFormDescription: e.target.value })}
-                        className="w-full p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
-                      />
-                    </div>
-                    <div className="col-span-1 md:col-span-2 space-y-1">
-                      <label className="font-bold text-slate-650 dark:text-slate-300">Admission Notice / Alert Box</label>
-                      <textarea
-                        rows={2}
-                        placeholder="e.g. Admission for Class 1 is now closed..."
-                        value={schoolConfig.admissionNotice || ""}
-                        onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionNotice: e.target.value })}
-                        className="w-full p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
-                      />
-                    </div>
                   </div>
                 </div>
 
