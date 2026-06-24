@@ -57,6 +57,27 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
     academicYear: getCurrentSession()
   });
 
+  const [addressFields, setAddressFields] = useState({
+    village: '',
+    post: '',
+    distt: '',
+    state: '',
+    country: 'INDIA',
+    pinCode: ''
+  });
+
+  React.useEffect(() => {
+    const { village, post, distt, state, country, pinCode } = addressFields;
+    if (village || post || distt || state || pinCode) {
+      setFormData(prev => ({
+        ...prev,
+        address: `Village: ${village}, Post: ${post}, Distt: ${distt}, State: ${state}, Country: ${country}, PIN: ${pinCode}`
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, address: '' }));
+    }
+  }, [addressFields]);
+
   const availableYears = React.useMemo(() => {
     return getSchoolSessions().slice().reverse();
   }, []);
@@ -618,7 +639,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Candidate Full Name *</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Candidate Full Name *</span>
+                    <span className="font-urdu text-sm">نام طالب علم / طالبہ</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <User className="w-4 h-4" />
@@ -635,7 +659,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Date of Birth (D.O.B) *</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Date of Birth (D.O.B) *</span>
+                    <span className="font-urdu text-sm">تاریخ پیدائش</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <Calendar className="w-4 h-4" />
@@ -651,7 +678,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Aadhaar Card Number (12 Digit)</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Aadhaar Number (12 Digit)</span>
+                    <span className="font-urdu text-sm">آدھار نمبر</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <CreditCard className="w-4 h-4" />
@@ -669,7 +699,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Gender *</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Gender *</span>
+                    <span className="font-urdu text-sm">جنس</span>
+                  </label>
                   <div className="grid grid-cols-3 gap-2">
                     {['Male', 'Female', 'Other'].map(g => (
                       <button
@@ -689,7 +722,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                 </div>
 
                 <div className="space-y-1 col-span-1 sm:col-span-2">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Academic Session Term *</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Academic Session Term *</span>
+                    <span className="font-urdu text-sm">تعلیمی سال</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3.5 text-slate-400">
                       <Calendar className="w-4 h-4" />
@@ -718,7 +754,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Father's / Guardian's Full Name *</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Father's / Guardian's Full Name *</span>
+                    <span className="font-urdu text-sm">والد کا نام</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <User className="w-4 h-4" />
@@ -735,7 +774,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Mother's Full Name *</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Mother's Full Name *</span>
+                    <span className="font-urdu text-sm">والدہ کا نام</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <User className="w-4 h-4" />
@@ -762,7 +804,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Mobile Number *</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Mobile Number *</span>
+                    <span className="font-urdu text-sm">موبائل نمبر</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <Phone className="w-4 h-4" />
@@ -780,8 +825,13 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
 
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">WhatsApp Number</label>
-                    {formData.contactPhone && (
+                    <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between w-full">
+                      <span>WhatsApp Number</span>
+                      <span className="font-urdu text-sm">واٹس ایپ نمبر</span>
+                    </label>
+                  </div>
+                  {formData.contactPhone && (
+                    <div className="text-right mb-1">
                       <button
                         type="button"
                         onClick={handleCopyPhoneToWhatsapp}
@@ -789,8 +839,8 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                       >
                         Same as Mobile
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <Smartphone className="w-4 h-4" />
@@ -821,20 +871,82 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                   </div>
                 </div>
 
-                <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Full Residential Address *</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-slate-400">
-                      <MapPin className="w-4 h-4" />
-                    </span>
-                    <textarea
-                      required
-                      rows={2}
-                      placeholder="House No, Ward/Mohalla, City, District State & PIN code..."
-                      value={formData.address}
-                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className="w-full pl-9 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-850 dark:text-white"
-                    />
+                <div className="space-y-3 sm:col-span-2">
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Full Residential Address (مکمل پتہ) *</label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                    
+                    <div className="space-y-1 col-span-2 md:col-span-2">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">Village</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Village Name"
+                        value={addressFields.village}
+                        onChange={(e) => setAddressFields({ ...addressFields, village: e.target.value })}
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-850 dark:text-white"
+                      />
+                    </div>
+                    
+                    <div className="space-y-1 col-span-2 md:col-span-2">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">Post</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Post Office"
+                        value={addressFields.post}
+                        onChange={(e) => setAddressFields({ ...addressFields, post: e.target.value })}
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-850 dark:text-white"
+                      />
+                    </div>
+
+                    <div className="space-y-1 col-span-2 md:col-span-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">Distt</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="District"
+                        value={addressFields.distt}
+                        onChange={(e) => setAddressFields({ ...addressFields, distt: e.target.value })}
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-850 dark:text-white"
+                      />
+                    </div>
+
+                    <div className="space-y-1 col-span-2 md:col-span-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">State</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="State"
+                        value={addressFields.state}
+                        onChange={(e) => setAddressFields({ ...addressFields, state: e.target.value })}
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-850 dark:text-white"
+                      />
+                    </div>
+
+                    <div className="space-y-1 col-span-1 md:col-span-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">Country</label>
+                      <input
+                        type="text"
+                        required
+                        readOnly
+                        value={addressFields.country}
+                        className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                      />
+                    </div>
+
+                    <div className="space-y-1 col-span-1 md:col-span-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">PIN Code</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. 272126"
+                        maxLength={6}
+                        value={addressFields.pinCode}
+                        onChange={(e) => setAddressFields({ ...addressFields, pinCode: e.target.value.replace(/\D/g, '') })}
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-850 dark:text-white font-mono"
+                      />
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -849,7 +961,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Select Admission Class *</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Select Admission Class *</span>
+                    <span className="font-urdu text-sm">مطلوبہ درجہ</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <School className="w-4 h-4" />
@@ -867,7 +982,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block">Previous Attended School</label>
+                  <label className="text-xs font-extrabold text-slate-650 dark:text-slate-300 block flex justify-between">
+                    <span>Previous Attended School</span>
+                    <span className="font-urdu text-sm">پہلے مدرسہ/اسکول کا نام</span>
+                  </label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-slate-400">
                       <GraduationCap className="w-4 h-4" />
