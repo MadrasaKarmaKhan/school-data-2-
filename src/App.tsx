@@ -172,45 +172,59 @@ export default function App() {
   useEffect(() => {
     const fetchFromSheets = async () => {
       // The user provided this exact macro, so we will fetch from it by default if custom config is missing.
-      const webhookUrl = schoolConfig?.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
-      if (!webhookUrl) return;
+      const defaultWebhookUrl = schoolConfig?.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
       
-      try {
-        const response = await fetch(webhookUrl);
-        // We use text() first to verify it's actually JSON, to avoid crashing if Google returns HTML an error.
-        const text = await response.text();
-        
-        let data = [];
-        try {
-          data = JSON.parse(text);
-        } catch (parseError) {
-          console.warn("Webhook returned non-JSON data (e.g. HTML error from doGet missing).", parseError);
-          return;
-        }
+      const webhooks = [...(schoolConfig?.googleSheetsWebhooks || [])];
+      
+      // Always include the default one if not already in the list
+      if (defaultWebhookUrl && !webhooks.some(w => w.url === defaultWebhookUrl)) {
+        webhooks.push({ year: 'Default', url: defaultWebhookUrl });
+      }
 
-        if (data && Array.isArray(data) && data.length > 0) {
-          // Verify we have results from Google Sheets
-          const mapped = data.filter(Boolean).map((r: any) => ({
-            ...r,
-            rollNo: String(r.rollNo || ''),
-            studentName: String(r.studentName || ''),
-            className: (r.className || "EDADIA"), 
-            // Google sheets might return marks as a string if not stringified as JSON.
-            marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
-          }));
-          
-          if (!isLoggedIn) {
-             setResults(mapped);
+      if (webhooks.length === 0) return;
+
+      try {
+        const fetchPromises = webhooks.map(async (webhook) => {
+          try {
+            const response = await fetch(webhook.url);
+            const text = await response.text();
+            let data = [];
+            try {
+              data = JSON.parse(text);
+            } catch (parseError) {
+              console.warn(`Webhook ${webhook.url} returned non-JSON data.`);
+              return [];
+            }
+            if (data && Array.isArray(data)) {
+               return data.filter(Boolean).map((r: any) => ({
+                 ...r,
+                 rollNo: String(r.rollNo || ''),
+                 studentName: String(r.studentName || ''),
+                 className: (r.className || "EDADIA"), 
+                 marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
+               }));
+            }
+            return [];
+          } catch(e) {
+            console.warn(`Could not fetch from Google Sheets ${webhook.url}:`, e);
+            return [];
           }
+        });
+
+        const allResultsArrays = await Promise.all(fetchPromises);
+        const mapped = allResultsArrays.flat();
+
+        if (mapped.length > 0 && !isLoggedIn) {
+           setResults(mapped);
         }
       } catch (e) {
-        console.warn("Could not fetch from Google Sheets (This is normal if CORS is blocked or doGet is not setup):", e);
+        console.error("Error during multiple sheets fetch", e);
       }
     };
     
     // Call the feature
     fetchFromSheets();
-  }, [schoolConfig?.googleSheetsWebhookUrl, isLoggedIn]);
+  }, [schoolConfig?.googleSheetsWebhookUrl, JSON.stringify(schoolConfig?.googleSheetsWebhooks), isLoggedIn]);
 
   const initialRender = useRef(true);
 

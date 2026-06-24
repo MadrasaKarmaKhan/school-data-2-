@@ -879,7 +879,9 @@ export default function PrincipalDashboard({
     localStorage.setItem("madarsa_records", JSON.stringify(updatedResults));
 
     // Webhook Sync
-    const webhookUrl = schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
+    const whList = schoolConfig.googleSheetsWebhooks || [];
+    const specific = whList.find(w => w.year === newResultRecord.session || w.year === String(newResultRecord.passingYear));
+    const webhookUrl = specific?.url || schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
     if (webhookUrl) {
       fetch(webhookUrl, {
         method: 'POST',
@@ -5584,31 +5586,90 @@ export default function PrincipalDashboard({
                     📊 Google Sheets Integration (Auto-Sync)
                   </h4>
                   <p className="text-xs text-slate-500 font-medium">
-                    To save records automatically without a login popup, create a Google Apps Script Web App that accepts POST requests, and paste the URL below. It will receive a JSON payload with the result data whenever you save.
+                    To save records automatically without a login popup, create a Google Apps Script Web App that accepts POST requests, and paste the URL below. You can also specify different URLs for different academic sessions (e.g., 2026-2027).
                   </p>
-                  <div className="space-y-1">
-                    <label className="font-bold text-slate-600 dark:text-slate-300">Google Apps Script Webhook URL</label>
-                    <input
-                      type="url"
-                      value={schoolConfig.googleSheetsWebhookUrl || ""}
-                      onChange={(e) => setSchoolConfig({ ...schoolConfig, googleSheetsWebhookUrl: e.target.value })}
-                      className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white font-mono text-xs"
-                      placeholder="https://script.google.com/macros/s/AKfycby.../exec"
-                    />
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <label className="font-bold text-slate-600 dark:text-slate-300">Default Webhook URL (Fallback)</label>
+                      <input
+                        type="url"
+                        value={schoolConfig.googleSheetsWebhookUrl || ""}
+                        onChange={(e) => setSchoolConfig({ ...schoolConfig, googleSheetsWebhookUrl: e.target.value })}
+                        className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white font-mono text-xs"
+                        placeholder="https://script.google.com/macros/s/AKfycby.../exec"
+                      />
+                    </div>
+                    
+                    <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                      <label className="font-bold text-slate-600 dark:text-slate-300 flex items-center justify-between">
+                        Year-Wise Webhooks
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newWebhooks = [...(schoolConfig.googleSheetsWebhooks || []), { year: '', url: '' }];
+                            setSchoolConfig({ ...schoolConfig, googleSheetsWebhooks: newWebhooks });
+                          }}
+                          className="text-xs font-bold text-emerald-600 hover:text-emerald-700"
+                        >
+                          + Add Session Year
+                        </button>
+                      </label>
+                      {schoolConfig.googleSheetsWebhooks?.map((wh, idx) => (
+                        <div key={idx} className="flex gap-2 items-center bg-slate-50 dark:bg-slate-950 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
+                          <input
+                            type="text"
+                            placeholder="Session (e.g., 2026-2027)"
+                            value={wh.year}
+                            onChange={(e) => {
+                              const newWebhooks = [...(schoolConfig.googleSheetsWebhooks || [])];
+                              newWebhooks[idx].year = e.target.value;
+                              setSchoolConfig({ ...schoolConfig, googleSheetsWebhooks: newWebhooks });
+                            }}
+                            className="w-1/3 p-2 border border-slate-250 dark:border-slate-700 rounded-md bg-white dark:bg-slate-900 text-xs"
+                          />
+                          <input
+                            type="url"
+                            placeholder="Webhook URL"
+                            value={wh.url}
+                            onChange={(e) => {
+                              const newWebhooks = [...(schoolConfig.googleSheetsWebhooks || [])];
+                              newWebhooks[idx].url = e.target.value;
+                              setSchoolConfig({ ...schoolConfig, googleSheetsWebhooks: newWebhooks });
+                            }}
+                            className="w-full p-2 border border-slate-250 dark:border-slate-700 rounded-md bg-white dark:bg-slate-900 text-xs font-mono"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newWebhooks = [...(schoolConfig.googleSheetsWebhooks || [])];
+                              newWebhooks.splice(idx, 1);
+                              setSchoolConfig({ ...schoolConfig, googleSheetsWebhooks: newWebhooks });
+                            }}
+                            className="p-2 text-rose-500 hover:bg-rose-50 rounded-md"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
+
                   <div className="mt-4 flex max-w-sm gap-2">
                     <button
                       type="button"
                       onClick={async () => {
-                        const webhookUrl = schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
-                        if (!webhookUrl) return alert("Please enter Webhook URL first.");
                         if (!confirm(`Are you sure you want to sync ALL ${results.length} results to Google Sheets? This might take a moment.`)) return;
                         
                         let success = 0;
                         let errs = 0;
-                        // To avoid rate limiting, we do a simple sequential batch or just parallel if it's fine. Google Apps Script can handle some load, but let's do sequential.
                         for (const result of results) {
                           try {
+                            const whList = schoolConfig.googleSheetsWebhooks || [];
+                            const specific = whList.find(w => w.year === result.session || w.year === String(result.passingYear));
+                            const webhookUrl = specific?.url || schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
+                            
+                            if (!webhookUrl) continue;
+                            
                             await fetch(webhookUrl, {
                               method: 'POST',
                               headers: { 'Content-Type': 'text/plain;charset=utf-8' },

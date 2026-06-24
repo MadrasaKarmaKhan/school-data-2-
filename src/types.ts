@@ -206,4 +206,5 @@ export interface SchoolConfig {
   marksheetLogo?: string;
   calligraphyBanner?: string;
   googleSheetsWebhookUrl?: string;
+  googleSheetsWebhooks?: { year: string, url: string }[];
 }
