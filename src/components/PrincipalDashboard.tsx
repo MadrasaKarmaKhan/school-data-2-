@@ -3982,6 +3982,18 @@ export default function PrincipalDashboard({
                               {item.previousSchool || 'N/A'}
                             </span>
                           </div>
+                          <div>
+                            <span className="text-slate-400 block font-medium">Email Address:</span>
+                            <span className="font-medium text-slate-705 dark:text-slate-300 truncate block max-w-[150px]" title={item.email}>
+                              {item.email || 'N/A'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block font-medium">Academic Year:</span>
+                            <span className="font-bold text-slate-800 dark:text-slate-200">
+                              {item.academicYear || '2026-2027'}
+                            </span>
+                          </div>
 
                           <div className="col-span-2 md:col-span-4 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-100 dark:border-slate-850">
                             <span className="text-[10px] text-slate-400 block font-medium">Permanent Residential Address:</span>
@@ -4624,6 +4636,45 @@ export default function PrincipalDashboard({
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* SECTION 1.6: ADMISSION PAGE CONFIGURATION */}
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+                  <h4 className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider border-b border-slate-100 dark:border-slate-850 pb-2">
+                    📑 Admission Page Configuration
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs text-slate-700">
+                    <div className="space-y-1">
+                      <label className="font-bold text-slate-650 dark:text-slate-300">Admission Page Title</label>
+                      <input
+                        type="text"
+                        placeholder="Jamia Noorul Uloom Portal"
+                        value={schoolConfig.admissionFormTitle || ""}
+                        onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionFormTitle: e.target.value })}
+                        className="w-full p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-bold text-slate-650 dark:text-slate-300">Admission Page Description</label>
+                      <textarea
+                        rows={2}
+                        placeholder="Fill out the secure admission docket below..."
+                        value={schoolConfig.admissionFormDescription || ""}
+                        onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionFormDescription: e.target.value })}
+                        className="w-full p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                      />
+                    </div>
+                    <div className="col-span-1 md:col-span-2 space-y-1">
+                      <label className="font-bold text-slate-650 dark:text-slate-300">Admission Notice / Alert Box</label>
+                      <textarea
+                        rows={2}
+                        placeholder="e.g. Admission for Class 1 is now closed..."
+                        value={schoolConfig.admissionNotice || ""}
+                        onChange={(e) => setSchoolConfig({ ...schoolConfig, admissionNotice: e.target.value })}
+                        className="w-full p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white"
+                      />
+                    </div>
                   </div>
                 </div>
 

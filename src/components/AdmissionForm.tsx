@@ -11,6 +11,7 @@ interface AdmissionFormProps {
   onSubmit: (app: Omit<AdmissionApplication, 'id' | 'applyDate' | 'status'> & { id?: string }) => void;
   admissions?: AdmissionApplication[];
   gallery?: GalleryItem[];
+  config?: SchoolConfig;
 }
 
 import { printBlankAdmissionForm } from '../utils/printBlankAdmissionForm';
@@ -34,7 +35,7 @@ export function getCurrentSession(): string {
   }
 }
 
-export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: AdmissionFormProps) {
+export default function AdmissionForm({ onSubmit, admissions, gallery = [], config }: AdmissionFormProps) {
   const [activeTab, setActiveTab] = useState<'apply' | 'track'>('apply');
   const [trackId, setTrackId] = useState('');
   const [searchedApp, setSearchedApp] = useState<AdmissionApplication | null>(null);
@@ -398,10 +399,10 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
           <GraduationCap className="w-4 h-4 animate-bounce" /> Academic Admission Session: {formData.academicYear}
         </div>
         <h2 className="text-3xl md:text-4xl font-black text-slate-850 dark:text-white tracking-tight">
-          Jamia Noorul Uloom Portal
+          {config?.admissionFormTitle || "Jamia Noorul Uloom Portal"}
         </h2>
         <p className="text-xs md:text-sm text-slate-550 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-          Fill out the secure admission docket below for quick processing. All student profiles catalogued here are transmitted directly to the Principal's ERP desktop board.
+          {config?.admissionFormDescription || "Fill out the secure admission docket below for quick processing. All student profiles catalogued here are transmitted directly to the Principal's ERP desktop board."}
         </p>
         <div className="pt-4 flex justify-center">
           <button
@@ -411,6 +412,12 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [] }: Ad
             <Printer className="w-4 h-4" /> Download Blank Offline Form (खाली फॉर्म प्रिंट करें)
           </button>
         </div>
+        {config?.admissionNotice && (
+          <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl text-amber-800 dark:text-amber-300 text-xs md:text-sm font-semibold max-w-2xl mx-auto flex items-start gap-2 text-left">
+            <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+            <p>{config.admissionNotice}</p>
+          </div>
+        )}
       </div>
 
       {/* Tab Switcher */}

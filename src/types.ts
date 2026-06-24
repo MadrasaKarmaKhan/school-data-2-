@@ -201,6 +201,10 @@ export interface SchoolConfig {
   whySupportHeading?: string;
   whySupportText?: string;
 
+  // Admission form settings
+  admissionFormTitle?: string;
+  admissionFormDescription?: string;
+
   // Custom Logo URL
   logoUrl?: string;
   marksheetLogo?: string;

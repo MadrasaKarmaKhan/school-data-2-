@@ -391,7 +391,7 @@ export default function App() {
         )}
 
         {currentTab === 'admissions' && (
-          <AdmissionForm onSubmit={handleAdmissionSubmit} admissions={admissions} gallery={gallery} />
+          <AdmissionForm onSubmit={handleAdmissionSubmit} admissions={admissions} gallery={gallery} config={schoolConfig} />
         )}
 
         {currentTab === 'dua' && (
