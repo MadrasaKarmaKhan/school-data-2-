@@ -4050,8 +4050,6 @@ export default function PrincipalDashboard({
                 </h3>
                 <button
                   onClick={async () => {
-                    const pass = prompt("Enter admin password to save changes:");
-                    if (pass !== "admin123") return alert("Incorrect password");
                     setStoredData('nu_config', schoolConfig);
                     const toast = document.createElement('div');
                     toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
