@@ -4763,7 +4763,6 @@ export default function PrincipalDashboard({
                       { id: 'Results', label: 'Exam Results' },
                       { id: 'Admissions', label: 'Admissions' },
                       { id: 'Donate', label: 'Donate' },
-                      { id: 'Cloud', label: 'Cloud Drive' },
                       { id: 'Dashboard', label: 'Principal Panel' },
                     ].map((nav) => (
                       <div key={nav.id} className="p-3 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-950 space-y-3">

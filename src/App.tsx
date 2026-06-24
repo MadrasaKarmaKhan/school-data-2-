@@ -6,7 +6,6 @@ import Homepage from './components/Homepage';
 import ResultPortal from './components/ResultPortal';
 import PrincipalDashboard from './components/PrincipalDashboard';
 import AdmissionForm from './components/AdmissionForm';
-import CloudUploader from './components/CloudUploader';
 import DuaPage from './components/DuaPage';
 import {
   Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName
@@ -396,10 +395,6 @@ export default function App() {
 
         {currentTab === 'dua' && (
           <DuaPage />
-        )}
-
-        {currentTab === 'cloud' && (
-          <CloudUploader />
         )}
 
         {currentTab === 'dashboard' && (

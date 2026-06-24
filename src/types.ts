@@ -157,8 +157,6 @@ export interface SchoolConfig {
   navMenuAdmissionsIcon?: string;
   navMenuDonateText?: string;
   navMenuDonateIcon?: string;
-  navMenuCloudText?: string;
-  navMenuCloudIcon?: string;
   navMenuDashboardText?: string;
   navMenuDashboardIcon?: string;
 
