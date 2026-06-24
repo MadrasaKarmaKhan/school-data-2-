@@ -202,9 +202,13 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
       if (matched.length === 0) {
         setFindError('No matching student found. Please check spelling, Class, or Roll No. (कोई छात्र नहीं मिला, कृपया स्पेलिंग या रोल नंबर जांचें)');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setFindError('Connection error. Please try again.');
+      if (err?.code === 'resource-exhausted') {
+        setFindError('Server is currently too busy (Quota Exceeded). Please try again later.');
+      } else {
+        setFindError('Connection error. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

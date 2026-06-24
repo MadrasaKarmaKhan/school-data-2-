@@ -26,26 +26,36 @@ export default function DuaPage() {
   // Real-time listener for students to calculate ranks
   useEffect(() => {
     if (!student) return;
-    const unsub = onSnapshot(collection(db, 'students'), (snapshot) => {
-      const studentsData: DuaStudent[] = [];
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        studentsData.push({
-           code: docSnap.id,
-           name: data.name,
-           className: data.className,
-           rollNo: data.rollNo,
-           memorizedDuas: data.memorizedDuas || []
+    const unsub = onSnapshot(
+      collection(db, 'students'), 
+      (snapshot) => {
+        const studentsData: DuaStudent[] = [];
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          studentsData.push({
+             code: docSnap.id,
+             name: data.name,
+             className: data.className,
+             rollNo: data.rollNo,
+             memorizedDuas: data.memorizedDuas || []
+          });
         });
-      });
-      setAllStudents(studentsData);
-      
-      // Update current student's memorized duas from latest FB data mapping
-      const me = studentsData.find(s => s.code === student.code);
-      if (me) {
-        setMemorizedDuas(me.memorizedDuas || []);
+        setAllStudents(studentsData);
+        
+        // Update current student's memorized duas from latest FB data mapping
+        const me = studentsData.find(s => s.code === student.code);
+        if (me) {
+          setMemorizedDuas(me.memorizedDuas || []);
+        }
+      },
+      (error: any) => {
+        if (error?.code === 'resource-exhausted') {
+          console.warn("Firebase Quota Exceeded for students collection. Using local state.");
+        } else {
+          console.error("Error fetching students:", error);
+        }
       }
-    });
+    );
     return () => unsub();
   }, [student]);
 

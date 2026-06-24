@@ -167,8 +167,12 @@ export default function PrincipalDashboard({
         });
       });
       setDuaStudents(studs);
-    }, (error) => {
-      console.error("Firestore loading error: ", error);
+    }, (error: any) => {
+      if (error?.code === 'resource-exhausted') {
+        console.warn("Firebase Quota Exceeded. Using local/cached students.");
+      } else {
+        console.error("Firestore loading error: ", error);
+      }
     });
     return () => unsub();
   }, [isLoggedIn]);
@@ -204,8 +208,12 @@ export default function PrincipalDashboard({
       merged.forEach(d => uniqueMap.set(d.id, d));
       const sorted = Array.from(uniqueMap.values()).sort((a, b) => a.id - b.id);
       setDuas(sorted);
-    }, (error) => {
-      console.error("Firestore duas loading error: ", error);
+    }, (error: any) => {
+      if (error?.code === 'resource-exhausted') {
+        console.warn("Firebase Quota Exceeded. Using local/default duas.");
+      } else {
+        console.error("Firestore duas loading error: ", error);
+      }
     });
     return () => unsub();
   }, [isLoggedIn]);
@@ -694,6 +702,7 @@ export default function PrincipalDashboard({
     e.preventDefault();
     if (username === 'admin' && password === 'principal123') {
       setIsLoggedIn(true);
+      localStorage.setItem('nu_islogged', 'true');
       setLoginError('');
     } else {
       setLoginError('Invalid Username or Password. Please try again.');
@@ -1299,11 +1308,12 @@ export default function PrincipalDashboard({
   const handleUpdateConfig = async (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem('nu_config', JSON.stringify(schoolConfig));
+    localStorage.setItem('nu_config_lastModified', Date.now().toString());
     if (isLoggedIn) {
-      await syncToFirebase('schoolData', 'config', schoolConfig);
+      syncToFirebase('schoolData', 'config', schoolConfig);
     }
     const toast = document.createElement('div');
-    toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
+    toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-[9999]';
     toast.innerText = 'Website configuration saved successfully!';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
@@ -1427,7 +1437,10 @@ export default function PrincipalDashboard({
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setIsLoggedIn(false)}
+            onClick={() => {
+              setIsLoggedIn(false);
+              localStorage.removeItem('nu_islogged');
+            }}
             className="px-4 py-2 bg-red-650 hover:bg-red-750 text-white text-xs font-bold rounded-xl shadow cursor-pointer transition-colors"
           >
             Secured Sign Out
@@ -4061,11 +4074,12 @@ export default function PrincipalDashboard({
                   type="button"
                   onClick={async () => {
                     localStorage.setItem('nu_config', JSON.stringify(schoolConfig));
+                    localStorage.setItem('nu_config_lastModified', Date.now().toString());
                     if (isLoggedIn) {
-                      await syncToFirebase('schoolData', 'config', schoolConfig);
+                      syncToFirebase('schoolData', 'config', schoolConfig);
                     }
                     const toast = document.createElement('div');
-                    toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
+                    toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-[9999]';
                     toast.innerText = 'Admission Settings Saved Successfully!';
                     document.body.appendChild(toast);
                     setTimeout(() => toast.remove(), 3000);

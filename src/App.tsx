@@ -135,32 +135,30 @@ export default function App() {
     let unsubNews: (() => void) | undefined;
     let unsubAdmissions: (() => void) | undefined;
 
-    if (!isLoggedIn) {
-      unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
-        if (data) setSchoolConfig(data);
-      });
-      unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
-        if (data) setTeachers(data);
-      });
-      unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
-        if (data) setStudents(data);
-      });
-      unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
-        if (data && Array.isArray(data)) {
-          const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
-          setResults(mapped);
-        }
-      });
-      unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data) => {
-        if (data) setGallery(data);
-      });
-      unsubNews = subscribeToFirebase('schoolData', 'news', (data) => {
-        if (data) setNews(data);
-      });
-      unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data) => {
-        if (data) setAdmissions(data);
-      });
-    }
+    unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
+      if (data) setSchoolConfig(data);
+    });
+    unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
+      if (data) setTeachers(data);
+    });
+    unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
+      if (data) setStudents(data);
+    });
+    unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
+      if (data && Array.isArray(data)) {
+        const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
+        setResults(mapped);
+      }
+    });
+    unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data) => {
+      if (data) setGallery(data);
+    });
+    unsubNews = subscribeToFirebase('schoolData', 'news', (data) => {
+      if (data) setNews(data);
+    });
+    unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data) => {
+      if (data) setAdmissions(data);
+    });
 
     const timer = setTimeout(() => {
       setLoading(false);
@@ -175,7 +173,7 @@ export default function App() {
       if (unsubNews) unsubNews();
       if (unsubAdmissions) unsubAdmissions();
     };
-  }, [isLoggedIn]);
+  }, []);
 
   // Sync results from Google Sheets
   useEffect(() => {
@@ -240,6 +238,7 @@ export default function App() {
   // Sync state modifications directly back to LocalStorage AND Firebase Firestore (only if it's the admin changing it)
   useEffect(() => { 
     setStoredData('nu_students', students); 
+    localStorage.setItem('nu_students_lastModified', Date.now().toString());
     if (isLoggedIn) {
       const timer = setTimeout(() => syncToFirebase('schoolData', 'students', students), 2000);
       return () => clearTimeout(timer);
@@ -249,6 +248,7 @@ export default function App() {
   useEffect(() => {
     setStoredData('nu_results', results);
     localStorage.setItem("madarsa_records", JSON.stringify(results));
+    localStorage.setItem('nu_results_lastModified', Date.now().toString());
     if (isLoggedIn) {
       const timer = setTimeout(() => syncToFirebase('schoolData', 'results', results), 2000);
       return () => clearTimeout(timer);
@@ -257,6 +257,7 @@ export default function App() {
 
   useEffect(() => { 
     setStoredData('nu_teachers', teachers); 
+    localStorage.setItem('nu_teachers_lastModified', Date.now().toString());
     if (isLoggedIn) {
       const timer = setTimeout(() => syncToFirebase('schoolData', 'teachers', teachers), 2000);
       return () => clearTimeout(timer);
@@ -265,6 +266,7 @@ export default function App() {
   
   useEffect(() => { 
     setStoredData('nu_admissions', admissions); 
+    localStorage.setItem('nu_admissions_lastModified', Date.now().toString());
     if (isLoggedIn) {
       const timer = setTimeout(() => syncToFirebase('schoolData', 'admissions', admissions), 2000);
       return () => clearTimeout(timer);
@@ -273,6 +275,7 @@ export default function App() {
   
   useEffect(() => { 
     setStoredData('nu_gallery', gallery); 
+    localStorage.setItem('nu_gallery_lastModified', Date.now().toString());
     if (isLoggedIn) {
       const timer = setTimeout(() => syncToFirebase('schoolData', 'gallery', gallery), 2000);
       return () => clearTimeout(timer);
@@ -281,6 +284,7 @@ export default function App() {
   
   useEffect(() => { 
     setStoredData('nu_news', news); 
+    localStorage.setItem('nu_news_lastModified', Date.now().toString());
     if (isLoggedIn) {
       const timer = setTimeout(() => syncToFirebase('schoolData', 'news', news), 2000);
       return () => clearTimeout(timer);
@@ -289,6 +293,7 @@ export default function App() {
   
   useEffect(() => { 
     setStoredData('nu_config', schoolConfig); 
+    localStorage.setItem('nu_config_lastModified', Date.now().toString());
     if (isLoggedIn) {
       const timer = setTimeout(() => syncToFirebase('schoolData', 'config', schoolConfig), 2000);
       return () => clearTimeout(timer);
