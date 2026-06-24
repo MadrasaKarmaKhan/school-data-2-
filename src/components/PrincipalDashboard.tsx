@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import {
   ShieldAlert, LogIn, Award, Users, BookOpen, FileText, Settings, Sparkles, Plus, Trash2, Edit2, Check, X,
-  Search, Upload, Image, ShieldCheck, Mail, Phone, MapPin, RefreshCw, AlertCircle, PlusCircle, Calendar, Printer
+  Search, Upload, Image, ShieldCheck, Mail, Phone, MapPin, RefreshCw, AlertCircle, PlusCircle, Calendar, Printer, Menu
 } from 'lucide-react';
 import { Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName } from '../types';
 import { resizeImage } from '../lib/imageUtils';
@@ -128,6 +128,8 @@ export default function PrincipalDashboard({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // Active Management Tab inside ERP panel
   const [erpTab, setErpTab] = useState<'analytics' | 'students' | 'results' | 'teachers' | 'admissions' | 'gallery' | 'news' | 'config' | 'duas-mgmt' | 'dua-students'>('analytics');
@@ -1422,65 +1424,89 @@ export default function PrincipalDashboard({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Left Hand Navigation Panel */}
-        <aside className="lg:col-span-1 p-4 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-700/80 rounded-2xl space-y-2 text-sm shadow">
-          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest block px-3 py-1 mb-2">Systems Menu</span>
+        <aside className={`p-4 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-700/80 rounded-2xl space-y-2 text-sm shadow transition-all duration-300 flex-shrink-0 ${isSidebarCollapsed ? 'w-full lg:w-20' : 'w-full lg:w-72'}`}>
+          <div className="flex items-center justify-between mb-2">
+            {!isSidebarCollapsed && <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest block px-3 py-1">Systems Menu</span>}
+            <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer lg:block hidden ml-auto text-slate-500">
+              <Menu className="w-5 h-5" />
+            </button>
+            {/* For mobile, always show toggle button */}
+            <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer lg:hidden ml-auto text-slate-500">
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
           
           <button
             onClick={() => setErpTab('analytics')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'analytics'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="Counter Analytics"
           >
-            📊 Counter Analytics
+            <span className="text-xl">📊</span>
+            {!isSidebarCollapsed && <span>Counter Analytics</span>}
           </button>
 
           <button
             onClick={() => setErpTab('students')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'students'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="Students Database"
           >
-            🎓 Students Database
+            <span className="text-xl">🎓</span>
+            {!isSidebarCollapsed && <span>Students Database</span>}
           </button>
 
           <button
             onClick={() => setErpTab('results')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'results'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="Marksheets & results"
           >
-            🏆 Marksheets & results
+            <span className="text-xl">🏆</span>
+            {!isSidebarCollapsed && <span>Marksheets & results</span>}
           </button>
 
           <button
             onClick={() => setErpTab('teachers')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'teachers'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="Teacher Profiles"
           >
-            💼 Teacher Profiles
+            <span className="text-xl">💼</span>
+            {!isSidebarCollapsed && <span>Teacher Profiles</span>}
           </button>
 
           <button
             onClick={() => setErpTab('admissions')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer relative ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer relative ${
               erpTab === 'admissions'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="Admission Inbox"
           >
-            📑 Admission Inbox
-            {admissions.filter(a => a.status === 'pending').length > 0 && (
+            <span className="text-xl relative">
+              📑
+              {isSidebarCollapsed && admissions.filter(a => a.status === 'pending').length > 0 && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse border border-white dark:border-slate-800"></span>
+              )}
+            </span>
+            {!isSidebarCollapsed && <span>Admission Inbox</span>}
+            {!isSidebarCollapsed && admissions.filter(a => a.status === 'pending').length > 0 && (
               <span className="absolute right-3 top-2.5 px-2 py-0.5 bg-amber-500 text-white rounded-full text-[9px] font-black animate-pulse">
                 {admissions.filter(a => a.status === 'pending').length}
               </span>
@@ -1489,62 +1515,72 @@ export default function PrincipalDashboard({
 
           <button
             onClick={() => setErpTab('gallery')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'gallery'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="Media Gallery"
           >
-            🖼️ Media Gallery
+            <span className="text-xl">🖼️</span>
+            {!isSidebarCollapsed && <span>Media Gallery</span>}
           </button>
 
           <button
             onClick={() => setErpTab('news')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'news'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="News & Notices"
           >
-            🔔 News & Notices
+            <span className="text-xl">🔔</span>
+            {!isSidebarCollapsed && <span>News & Notices</span>}
           </button>
 
           <button
             onClick={() => setErpTab('config')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'config'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="Systems Config"
           >
-            ⚙️ Systems Config
+            <span className="text-xl">⚙️</span>
+            {!isSidebarCollapsed && <span>Systems Config</span>}
           </button>
 
           <button
             onClick={() => setErpTab('duas-mgmt')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'duas-mgmt'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="दुआ मैनेजमेंट (Manage Duas)"
           >
-            🕌 दुआ मैनेजमेंट (Manage Duas)
+            <span className="text-xl">🕌</span>
+            {!isSidebarCollapsed && <span className="truncate">दुआ मैनेजमेंट (Manage Duas)</span>}
           </button>
 
           <button
             onClick={() => setErpTab('dua-students')}
-            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`w-full text-left py-2.5 px-3.5 rounded-xl font-bold flex items-center gap-3 transition-all cursor-pointer ${
               erpTab === 'dua-students'
                 ? 'bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-700 dark:text-amber-400 shadow-inner'
                 : 'text-slate-650 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
-            }`}
+            } ${isSidebarCollapsed ? 'justify-center px-0' : ''}`}
+            title="पंजीकृत छात्र (Registered Kids)"
           >
-            📖 पंजीकृत छात्र (Registered Kids)
+            <span className="text-xl">📖</span>
+            {!isSidebarCollapsed && <span className="truncate">पंजीकृत छात्र (Registered Kids)</span>}
           </button>
         </aside>
 
         {/* Right Hand Work Panel */}
-        <main className="lg:col-span-3 p-6 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-700/85 rounded-2xl shadow-xl min-h-[400px]">
+        <main className="flex-1 min-w-0 p-6 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-700/85 rounded-2xl shadow-xl min-h-[400px]">
           {/* ANALYTICS PANEL */}
           {erpTab === 'analytics' && (
             <div className="space-y-6 animate-fade-in">
