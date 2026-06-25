@@ -2935,7 +2935,7 @@ export default function PrincipalDashboard({
 
                     <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
                       {schoolConfig?.schoolStampUrl ? (
-                        <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '100px', height: '100px', pointerEvents: 'none' }}>
+                        <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '150px', height: '150px', pointerEvents: 'none' }}>
                           <img 
                             src={schoolConfig.schoolStampUrl} 
                             alt="School Stamp" 
@@ -3775,7 +3775,7 @@ export default function PrincipalDashboard({
 
                           <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
                             {schoolConfig?.schoolStampUrl ? (
-                              <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '100px', height: '100px', pointerEvents: 'none' }}>
+                              <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '150px', height: '150px', pointerEvents: 'none' }}>
                                 <img 
                                   src={schoolConfig.schoolStampUrl} 
                                   alt="School Stamp" 
