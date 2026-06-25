@@ -43,8 +43,9 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
         const lastMod = docData._lastModified || 0;
         
         try {
+          const isLoggedIn = localStorage.getItem('nu_islogged') === 'true';
           const localModString = localStorage.getItem(`nu_${docId}_lastModified`);
-          if (localModString && parseInt(localModString, 10) > lastMod) {
+          if (isLoggedIn && localModString && parseInt(localModString, 10) > lastMod) {
             return; // Ignore older snapshot from cache
           }
         } catch(e) {}
