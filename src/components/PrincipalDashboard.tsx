@@ -2284,10 +2284,10 @@ export default function PrincipalDashboard({
                           </button>
                         )}
                       </div>
-                      <div style={{ fontSize: '26px', fontWeight: 800, color: '#0000FF', marginTop: '-5px' }}>
+                      <div style={{ fontSize: '22px', fontWeight: 800, color: '#0000FF', marginTop: '-5px' }}>
                         MADARSA ARABIA NOORUL ULOOM
                       </div>
-                      <div style={{ fontSize: '18px', fontWeight: 700, color: '#0000FF' }}>
+                      <div style={{ fontSize: '15px', fontWeight: 700, color: '#0000FF' }}>
                         Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                       </div>
                       <div 
@@ -2935,7 +2935,7 @@ export default function PrincipalDashboard({
 
                     <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
                       {schoolConfig?.schoolStampUrl ? (
-                        <div style={{ position: 'absolute', bottom: '-15px', left: '50%', transform: 'translateX(-50%)', width: '180px', height: '180px', pointerEvents: 'none' }}>
+                        <div style={{ position: 'absolute', bottom: '15px', left: '50%', transform: 'translateX(-50%)', width: '180px', height: '180px', pointerEvents: 'none' }}>
                           <img 
                             src={schoolConfig.schoolStampUrl} 
                             alt="School Stamp" 
@@ -3515,10 +3515,10 @@ export default function PrincipalDashboard({
                                 </div>
                               )}
                             </div>
-                            <div style={{ fontSize: '26px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: '22px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
                               MADARSA ARABIA NOORUL ULOOM
                             </div>
-                            <div style={{ fontSize: '18px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: '15px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
                               Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                             </div>
                             <div 
@@ -3775,7 +3775,7 @@ export default function PrincipalDashboard({
 
                           <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
                             {schoolConfig?.schoolStampUrl ? (
-                              <div style={{ position: 'absolute', bottom: '-15px', left: '50%', transform: 'translateX(-50%)', width: '180px', height: '180px', pointerEvents: 'none' }}>
+                              <div style={{ position: 'absolute', bottom: '15px', left: '50%', transform: 'translateX(-50%)', width: '180px', height: '180px', pointerEvents: 'none' }}>
                                 <img 
                                   src={schoolConfig.schoolStampUrl} 
                                   alt="School Stamp" 

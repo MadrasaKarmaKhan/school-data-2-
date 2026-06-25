@@ -858,10 +858,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         </div>
                       )}
                     </div>
-                    <div style={{ fontSize: '30px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: '24px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
                       MADARSA ARABIA NOORUL ULOOM
                     </div>
-                    <div style={{ fontSize: '22px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: '16px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
                       Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                     </div>
                     <div 
@@ -1280,7 +1280,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                   <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
                     {config?.schoolStampUrl ? (
-                      <div style={{ position: 'absolute', bottom: '-15px', left: '50%', transform: 'translateX(-50%)', width: '180px', height: '180px', pointerEvents: 'none' }}>
+                      <div style={{ position: 'absolute', bottom: '15px', left: '50%', transform: 'translateX(-50%)', width: '180px', height: '180px', pointerEvents: 'none' }}>
                         <img 
                           src={config.schoolStampUrl} 
                           alt="School Stamp" 
