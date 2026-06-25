@@ -2065,7 +2065,7 @@ export default function PrincipalDashboard({
                         if (file.type !== "image/png") {
                           alert("Please upload a transparent .png format logo only to avoid background errors!");
                         }
-                        resizeImage(file, 800, 800, 0.6).then((url) => {
+                        resizeImage(file, 1200, 1200, 0.95).then((url) => {
                           localStorage.setItem("m_logo", url);
                           setAdminSchoolLogo(url);
                           setSchoolConfig(prev => ({
@@ -2087,7 +2087,7 @@ export default function PrincipalDashboard({
                         if (file.type !== "image/png") {
                           alert("Please upload a transparent .png format Urdu name logo only!");
                         }
-                        resizeImage(file, 800, 800, 0.6).then((url) => {
+                        resizeImage(file, 1600, 600, 0.95).then((url) => {
                           localStorage.setItem("m_urdu_logo", url);
                           setAdminUrduLogo(url);
                           setSchoolConfig(prev => ({
@@ -3384,6 +3384,12 @@ export default function PrincipalDashboard({
                         background-color: transparent !important;
                         background: transparent !important;
                         -webkit-print-color-adjust: exact !important;
+                        color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                      }
+                      #bulkPrintArea, #bulkPrintArea *, .printable-card-item, .printable-card-item * {
+                        -webkit-print-color-adjust: exact !important;
+                        color-adjust: exact !important;
                         print-color-adjust: exact !important;
                       }
                       @page {
@@ -4747,7 +4753,7 @@ export default function PrincipalDashboard({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              resizeImage(file, 800, 800, 0.6).then((url) => {
+                              resizeImage(file, 1200, 1200, 0.95).then((url) => {
                                 setSchoolConfig({ ...schoolConfig, logoUrl: url });
                               }).catch(e => console.error("Compression failed", e));
                             }
@@ -4808,7 +4814,7 @@ export default function PrincipalDashboard({
                               if (file.type !== "image/png") {
                                 alert("Please upload a transparent .png format signature to avoid background errors! (कृपया पारदर्शी .png सिग्नेचर अपलोड करें)");
                               }
-                              resizeImage(file, 400, 200, 0.75).then((url) => {
+                              resizeImage(file, 600, 300, 0.95).then((url) => {
                                 setSchoolConfig({ ...schoolConfig, principalSignatureUrl: url });
                               }).catch(e => console.error("Compression failed", e));
                             }
@@ -4869,7 +4875,7 @@ export default function PrincipalDashboard({
                               if (file.type !== "image/png") {
                                 alert("Please upload a transparent .png format stamp to avoid background errors! (कृपया पारदर्शी .png स्टैम्प अपलोड करें)");
                               }
-                              resizeImage(file, 400, 400, 0.75).then((url) => {
+                              resizeImage(file, 600, 600, 0.95).then((url) => {
                                 setSchoolConfig({ ...schoolConfig, schoolStampUrl: url });
                               }).catch(e => console.error("Compression failed", e));
                             }

@@ -562,6 +562,12 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             background-color: transparent !important;
             background: transparent !important;
             -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          #card-printed-view, #card-printed-view *, #card-printed-view img, #urduLogoImg, img {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
           input, textarea, select {
