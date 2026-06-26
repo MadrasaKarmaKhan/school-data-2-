@@ -3323,6 +3323,18 @@ export default function PrincipalDashboard({
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
                       }
+                      #bulkPrintArea, #bulkPrintArea * {
+                        font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+                      }
+                      .font-mono, #bulkPrintArea .font-mono, #bulkPrintArea [class*="font-mono"] {
+                        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+                      }
+                      .font-arabic, #bulkPrintArea .font-arabic, #bulkPrintArea [class*="font-arabic"] {
+                        font-family: "Noto Naskh Arabic", serif !important;
+                      }
+                      .font-urdu, #bulkPrintArea .font-urdu, #bulkPrintArea [class*="font-urdu"] {
+                        font-family: "Noto Nastaliq Urdu", serif !important;
+                      }
                       /* Counteract dark mode classes during print to prevent black sections */
                       .dark, .dark * {
                         background-color: transparent !important;

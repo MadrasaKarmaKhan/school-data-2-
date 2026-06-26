@@ -279,7 +279,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             <head>
               <title>Print Marksheet - Noorul Uloom</title>
               ${parentStyles}
-              <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;650;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet" />
+              <link rel="preconnect" href="https://fonts.googleapis.com">
+              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+              <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;650;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet" />
               <style>
                 body {
                   margin: 0;
@@ -291,6 +293,18 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   align-items: flex-start;
                   -webkit-print-color-adjust: exact !important;
                   print-color-adjust: exact !important;
+                }
+                body, #card-printed-view, #card-printed-view * {
+                  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+                }
+                .font-mono, [class*="font-mono"] {
+                  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+                }
+                .font-arabic, [class*="font-arabic"] {
+                  font-family: "Noto Naskh Arabic", serif !important;
+                }
+                .font-urdu, [class*="font-urdu"] {
+                  font-family: "Noto Nastaliq Urdu", serif !important;
                 }
                 #card-printed-view {
                   box-shadow: none !important;
@@ -359,8 +373,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           }
         });
 
-        // Fire print preview inside iframe
-        setTimeout(() => {
+        // Fire print preview inside iframe once fonts are loaded
+        const triggerPrint = () => {
           try {
             printIframe?.contentWindow?.focus();
             printIframe?.contentWindow?.print();
@@ -370,7 +384,17 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             window.print();
           }
           setIsGeneratingPrint(false);
-        }, 450);
+        };
+
+        if ((iframeDoc as any).fonts && (iframeDoc as any).fonts.ready) {
+          (iframeDoc as any).fonts.ready.then(() => {
+            setTimeout(triggerPrint, 300);
+          }).catch(() => {
+            setTimeout(triggerPrint, 450);
+          });
+        } else {
+          setTimeout(triggerPrint, 450);
+        }
 
       } catch (e) {
         console.warn("Printing via iframe failed, falling back to direct window.print() directly:", e);
