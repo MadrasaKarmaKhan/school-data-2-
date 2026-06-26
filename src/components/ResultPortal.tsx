@@ -432,6 +432,40 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
         backgroundColor: '#ffffff', // Ensures white backgrounds
         logging: false,
         onclone: (clonedDoc) => {
+          // Explicitly inject the external Google Fonts and font-family rules to clonedDoc
+          try {
+            const fontLink = clonedDoc.createElement('link');
+            fontLink.rel = 'stylesheet';
+            fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;650;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap';
+            clonedDoc.head.appendChild(fontLink);
+
+            const fontStyle = clonedDoc.createElement('style');
+            fontStyle.textContent = `
+              #card-printed-view, #card-printed-view * {
+                font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+              }
+              .font-sans, [class*="font-sans"] {
+                font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+              }
+              .font-mono, [class*="font-mono"] {
+                font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+              }
+              .font-arabic, [class*="font-arabic"] {
+                font-family: "Noto Naskh Arabic", serif !important;
+              }
+              .font-urdu, [class*="font-urdu"] {
+                font-family: "Noto Nastaliq Urdu", serif !important;
+              }
+              /* Preserve bold weight rendering properly */
+              #card-printed-view span, #card-printed-view div, #card-printed-view td, #card-printed-view th {
+                font-weight: inherit;
+              }
+            `;
+            clonedDoc.head.appendChild(fontStyle);
+          } catch (e) {
+            console.warn("Could not inject custom styles into html2canvas clone:", e);
+          }
+
           // Fix Tailwind v4 color issues in html2canvas (unsupported colors in style parsed list)
           try {
             // 1. Process inline styles of cloned style elements
@@ -750,7 +784,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   display: 'flex',
                   flexDirection: 'column',
                   boxSizing: 'border-box',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  fontFamily: '"Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
                 }}
               >
                 {/* Header Curved Ribbon */}
