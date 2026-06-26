@@ -810,9 +810,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             margin: 0 auto !important;
             width: 900px !important;
             max-width: 900px !important;
-            height: 1311px !important; 
-            min-height: 1311px !important;
-            max-height: 1311px !important;
+            height: 1296px !important; 
+            min-height: 1296px !important;
+            max-height: 1296px !important;
             border: 5px solid #1e5631 !important;
             box-shadow: none !important;
             background: white !important;
@@ -975,9 +975,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 style={{
                   width: '900px',
                   maxWidth: '900px',
-                  height: '1311px',
-                  minHeight: '1311px',
-                  maxHeight: '1311px',
+                  height: '1296px',
+                  minHeight: '1296px',
+                  maxHeight: '1296px',
                   margin: 'auto',
                   background: '#ffffff',
                   border: '5px solid #1e5631',
