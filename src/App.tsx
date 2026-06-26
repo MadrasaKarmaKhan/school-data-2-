@@ -195,7 +195,7 @@ export default function App() {
         hasCheckedLoading = true;
         setLoading(false);
       }
-    }, 2500); // Wait up to 2.5 seconds for fresh data
+    }, 8000); // Wait up to 8 seconds for fresh data
 
     return () => {
       clearTimeout(timer);
