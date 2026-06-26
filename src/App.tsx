@@ -147,35 +147,35 @@ export default function App() {
       }
     };
 
-    unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
-      if (data) setSchoolConfig(data);
-      configLoaded = true;
+    unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data, fromCache, dataChanged) => {
+      if (data && dataChanged) setSchoolConfig(data);
+      if (!fromCache) configLoaded = true;
       checkHideLoading();
     });
-    unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
-      if (data) setTeachers(data);
+    unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data, fromCache, dataChanged) => {
+      if (data && dataChanged) setTeachers(data);
     });
-    unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
-      if (data) setStudents(data);
-      studentsLoaded = true;
+    unsubStudents = subscribeToFirebase('schoolData', 'students', (data, fromCache, dataChanged) => {
+      if (data && dataChanged) setStudents(data);
+      if (!fromCache) studentsLoaded = true;
       checkHideLoading();
     });
-    unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
-      if (data && Array.isArray(data)) {
+    unsubResults = subscribeToFirebase('schoolData', 'results', (data, fromCache, dataChanged) => {
+      if (data && Array.isArray(data) && dataChanged) {
         const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
         setResults(mapped);
       }
     });
-    unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data) => {
-      if (data) setGallery(data);
+    unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data, fromCache, dataChanged) => {
+      if (data && dataChanged) setGallery(data);
     });
-    unsubNews = subscribeToFirebase('schoolData', 'news', (data) => {
-      if (data) setNews(data);
-      newsLoaded = true;
+    unsubNews = subscribeToFirebase('schoolData', 'news', (data, fromCache, dataChanged) => {
+      if (data && dataChanged) setNews(data);
+      if (!fromCache) newsLoaded = true;
       checkHideLoading();
     });
-    unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data) => {
-      if (data) setAdmissions(data);
+    unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data, fromCache, dataChanged) => {
+      if (data && dataChanged) setAdmissions(data);
     });
 
     const timer = setTimeout(() => {

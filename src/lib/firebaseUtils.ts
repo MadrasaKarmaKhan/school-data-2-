@@ -30,11 +30,13 @@ export async function syncToFirebase(collectionName: string, docId: string, data
   }
 }
 
-export function subscribeToFirebase(collectionName: string, docId: string, callback: (data: any) => void) {
+export function subscribeToFirebase(collectionName: string, docId: string, callback: (data: any, fromCache: boolean, dataChanged: boolean) => void) {
   return onSnapshot(
     doc(db, collectionName, docId),
+    { includeMetadataChanges: true },
     (docSnap) => {
       const cacheKey = `${collectionName}_${docId}`;
+      const isFromCache = docSnap.metadata.fromCache;
       receivedSnapshots.add(cacheKey);
       
       if (docSnap.exists() && docSnap.data().data) {
@@ -51,13 +53,15 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
         } catch(e) {}
         
         const dataString = JSON.stringify(data);
-        if (cache.get(cacheKey) === dataString) {
-          return;
+        const dataChanged = cache.get(cacheKey) !== dataString;
+        
+        if (dataChanged) {
+          cache.set(cacheKey, dataString);
         }
-        cache.set(cacheKey, dataString);
-        callback(data);
+        
+        callback(data, isFromCache, dataChanged);
       } else {
-        callback(null);
+        callback(null, isFromCache, true);
       }
     },
     (error: any) => {
