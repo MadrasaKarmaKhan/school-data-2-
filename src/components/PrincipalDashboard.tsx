@@ -2028,6 +2028,165 @@ export default function PrincipalDashboard({
                 </div>
               </div>
 
+              {/* Dedicated Logo and Banner uploader for result card / marksheet */}
+              <div id="marksheet-logo-banner-uploader" className="bg-white dark:bg-slate-850 border border-emerald-150 dark:border-emerald-900/60 p-5 rounded-2xl shadow-sm no-print">
+                <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100 dark:border-slate-750">
+                  <span className="text-xl">🖼️</span>
+                  <div>
+                    <h4 className="font-extrabold text-sm text-emerald-800 dark:text-emerald-400">
+                      मार्कशीट लोगो और उर्दू बैनर अपलोडर (Permanent Logo & Banner Settings)
+                    </h4>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
+                      यहाँ से आप रिज़ल्ट कार्ड का मुख्य गोल लोगो और उर्दू कैलीग्राफी बैनर अपलोड या चेंज कर सकते हैं। ये हमेशा के लिए सुरक्षित (Save) रहेंगे।
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Marksheet logo */}
+                  <div className="space-y-2 bg-slate-50 dark:bg-slate-900/40 p-3 rounded-xl border border-slate-150 dark:border-slate-800/80">
+                    <label className="font-bold text-xs text-slate-700 dark:text-slate-300 block">
+                      मार्कशीट का गोल लोगो (Crest/Stamp Logo - transparent .png only)
+                    </label>
+                    <div className="flex items-center gap-3">
+                      {adminSchoolLogo ? (
+                        <div className="p-1 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded-lg">
+                          <img
+                            src={adminSchoolLogo}
+                            alt="Crest Logo"
+                            className="w-12 h-12 object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg border border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center text-slate-400 text-[9px] text-center leading-tight bg-white dark:bg-slate-950 font-bold">
+                          Default Logo
+                        </div>
+                      )}
+                      
+                      <div className="flex flex-col gap-1">
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('adminLogoUploadInput')?.click()}
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg cursor-pointer transition text-[10px] flex items-center gap-1 shadow-sm"
+                        >
+                          📤 Upload Logo File
+                        </button>
+                        {adminSchoolLogo && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              localStorage.removeItem("m_logo");
+                              setAdminSchoolLogo("");
+                              const updatedConfig = { ...schoolConfig, marksheetLogo: "" };
+                              setSchoolConfig(updatedConfig);
+                              localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+                              localStorage.setItem('nu_config_lastModified', Date.now().toString());
+                              if (isLoggedIn) {
+                                syncToFirebase('schoolData', 'config', updatedConfig);
+                              }
+                            }}
+                            className="text-[10px] text-rose-500 font-extrabold uppercase tracking-wider hover:underline cursor-pointer text-left pl-1"
+                          >
+                            Remove Logo
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="या डायरेक्ट इमेज लिंक (URL) डालें"
+                        value={adminSchoolLogo}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          localStorage.setItem("m_logo", val);
+                          setAdminSchoolLogo(val);
+                          const updatedConfig = { ...schoolConfig, marksheetLogo: val };
+                          setSchoolConfig(updatedConfig);
+                          localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+                          localStorage.setItem('nu_config_lastModified', Date.now().toString());
+                          if (isLoggedIn) {
+                            syncToFirebase('schoolData', 'config', updatedConfig);
+                          }
+                        }}
+                        className="w-full mt-1 p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-950 font-semibold text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Marksheet urdu banner */}
+                  <div className="space-y-2 bg-slate-50 dark:bg-slate-900/40 p-3 rounded-xl border border-slate-150 dark:border-slate-800/80">
+                    <label className="font-bold text-xs text-slate-700 dark:text-slate-300 block">
+                      मार्कशीट का उर्दू बड़ा बैनर (Calligraphy Banner - transparent .png only)
+                    </label>
+                    <div className="flex items-center gap-3">
+                      {adminUrduLogo ? (
+                        <div className="p-1 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded-lg">
+                          <img
+                            src={adminUrduLogo}
+                            alt="Urdu Calligraphy"
+                            className="w-24 h-12 object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-24 h-12 rounded-lg border border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center text-slate-400 text-[9px] text-center leading-tight bg-white dark:bg-slate-950 font-bold">
+                          Default Banner
+                        </div>
+                      )}
+
+                      <div className="flex flex-col gap-1">
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('adminUrduUploadInput')?.click()}
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg cursor-pointer transition text-[10px] flex items-center gap-1 shadow-sm"
+                        >
+                          📤 Upload Banner File
+                        </button>
+                        {adminUrduLogo && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              localStorage.removeItem("m_urdu_logo");
+                              setAdminUrduLogo("");
+                              const updatedConfig = { ...schoolConfig, calligraphyBanner: "" };
+                              setSchoolConfig(updatedConfig);
+                              localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+                              localStorage.setItem('nu_config_lastModified', Date.now().toString());
+                              if (isLoggedIn) {
+                                syncToFirebase('schoolData', 'config', updatedConfig);
+                              }
+                            }}
+                            className="text-[10px] text-rose-500 font-extrabold uppercase tracking-wider hover:underline cursor-pointer text-left pl-1"
+                          >
+                            Remove Banner
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="या डायरेक्ट इमेज लिंक (URL) डालें"
+                        value={adminUrduLogo}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          localStorage.setItem("m_urdu_logo", val);
+                          setAdminUrduLogo(val);
+                          const updatedConfig = { ...schoolConfig, calligraphyBanner: val };
+                          setSchoolConfig(updatedConfig);
+                          localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+                          localStorage.setItem('nu_config_lastModified', Date.now().toString());
+                          if (isLoggedIn) {
+                            syncToFirebase('schoolData', 'config', updatedConfig);
+                          }
+                        }}
+                        className="w-full mt-1 p-2 border border-slate-250 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-950 font-semibold text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* LIVE IN-PLACE CARD EDITOR */}
               <div className="overflow-x-auto py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-inner no-print">
                 <p className="text-center text-xs font-bold font-mono text-slate-450 text-[#1e5631] mb-2 uppercase tracking-widest">
@@ -2053,7 +2212,7 @@ export default function PrincipalDashboard({
                     overflow: 'hidden'
                   }}
                 >
-                  {/* Invisible Image File Selectors */}
+                               {/* Invisible Image File Selectors */}
                   <input
                     type="file"
                     id="adminLogoUploadInput"
@@ -2068,10 +2227,13 @@ export default function PrincipalDashboard({
                         resizeImage(file, 1200, 1200, 0.95).then((url) => {
                           localStorage.setItem("m_logo", url);
                           setAdminSchoolLogo(url);
-                          setSchoolConfig(prev => ({
-                            ...prev,
-                            marksheetLogo: url
-                          }));
+                          const updatedConfig = { ...schoolConfig, marksheetLogo: url };
+                          setSchoolConfig(updatedConfig);
+                          localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+                          localStorage.setItem('nu_config_lastModified', Date.now().toString());
+                          if (isLoggedIn) {
+                            syncToFirebase('schoolData', 'config', updatedConfig);
+                          }
                         }).catch(e => console.error("Compression failed", e));
                       }
                     }}
@@ -2090,10 +2252,13 @@ export default function PrincipalDashboard({
                         resizeImage(file, 1600, 600, 0.95).then((url) => {
                           localStorage.setItem("m_urdu_logo", url);
                           setAdminUrduLogo(url);
-                          setSchoolConfig(prev => ({
-                            ...prev,
-                            calligraphyBanner: url
-                          }));
+                          const updatedConfig = { ...schoolConfig, calligraphyBanner: url };
+                          setSchoolConfig(updatedConfig);
+                          localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+                          localStorage.setItem('nu_config_lastModified', Date.now().toString());
+                          if (isLoggedIn) {
+                            syncToFirebase('schoolData', 'config', updatedConfig);
+                          }
                         }).catch(e => console.error("Compression failed", e));
                       }
                     }}
@@ -2209,10 +2374,13 @@ export default function PrincipalDashboard({
                               const cleanUrl = await removeBlackBackground(adminSchoolLogo);
                               localStorage.setItem("m_logo", cleanUrl);
                               setAdminSchoolLogo(cleanUrl);
-                              setSchoolConfig(prev => ({
-                                ...prev,
-                                marksheetLogo: cleanUrl
-                              }));
+                              const updatedConfig = { ...schoolConfig, marksheetLogo: cleanUrl };
+                              setSchoolConfig(updatedConfig);
+                              localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+                              localStorage.setItem('nu_config_lastModified', Date.now().toString());
+                              if (isLoggedIn) {
+                                syncToFirebase('schoolData', 'config', updatedConfig);
+                              }
                             } catch (error) {
                               console.error(error);
                             }
@@ -2271,10 +2439,13 @@ export default function PrincipalDashboard({
                                 const cleanUrl = await removeBlackBackground(adminUrduLogo);
                                 localStorage.setItem("m_urdu_logo", cleanUrl);
                                 setAdminUrduLogo(cleanUrl);
-                                setSchoolConfig(prev => ({
-                                  ...prev,
-                                  calligraphyBanner: cleanUrl
-                                }));
+                                const updatedConfig = { ...schoolConfig, calligraphyBanner: cleanUrl };
+                                setSchoolConfig(updatedConfig);
+                                localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+                                localStorage.setItem('nu_config_lastModified', Date.now().toString());
+                                if (isLoggedIn) {
+                                  syncToFirebase('schoolData', 'config', updatedConfig);
+                                }
                               } catch (error) {
                                 console.error(error);
                               }
@@ -4915,6 +5086,148 @@ export default function PrincipalDashboard({
                         placeholder="Or paste stamp image URL (मुहर का लिंक डालें)"
                         value={schoolConfig.schoolStampUrl || ""}
                         onChange={(e) => setSchoolConfig({ ...schoolConfig, schoolStampUrl: e.target.value })}
+                        className="w-full mt-1.5 p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-slate-50 dark:bg-slate-950 font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-bold text-slate-650 dark:text-slate-300 block mb-1">
+                        Result Card / Marksheet Custom Crest Logo (मार्कशीट का गोल लोगो - पारदर्शी PNG)
+                      </label>
+                      <div className="flex items-center gap-3">
+                        {schoolConfig.marksheetLogo ? (
+                          <div className="p-1 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded">
+                            <img
+                              src={schoolConfig.marksheetLogo}
+                              alt="Marksheet Logo"
+                              className="w-12 h-12 object-contain"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-12 h-12 rounded border border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center text-slate-400 text-[9px] text-center leading-tight bg-slate-50 dark:bg-slate-950">
+                            Default Logo
+                          </div>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/png"
+                          id="schoolMarksheetLogoUploadInput"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              if (file.type !== "image/png") {
+                                alert("Please upload a transparent .png format logo only to avoid background errors! (कृपया पारदर्शी .png लोगो अपलोड करें)");
+                              }
+                              resizeImage(file, 1200, 1200, 0.95).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, marksheetLogo: url });
+                                setAdminSchoolLogo(url);
+                                localStorage.setItem("m_logo", url);
+                              }).catch(e => console.error("Compression failed", e));
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('schoolMarksheetLogoUploadInput')?.click()}
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg cursor-pointer transition text-[10px] flex items-center gap-1"
+                        >
+                          📤 Upload Logo (लोगो)
+                        </button>
+                        {schoolConfig.marksheetLogo && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSchoolConfig({ ...schoolConfig, marksheetLogo: "" });
+                              setAdminSchoolLogo("");
+                              localStorage.removeItem("m_logo");
+                            }}
+                            className="text-[10px] text-rose-500 font-extrabold uppercase tracking-wider hover:underline cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Or paste marksheet logo image URL (लोगो का लिंक डालें)"
+                        value={schoolConfig.marksheetLogo || ""}
+                        onChange={(e) => {
+                          setSchoolConfig({ ...schoolConfig, marksheetLogo: e.target.value });
+                          setAdminSchoolLogo(e.target.value);
+                          localStorage.setItem("m_logo", e.target.value);
+                        }}
+                        className="w-full mt-1.5 p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-slate-50 dark:bg-slate-950 font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-bold text-slate-650 dark:text-slate-300 block mb-1">
+                        Result Card / Marksheet Urdu Calligraphy Banner (मार्कशीट का उर्दू बैनर - पारदर्शी PNG)
+                      </label>
+                      <div className="flex items-center gap-3">
+                        {schoolConfig.calligraphyBanner ? (
+                          <div className="p-1 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded">
+                            <img
+                              src={schoolConfig.calligraphyBanner}
+                              alt="Marksheet Banner"
+                              className="w-24 h-12 object-contain"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-24 h-12 rounded border border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center text-slate-400 text-[9px] text-center leading-tight bg-slate-50 dark:bg-slate-950">
+                            Default Banner
+                          </div>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/png"
+                          id="schoolMarksheetBannerUploadInput"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              if (file.type !== "image/png") {
+                                alert("Please upload a transparent .png format Urdu calligraphy banner only! (कृपया पारदर्शी .png उर्दू बैनर अपलोड करें)");
+                              }
+                              resizeImage(file, 1600, 600, 0.95).then((url) => {
+                                setSchoolConfig({ ...schoolConfig, calligraphyBanner: url });
+                                setAdminUrduLogo(url);
+                                localStorage.setItem("m_urdu_logo", url);
+                              }).catch(e => console.error("Compression failed", e));
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('schoolMarksheetBannerUploadInput')?.click()}
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg cursor-pointer transition text-[10px] flex items-center gap-1"
+                        >
+                          📤 Upload Banner (बैनर)
+                        </button>
+                        {schoolConfig.calligraphyBanner && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSchoolConfig({ ...schoolConfig, calligraphyBanner: "" });
+                              setAdminUrduLogo("");
+                              localStorage.removeItem("m_urdu_logo");
+                            }}
+                            className="text-[10px] text-rose-500 font-extrabold uppercase tracking-wider hover:underline cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Or paste marksheet banner image URL (बैनर का लिंक डालें)"
+                        value={schoolConfig.calligraphyBanner || ""}
+                        onChange={(e) => {
+                          setSchoolConfig({ ...schoolConfig, calligraphyBanner: e.target.value });
+                          setAdminUrduLogo(e.target.value);
+                          localStorage.setItem("m_urdu_logo", e.target.value);
+                        }}
                         className="w-full mt-1.5 p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-slate-50 dark:bg-slate-950 font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400"
                       />
                     </div>
