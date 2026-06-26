@@ -5,6 +5,180 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { getClassSubjects, getSchoolClasses, getSchoolSessions } from '../data';
 import { removeBlackBackground } from '../lib/removeBlack';
+import confetti from 'canvas-confetti';
+
+const playCelebrationSounds = () => {
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+
+    // 1. Festive Chime Arpeggio (Chimes)
+    const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99]; // C4, E4, G4, C5, E5, G5
+    notes.forEach((freq, index) => {
+      setTimeout(() => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7);
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.7);
+      }, index * 120);
+    });
+
+    // 2. Crowd Cheering & Shouting Background Noise Sweep (Vocal Crowd Resonance)
+    const cheerDuration = 3.5; // 3.5 seconds
+    const cheerBufferSize = ctx.sampleRate * cheerDuration;
+    const cheerBuffer = ctx.createBuffer(1, cheerBufferSize, ctx.sampleRate);
+    const cheerData = cheerBuffer.getChannelData(0);
+    for (let i = 0; i < cheerBufferSize; i++) {
+      cheerData[i] = Math.random() * 2 - 1;
+    }
+
+    const cheerNode = ctx.createBufferSource();
+    cheerNode.buffer = cheerBuffer;
+
+    const cheerFilter = ctx.createBiquadFilter();
+    cheerFilter.type = 'bandpass';
+    cheerFilter.frequency.setValueAtTime(650, ctx.currentTime); // Vocal formants average around 600-800Hz
+    cheerFilter.Q.setValueAtTime(1.5, ctx.currentTime); // Broad bandpass for organic feel
+
+    const cheerGain = ctx.createGain();
+    cheerGain.gain.setValueAtTime(0.001, ctx.currentTime);
+    cheerGain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.6); // Rise
+    cheerGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + cheerDuration); // Long decay
+
+    cheerNode.connect(cheerFilter);
+    cheerFilter.connect(cheerGain);
+    cheerGain.connect(ctx.destination);
+    cheerNode.start();
+
+    // 3. Dense Crowd Clapping (120 overlayed claps to simulate a large crowd)
+    const clapBufferSize = ctx.sampleRate * 0.3; // 300ms max buffer for a single clap
+    const clapBuffer = ctx.createBuffer(1, clapBufferSize, ctx.sampleRate);
+    const clapData = clapBuffer.getChannelData(0);
+    for (let i = 0; i < clapBufferSize; i++) {
+      clapData[i] = Math.random() * 2 - 1;
+    }
+
+    const playSingleCrowdClap = (delayMs: number, pitch: number, vol: number, clapLengthSec: number) => {
+      setTimeout(() => {
+        const source = ctx.createBufferSource();
+        source.buffer = clapBuffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(pitch, ctx.currentTime);
+        filter.Q.setValueAtTime(4.5, ctx.currentTime); // Realistic handclap resonance
+
+        const gainNode = ctx.createGain();
+        gainNode.gain.setValueAtTime(vol, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + clapLengthSec);
+
+        source.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        source.start();
+        source.stop(ctx.currentTime + clapLengthSec);
+      }, delayMs);
+    };
+
+    // Synthesize 120 random claps spreading across 3.2 seconds
+    for (let i = 0; i < 120; i++) {
+      const delay = Math.random() * 3200; // delay spread
+      // Vary the pitch slightly to represent different hands clapping in the room (900Hz to 2100Hz)
+      const pitch = 900 + Math.random() * 1200; 
+      // Vary volume for spatial depth (near and far audience)
+      const vol = 0.04 + Math.random() * 0.14; 
+      // Vary hand cup sizes (clapping decay length)
+      const clapLen = 0.08 + Math.random() * 0.10; 
+      playSingleCrowdClap(delay, pitch, vol, clapLen);
+    }
+
+    // 4. Firecracker Popping Sounds (Patake)
+    const playFirecracker = (delayMs: number) => {
+      setTimeout(() => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(85 + Math.random() * 50, ctx.currentTime); // Low booming bass
+
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(320, ctx.currentTime);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+
+        // Multiple crackling sparkles following the main boom
+        for (let j = 0; j < 10; j++) {
+          const crackleDelay = 60 + Math.random() * 250;
+          setTimeout(() => {
+            const crackleOsc = ctx.createOscillator();
+            const crackleGain = ctx.createGain();
+            crackleOsc.type = 'triangle';
+            crackleOsc.frequency.setValueAtTime(1400 + Math.random() * 1200, ctx.currentTime);
+            crackleGain.gain.setValueAtTime(0.04, ctx.currentTime);
+            crackleGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
+
+            crackleOsc.connect(crackleGain);
+            crackleGain.connect(ctx.destination);
+            crackleOsc.start();
+            crackleOsc.stop(ctx.currentTime + 0.03);
+          }, crackleDelay);
+        }
+
+      }, delayMs);
+    };
+
+    // Play multiple spaced out firecrackers with rich stereophonic timing
+    playFirecracker(150);
+    playFirecracker(500);
+    playFirecracker(900);
+    playFirecracker(1400);
+    playFirecracker(1900);
+
+  } catch (err) {
+    console.error("Audio Synthesis error:", err);
+  }
+};
+
+const triggerPatake = () => {
+  const duration = 2.5 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
+
+  function randomInRange(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+  }
+
+  const interval: any = setInterval(function() {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    const particleCount = 50 * (timeLeft / duration);
+    // random explosions across the screen simulating firecrackers
+    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: randomInRange(0.2, 0.5) } });
+    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: randomInRange(0.2, 0.5) } });
+  }, 250);
+};
 
 interface ResultPortalProps {
   results: Result[];
@@ -76,6 +250,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
   const [passingYear, setPassingYear] = useState('2526'); // Matches Urdu numerals 2026 / 1447 AH
   const [searchTriggered, setSearchTriggered] = useState(false);
   const [foundResult, setFoundResult] = useState<Result | null>(null);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   // Dynamically extract exam variations or provide robust default ones based on configured sessions
   const availableSessions = React.useMemo(() => {
@@ -180,7 +355,15 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
         normalizeSession(r.session).toLowerCase() === normalizeSession(selectedSession).toLowerCase()
     );
 
-    setFoundResult(match || null);
+    if (match) {
+      setFoundResult(match);
+      setShowCelebration(true);
+      playCelebrationSounds();
+      triggerPatake();
+    } else {
+      setFoundResult(null);
+      setShowCelebration(false);
+    }
   };
 
   const handleReset = () => {
@@ -188,6 +371,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     setSearchTriggered(false);
     setFoundResult(null);
     setPrintImage('');
+    setShowCelebration(false);
   };
 
   // Maps stored marks to the 10 standard subjects gracefully
@@ -539,6 +723,55 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
   return (
     <div className="max-w-4xl mx-auto py-8">
+      {showCelebration && foundResult && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 no-print">
+          <div className="bg-gradient-to-br from-amber-50 to-white border-4 border-amber-400 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl relative overflow-hidden transform transition-all duration-300 animate-in fade-in zoom-in-95">
+            {/* Multi-color top accent bar */}
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 via-blue-500 to-purple-500"></div>
+            
+            <div className="mt-4 flex justify-center gap-1 text-5xl">
+              🎉 👏 💥
+            </div>
+            
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1e5631] mt-4 tracking-tight drop-shadow-sm">
+              CONGRATULATIONS!
+            </h2>
+            <h3 className="text-xl font-bold text-amber-600 mt-1 font-sans">
+              बधाई हो! / مبارکباد!
+            </h3>
+            
+            <p className="text-slate-600 font-medium mt-3 text-sm sm:text-base px-2">
+              शाबाश! आपका परीक्षा परिणाम घोषित हो चुका है और आप सफल रहे हैं!
+            </p>
+
+            {/* Student Highlight Box */}
+            <div className="my-6 bg-white border border-amber-200 rounded-xl p-4 shadow-sm text-left space-y-2 max-w-xs mx-auto">
+              <div className="flex justify-between border-b border-slate-100 pb-1.5 items-center">
+                <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">Student Name</span>
+                <span className="text-slate-900 font-extrabold text-sm text-right">{foundResult.studentName.toUpperCase()}</span>
+              </div>
+              <div className="flex justify-between border-b border-slate-100 pb-1.5 items-center">
+                <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">Class</span>
+                <span className="text-slate-900 font-extrabold text-sm">{formatClassName(foundResult.className)}</span>
+              </div>
+              <div className="flex justify-between pb-0.5 items-center">
+                <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">Roll No</span>
+                <span className="text-slate-900 font-extrabold text-sm">{foundResult.rollNo}</span>
+              </div>
+            </div>
+
+            {/* Main view marksheet action */}
+            <button
+              type="button"
+              onClick={() => setShowCelebration(false)}
+              className="w-full py-3.5 bg-[#1e5631] hover:bg-[#153e22] text-white font-extrabold text-sm rounded-xl transition-all duration-200 cursor-pointer shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
+            >
+              📄 मार्कशीट देखें / View Marksheet
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Dynamic Overwrite Styles for perfect print formatting (Hiding standard page menus on print) */}
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
