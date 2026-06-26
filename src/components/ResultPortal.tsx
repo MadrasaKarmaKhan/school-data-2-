@@ -171,33 +171,14 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     }
 
     setSearchTriggered(true);
-    // 1. Try to find the exact result matching Roll Number, Class Name, Exam Type and Session/Year
-    let match = results.find(
+    // Try to find the exact result matching Roll Number, Class Name, Exam Type and Session/Year
+    const match = results.find(
       (r) =>
         r.rollNo.toString().trim() === rollNo.trim() &&
         r.className === selectedClass &&
         (r.examType || 'Annual').toLowerCase() === selectedExamType.toLowerCase() &&
         normalizeSession(r.session).toLowerCase() === normalizeSession(selectedSession).toLowerCase()
     );
-
-    // 2. Fallback: Search by Roll Number and Class Name (allowing graceful corrections for Exam Type/Session)
-    if (!match) {
-      const fallbackMatch = results.find(
-        (r) =>
-          r.rollNo.toString().trim() === rollNo.trim() &&
-          r.className === selectedClass
-      );
-      if (fallbackMatch) {
-        match = fallbackMatch;
-        // Auto-update selection options to match the actual student's session and exam type criteria
-        if (fallbackMatch.examType) {
-          setSelectedExamType(fallbackMatch.examType);
-        }
-        if (fallbackMatch.session) {
-          setSelectedSession(normalizeSession(fallbackMatch.session));
-        }
-      }
-    }
 
     setFoundResult(match || null);
   };
