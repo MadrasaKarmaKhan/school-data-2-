@@ -135,14 +135,30 @@ export default function App() {
     let unsubNews: (() => void) | undefined;
     let unsubAdmissions: (() => void) | undefined;
 
+    let configLoaded = false;
+    let newsLoaded = false;
+    let studentsLoaded = false;
+    let hasCheckedLoading = false;
+
+    const checkHideLoading = () => {
+      if (configLoaded && newsLoaded && studentsLoaded && !hasCheckedLoading) {
+        hasCheckedLoading = true;
+        setLoading(false);
+      }
+    };
+
     unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data) => {
       if (data) setSchoolConfig(data);
+      configLoaded = true;
+      checkHideLoading();
     });
     unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data) => {
       if (data) setTeachers(data);
     });
     unsubStudents = subscribeToFirebase('schoolData', 'students', (data) => {
       if (data) setStudents(data);
+      studentsLoaded = true;
+      checkHideLoading();
     });
     unsubResults = subscribeToFirebase('schoolData', 'results', (data) => {
       if (data && Array.isArray(data)) {
@@ -155,14 +171,20 @@ export default function App() {
     });
     unsubNews = subscribeToFirebase('schoolData', 'news', (data) => {
       if (data) setNews(data);
+      newsLoaded = true;
+      checkHideLoading();
     });
     unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data) => {
       if (data) setAdmissions(data);
     });
 
     const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1300);
+      if (!hasCheckedLoading) {
+        hasCheckedLoading = true;
+        setLoading(false);
+      }
+    }, 4500); // Wait up to 4.5 seconds for fresh data
+
     return () => {
       clearTimeout(timer);
       if (unsubSchoolConfig) unsubSchoolConfig();

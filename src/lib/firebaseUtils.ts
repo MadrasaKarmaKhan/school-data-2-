@@ -56,6 +56,8 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
         }
         cache.set(cacheKey, dataString);
         callback(data);
+      } else {
+        callback(null);
       }
     },
     (error: any) => {
