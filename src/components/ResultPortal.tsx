@@ -251,6 +251,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
   const [searchTriggered, setSearchTriggered] = useState(false);
   const [foundResult, setFoundResult] = useState<Result | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [printScale, setPrintScale] = useState(100);
 
   // Dynamically extract exam variations or provide robust default ones based on configured sessions
   const availableSessions = React.useMemo(() => {
@@ -484,6 +485,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   flex-direction: column !important;
                   box-sizing: border-box !important;
                   transform: none !important;
+                  zoom: ${printScale / 100} !important;
                 }
                 @media print {
                   body {
@@ -823,6 +825,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             flex-direction: column !important;
             justify-content: space-between !important; 
             transform-origin: top center !important;
+            zoom: ${printScale / 100} !important;
             /* Allow browser to scale this 900x1311 block down to the page size */
           }
           
@@ -942,26 +945,63 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
       ) : (
         <div className="space-y-6">
           {/* Controls Bar */}
-          <div className="flex flex-col sm:flex-row justify-between items-center bg-white dark:bg-slate-850 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm gap-2 no-print">
-            <button
-              onClick={handleReset}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-800 dark:text-white text-xs font-bold rounded-lg flex items-center gap-1.5 cursor-pointer border border-slate-200 dark:border-slate-700 transition"
-            >
-              <RefreshCw className="w-3.5 h-3.5" /> Search Another
-            </button>
+          <div className="flex flex-col bg-white dark:bg-slate-850 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm gap-4 no-print">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+              <button
+                onClick={handleReset}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-800 dark:text-white text-xs font-bold rounded-lg flex items-center gap-1.5 cursor-pointer border border-slate-200 dark:border-slate-700 transition"
+              >
+                <RefreshCw className="w-3.5 h-3.5" /> Search Another
+              </button>
 
+              {foundResult && (
+                <div className="flex gap-2 flex-wrap items-center">
+                  {/* Print button on standard view */}
+                  <button
+                    onClick={handleLaptopPrint}
+                    disabled={isGeneratingPrint}
+                    className={`px-5 py-2 bg-[#1e5631] hover:bg-[#153e22] text-white text-xs font-bold rounded-lg flex items-center gap-1.5 shadow transition cursor-pointer ${
+                      isGeneratingPrint ? 'opacity-70 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    <Printer className="w-4 h-4" /> 
+                    {isGeneratingPrint ? "Preparing..." : "🖨️ Print Marksheet A4"}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile adjustment instructions & scale slider helper */}
             {foundResult && (
-              <div className="flex gap-2 flex-wrap">
-                <button
-                  onClick={handleLaptopPrint}
-                  disabled={isGeneratingPrint}
-                  className={`px-5 py-2 bg-[#1e5631] hover:bg-[#153e22] text-white text-xs font-bold rounded-lg flex items-center gap-1.5 shadow transition cursor-pointer ${
-                    isGeneratingPrint ? 'opacity-70 cursor-not-allowed' : ''
-                  }`}
-                >
-                  <Printer className="w-4 h-4" /> 
-                  {isGeneratingPrint ? "Preparing..." : "🖨️ Print Marksheet A4"}
-                </button>
+              <div className="p-3 bg-amber-50/50 dark:bg-slate-800/40 border border-amber-200/60 dark:border-slate-700/60 rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-3 text-left">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 font-extrabold text-xs">
+                    <span>📱</span>
+                    <span>Mobile Screen Print Adjuster (मोबाइल प्रिंट साइज़ सुधारें)</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                    अगर मोबाइल से प्रिंट करने पर मार्कशीट साइड से कट रही है, तो नीचे से प्रिंट साइज़ को कम 
+                    करें (जैसे <strong>70% या 75%</strong>) और प्रिंट सेटिंग्स में <strong>Portrait (पोर्ट्रेट)</strong> और 
+                    <strong>A4</strong> साइज़ ज़रूर सेट करें।
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 self-start md:self-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 min-w-[180px] justify-between shadow-sm">
+                  <span className="text-[11px] font-extrabold text-slate-500 dark:text-slate-400">Print Size:</span>
+                  <select
+                    value={printScale}
+                    onChange={(e) => setPrintScale(Number(e.target.value))}
+                    className="bg-transparent text-xs font-extrabold text-[#1e5631] dark:text-[#a4be7b] border-none focus:outline-none focus:ring-0 cursor-pointer"
+                  >
+                    <option value="100">100% (Normal)</option>
+                    <option value="90">90% (Medium)</option>
+                    <option value="85">85% (Compact)</option>
+                    <option value="80">80% (Narrow)</option>
+                    <option value="75">75% (Mobile Ideal)</option>
+                    <option value="70">70% (Mobile Extra Fit)</option>
+                    <option value="65">65% (Very Small)</option>
+                  </select>
+                </div>
               </div>
             )}
           </div>
