@@ -810,9 +810,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
             margin: 0 auto !important;
             width: 900px !important;
             max-width: 900px !important;
-            height: 1296px !important; 
-            min-height: 1296px !important;
-            max-height: 1296px !important;
+            height: 1311px !important; 
+            min-height: 1311px !important;
+            max-height: 1311px !important;
             border: 5px solid #1e5631 !important;
             box-shadow: none !important;
             background: white !important;
@@ -975,9 +975,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 style={{
                   width: '900px',
                   maxWidth: '900px',
-                  height: '1296px',
-                  minHeight: '1296px',
-                  maxHeight: '1296px',
+                  height: '1311px',
+                  minHeight: '1311px',
+                  maxHeight: '1311px',
                   margin: 'auto',
                   background: '#ffffff',
                   border: '5px solid #1e5631',
@@ -994,10 +994,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   id="topSpace"
                   style={{
                     position: 'relative',
-                    height: '260px',
-                    marginBottom: '15px',
+                    height: '280px',
+                    marginBottom: '30px',
                     background: 'linear-gradient(90deg, #fdfbf7, #fffdd0, #fdfbf7)',
-                    margin: '-20px -20px 15px -20px',
+                    margin: '-20px -20px 30px -20px',
                     padding: '15px',
                     borderRadius: '12px 12px 0 0',
                     clipPath: 'ellipse(110% 100% at 50% 0%)',
@@ -1072,8 +1072,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                       position: 'absolute',
                       left: '10px',
                       top: '40px',
-                      width: '180px',
-                      height: '180px',
+                      width: '185px',
+                      height: '185px',
                       zIndex: '10',
                       display: 'flex',
                       alignItems: 'center',
@@ -1083,10 +1083,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     {schoolLogo ? (
                       <img src={schoolLogo} alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: 'transparent' }} />
                     ) : (
-                      <div className="w-[160px] h-[160px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
-                        <span className="text-[36px]">🕌</span>
-                        <span className="text-[11px] font-black leading-tight text-[#1e5631]">NOORUL ULOOM</span>
-                        <span className="text-[9px] font-bold text-[#1e5631]">KARMALHAN</span>
+                      <div className="w-[170px] h-[170px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
+                        <span className="text-[40px]">🕌</span>
+                        <span className="text-[12px] font-black leading-tight text-[#1e5631]">NOORUL ULOOM</span>
+                        <span className="text-[10px] font-bold text-[#1e5631]">KARMALHAN</span>
                       </div>
                     )}
                   </div>
@@ -1110,29 +1110,29 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                           id="urduLogoImg" 
                           src={urduLogo} 
                           alt="Urdu Name calligraphy" 
-                          style={{ maxWidth: '750px', height: '110px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
+                          style={{ maxWidth: '750px', height: '120px', objectFit: 'contain', margin: 'auto', backgroundColor: 'transparent' }} 
                         />
                       ) : (
-                        <div style={{ height: '110px', width: '750px', margin: '0 auto' }} className="flex flex-col items-center justify-center p-2 rounded bg-[#fffdd0]/30">
-                          <span style={{ fontSize: '34px', color: '#1b5e20', fontFamily: 'Georgia, serif', whiteSpace: 'nowrap' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
+                        <div style={{ height: '120px', width: '750px', margin: '0 auto' }} className="flex flex-col items-center justify-center p-2 rounded bg-[#fffdd0]/30">
+                          <span style={{ fontSize: '38px', color: '#1b5e20', fontFamily: 'Georgia, serif', whiteSpace: 'nowrap' }}>مَدْرَسَة عَرَبِيَّة نُورُ الْعُلُومِ كَارْمَاخَانْ</span>
                         </div>
                       )}
                     </div>
-                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: '24px', fontWeight: 800, color: '#0000FF', marginTop: '-5px', whiteSpace: 'nowrap' }}>
                       MADARSA ARABIA NOORUL ULOOM
                     </div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: '16px', fontWeight: 700, color: '#0000FF', whiteSpace: 'nowrap' }}>
                       Karma Khan, Distt: Sant Kabir Nagar (U.P.)
                     </div>
                     <div 
                       style={{
-                        fontSize: '20px', 
-                        marginTop: '6px', 
+                        fontSize: '24px', 
+                        marginTop: '8px', 
                         background: '#FFFDD0', 
                         color: '#000000', 
                         display: 'inline-block', 
-                        padding: '3px 20px', 
-                        borderRadius: '14px', 
+                        padding: '4px 28px', 
+                        borderRadius: '18px', 
                         border: '2px solid #1e5631',
                         fontWeight: 900
                       }}
@@ -1183,43 +1183,43 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                 {/* Student Details Fields - Beautifully Aligned Rows */}
                 {/* Row 1 */}
-                <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '8px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
+                <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                   <div style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '15px', fontWeight: 800, width: '120px', display: 'inline-block' }}>Student Name:</span> 
+                    <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Student Name:</span> 
                     <input 
                       readOnly 
                       value={foundResult.studentName.toUpperCase()} 
                       style={{ 
-                        fontSize: '15px', 
+                        fontSize: '17px', 
                         fontWeight: 900, 
                         border: '1.5px solid #1e5631', 
                         borderRadius: '4px', 
                         background: '#f9fff9', 
                         width: '100%', 
                         boxSizing: 'border-box', 
-                        height: '28px', 
+                        height: '32px', 
                         color: '#000000',
-                        padding: '2px 8px',
+                        padding: '4px 8px',
                         outline: 'none'
                       }}
                     />
                   </div>
                   <div style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '15px', fontWeight: 800, width: '110px', display: 'inline-block' }}>Father Name:</span> 
+                    <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Father Name:</span> 
                     <input 
                       readOnly 
                       value={foundResult.fatherName.toUpperCase()} 
                       style={{ 
-                        fontSize: '15px', 
+                        fontSize: '17px', 
                         fontWeight: 900, 
                         border: '1.5px solid #1e5631', 
                         borderRadius: '4px', 
                         background: '#f9fff9', 
                         width: '100%', 
                         boxSizing: 'border-box', 
-                        height: '28px', 
+                        height: '32px', 
                         color: '#000000',
-                        padding: '2px 8px',
+                        padding: '4px 8px',
                         outline: 'none'
                       }}
                     />
@@ -1227,86 +1227,86 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 </div>
 
                 {/* Row 2 */}
-                <div className="card-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
+                <div className="card-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                   <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 800, width: '100px', display: 'inline-block' }}>Mother Name:</span> 
+                    <span style={{ fontSize: '15px', fontWeight: 800, width: '105px', display: 'inline-block' }}>Mother Name:</span> 
                     <input 
                       readOnly 
                       value={(foundResult.motherName || "ZAREENA KHATOON").toUpperCase()} 
                       style={{ 
-                        fontSize: '14px', 
+                        fontSize: '16px', 
                         fontWeight: 900, 
                         border: '1.5px solid #1e5631', 
                         borderRadius: '4px', 
                         background: '#f9fff9', 
                         width: '100%', 
                         boxSizing: 'border-box', 
-                        height: '28px', 
+                        height: '32px', 
                         color: '#000000',
-                        padding: '2px 8px',
+                        padding: '4px 8px',
                         outline: 'none'
                       }}
                     />
                   </div>
                   <div style={{ width: '185px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    <span style={{ fontSize: '14px', fontWeight: 800 }}>D.O.B:</span> 
+                    <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                     <input 
                       readOnly 
                       value={foundResult.dateOfBirth || "12-04-2011"} 
                       style={{ 
-                        fontSize: '14px', 
+                        fontSize: '16px', 
                         fontWeight: 900, 
                         border: '1.5px solid #1e5631', 
                         borderRadius: '4px', 
                         background: '#f9fff9', 
                         width: '100%', 
                         boxSizing: 'border-box', 
-                        height: '28px', 
+                        height: '32px', 
                         color: '#000000',
                         textAlign: 'center',
-                        padding: '2px 8px',
+                        padding: '4px 8px',
                         outline: 'none'
                       }}
                     />
                   </div>
                   <div style={{ width: '145px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                     <span style={{ fontSize: '14px', fontWeight: 800 }}>Class:</span> 
+                     <span style={{ fontSize: '15px', fontWeight: 800 }}>Class:</span> 
                      <input 
                        readOnly 
                        value={formatClassName(foundResult.className)} 
                        style={{ 
-                         fontSize: '14px', 
+                         fontSize: '16px', 
                          fontWeight: 900, 
                          border: '1.5px solid #1e5631', 
                          borderRadius: '4px', 
                          background: '#f9fff9', 
                          width: '100%', 
                          boxSizing: 'border-box', 
-                         height: '28px', 
+                         height: '32px', 
                          color: '#000000',
                          textAlign: 'center',
-                         padding: '2px 8px',
+                         padding: '4px 8px',
                          outline: 'none'
                        }}
                      />
                   </div>
                   <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    <span style={{ fontSize: '14px', fontWeight: 800, width: '50px', display: 'inline-block' }}>Roll No:</span> 
+                    <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
                     <input 
                       readOnly 
                       value={foundResult.rollNo} 
                       style={{ 
-                        fontSize: '14px', 
+                        fontSize: '16px', 
                         fontWeight: 900, 
                         border: '1.5px solid #1e5631', 
                         borderRadius: '4px', 
                         background: '#f9fff9', 
                         width: '100%', 
                         boxSizing: 'border-box', 
-                        height: '28px', 
+                        height: '32px', 
                         color: '#000000',
                         textAlign: 'center',
-                        padding: '2px 8px',
+                        padding: '4px 8px',
                         outline: 'none'
                       }}
                     />
@@ -1314,23 +1314,23 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 </div>
 
                 {/* Address full width block underneath */}
-                <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '8px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
+                <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                   <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '15px', fontWeight: 800, width: '70px', display: 'inline-block' }}>Address:</span> 
+                    <span style={{ fontSize: '17px', fontWeight: 800, width: '75px', display: 'inline-block' }}>Address:</span> 
                     <input 
                       readOnly 
                       value={foundResult.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH"} 
                       style={{ 
-                        fontSize: '14px', 
+                        fontSize: '15px', 
                         fontWeight: 900, 
                         border: '1.5px solid #1e5631', 
                         borderRadius: '4px', 
                         background: '#f9fff9', 
                         width: '100%', 
                         boxSizing: 'border-box', 
-                        height: '28px', 
+                        height: '32px', 
                         color: '#000000',
-                        padding: '2px 8px',
+                        padding: '4px 8px',
                         outline: 'none'
                       }}
                     />
@@ -1338,13 +1338,13 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 </div>
 
                 {/* Rainbow Table of Subject Marks */}
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '4px', background: 'white', border: '2px solid #1e5631' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', background: 'white', border: '2px solid #1e5631' }}>
                   <thead>
                     <tr>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '60px', verticalAlign: 'middle' }}>S.R.</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', background: '#FFFDD0', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Subject</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '100px', verticalAlign: 'middle' }}>Max</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '160px', verticalAlign: 'middle' }}>Marks Obtained</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '60px', verticalAlign: 'middle' }}>S.R.</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Subject</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '100px', verticalAlign: 'middle' }}>Max</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '160px', verticalAlign: 'middle' }}>Marks Obtained</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1354,10 +1354,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                       return (
                         <tr key={sub} style={{ backgroundColor: color }}>
-                          <td style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', fontFamily: 'sans-serif', verticalAlign: 'middle' }}>{idx + 1}</td>
-                          <td className="subject-name" style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontWeight: 950, fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#000000', verticalAlign: 'middle' }}>{sub}</td>
-                          <td style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>100</td>
-                          <td style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>{mark}</td>
+                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', fontFamily: 'sans-serif', verticalAlign: 'middle' }}>{idx + 1}</td>
+                          <td className="subject-name" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 950, fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#000000', verticalAlign: 'middle' }}>{sub}</td>
+                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>100</td>
+                          <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>{mark}</td>
                         </tr>
                       );
                     })}
@@ -1365,17 +1365,17 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   <tfoot>
                     {/* Autocalculated Row Total */}
                     <tr style={{ background: '#f9fff9' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Total</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>{getClassSubjects(foundResult.className).length * 100}</th>
-                      <th id="total" style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Total</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>{getClassSubjects(foundResult.className).length * 100}</th>
+                      <th id="total" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
                         {getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0)}
                       </th>
                     </tr>
                     
                     {/* Autocalculated Percentage */}
                     <tr style={{ background: '#f9fff9' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Percentage</th>
-                      <th colSpan={2} id="percent" style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Percentage</th>
+                      <th colSpan={2} id="percent" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
                         {getClassSubjects(foundResult.className).length > 0 ? (
                           (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length).toFixed(2)
                         ) : '0.00'}%
@@ -1384,16 +1384,16 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                     {/* Student Rank relative to active database */}
                     <tr style={{ backgroundColor: '#fffdd0' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Rank</th>
-                      <th colSpan={2} id="rank" style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '16px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Rank</th>
+                      <th colSpan={2} id="rank" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
                         {getAutocalculatedRank(foundResult)}
                       </th>
                     </tr>
 
                     {/* Calculated Division Row */}
                     <tr style={{ backgroundColor: '#fffdd0' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '15px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Division</th>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center', fontSize: '16px', fontWeight: 900, color: '#000000', fontStyle: 'italic', verticalAlign: 'middle' }}>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Division</th>
+                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, color: '#000000', fontStyle: 'italic', verticalAlign: 'middle' }}>
                         {foundResult.division || ""}
                       </th>
                     </tr>
@@ -1404,11 +1404,11 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 <div 
                   id="resultBox"
                   style={{
-                    margin: '8px auto', 
+                    margin: '15px auto', 
                     width: '70%', 
-                    padding: '6px', 
+                    padding: '10px', 
                     textAlign: 'center', 
-                    fontSize: '19px', 
+                    fontSize: '22px', 
                     fontWeight: 900, 
                     background: '#fdfbf7', 
                     border: '2px solid #1b5e20', 
@@ -1472,15 +1472,15 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     justifyContent: 'space-between',
                     alignItems: 'flex-end',
                     padding: '0 40px',
-                    paddingBottom: '10px',
+                    paddingBottom: '30px',
                     color: '#1e5631',
                     fontSize: '16px',
-                    height: '90px'
+                    height: '110px'
                   }}
                 >
                   <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
                     {config?.principalSignatureUrl ? (
-                      <div style={{ position: 'absolute', bottom: '18px', left: '50%', transform: 'translateX(-50%)', width: '160px', height: '50px', pointerEvents: 'none' }}>
+                      <div style={{ position: 'absolute', bottom: '22px', left: '50%', transform: 'translateX(-50%)', width: '160px', height: '65px', pointerEvents: 'none' }}>
                         <img 
                           src={config.principalSignatureUrl} 
                           alt="Principal Signature" 
@@ -1494,7 +1494,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                   <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
                     {config?.schoolStampUrl ? (
-                      <div style={{ position: 'absolute', bottom: '2px', left: '50%', transform: 'translateX(-50%)', width: '130px', height: '130px', pointerEvents: 'none', zIndex: 10 }}>
+                      <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', width: '165px', height: '165px', pointerEvents: 'none', zIndex: 10 }}>
                         <img 
                           src={config.schoolStampUrl} 
                           alt="School Stamp" 
