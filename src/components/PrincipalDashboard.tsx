@@ -2057,13 +2057,13 @@ export default function PrincipalDashboard({
                   <input
                     type="file"
                     id="adminLogoUploadInput"
-                    accept="image/png"
+                    accept="image/png, image/jpeg, image/jpg"
                     style={{ display: 'none' }}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        if (file.type !== "image/png") {
-                          alert("Please upload a transparent .png format logo only to avoid background errors!");
+                        if (file.type !== "image/png" && file.type !== "image/jpeg" && file.type !== "image/jpg") {
+                          alert("Please upload a valid .png or .jpg/.jpeg format logo!");
                         }
                         resizeImage(file, 1200, 1200, 0.95).then((url) => {
                           localStorage.setItem("m_logo", url);
@@ -2192,8 +2192,8 @@ export default function PrincipalDashboard({
                           <div className="w-[170px] h-[170px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
                             <span className="text-[28px]">🕌</span>
                             <span className="text-[10px] font-black leading-tight text-[#1e5631]">Click to Upload</span>
-                            <span className="text-[9px] font-bold text-[#1e5631]">school_logo.png</span>
-                            <span className="text-[8px] text-[#1e5631] opacity-75">(Transparent PNG Only)</span>
+                            <span className="text-[9px] font-bold text-[#1e5631]">school_logo (PNG / JPG)</span>
+                            <span className="text-[8px] text-[#1e5631] opacity-75">(PNG or JPG supported)</span>
                           </div>
                         )}
                       </div>
