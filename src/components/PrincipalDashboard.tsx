@@ -3653,10 +3653,10 @@ export default function PrincipalDashboard({
                         <table className="card-marks-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', background: 'white', border: '2px solid #1e5631' }}>
                           <thead>
                             <tr>
-                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '60px' }}>S.R.</th>
-                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900 }}>Subject</th>
-                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '100px' }}>Max</th>
-                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '160px' }}>Marks Obtained</th>
+                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '60px', verticalAlign: 'middle' }}>S.R.</th>
+                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Subject</th>
+                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '100px', verticalAlign: 'middle' }}>Max</th>
+                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', background: '#FFFDD0', color: '#000000', fontWeight: 900, width: '160px', verticalAlign: 'middle' }}>Marks Obtained</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -3688,33 +3688,33 @@ export default function PrincipalDashboard({
 
                               return (
                                 <tr key={sub} style={{ backgroundColor: color }}>
-                                  <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', fontFamily: 'sans-serif' }}>{idx + 1}</td>
-                                  <td className="subject-name" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 950, fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#000000' }}>{sub}</td>
-                                  <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900 }}>100</td>
-                                  <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000' }}>{mValue}</td>
+                                  <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', fontFamily: 'sans-serif', verticalAlign: 'middle' }}>{idx + 1}</td>
+                                  <td className="subject-name" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 950, fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#000000', verticalAlign: 'middle' }}>{sub}</td>
+                                  <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>100</td>
+                                  <td style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>{mValue}</td>
                                 </tr>
                               );
                             })}
                           </tbody>
                           <tfoot>
                             <tr style={{ background: '#f9fff9' }}>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Total</th>
-                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900 }}>{subjects.length * 100}</th>
-                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000' }}>{totalScore}</th>
+                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Total</th>
+                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>{subjects.length * 100}</th>
+                              <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>{totalScore}</th>
                             </tr>
                             <tr style={{ background: '#f9fff9' }}>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Percentage</th>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000' }}>
+                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Percentage</th>
+                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
                                 {subjects.length > 0 ? (totalScore / subjects.length).toFixed(2) : '0.00'}%
                               </th>
                             </tr>
                             <tr style={{ backgroundColor: '#fffdd0' }}>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Rank</th>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, color: '#000000' }}>{index + 1}</th>
+                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Rank</th>
+                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>{index + 1}</th>
                             </tr>
                             <tr style={{ backgroundColor: '#fffdd0' }}>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Division</th>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, fontStyle: 'italic', color: '#000000' }}>
+                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Division</th>
+                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, fontStyle: 'italic', color: '#000000', verticalAlign: 'middle' }}>
                                 {res.division || ""}
                               </th>
                             </tr>
