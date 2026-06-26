@@ -413,7 +413,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     }, 150);
   };
 
-  const handleDownloadPDF = () => {
+  const handleDownloadJPG = () => {
     setIsGeneratingPrint(true);
     
     // Delay capture slightly to let the React state update flush and render shifted text positions
@@ -426,7 +426,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
       }
       
       html2canvas(card, {
-        scale: 2, // High DPI target print quality
+        scale: 2, // High DPI target quality
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff', // Ensures white backgrounds
@@ -523,20 +523,16 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           }
         }
       }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 210;
-        const pageHeight = 297;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
-        // Margins/centering check: Since our aspect ratio fits standard A4 very well,
-        // let's place it nicely on the A4 canvas
-        const yPosition = imgHeight < pageHeight ? (pageHeight - imgHeight) / 2 : 0;
-        pdf.addImage(imgData, 'PNG', 0, yPosition, imgWidth, Math.min(imgHeight, pageHeight));
-        pdf.save(`Noorul_Uloom_Marksheet_${foundResult?.rollNo || 'Result'}.pdf`);
+        const imgData = canvas.toDataURL('image/jpeg', 0.98);
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = `Noorul_Uloom_Marksheet_${foundResult?.rollNo || 'Result'}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         setIsGeneratingPrint(false);
       }).catch(err => {
-        console.error("PDF export error:", err);
+        console.error("JPG export error:", err);
         setIsGeneratingPrint(false);
         alert("Download failed. Please print directly using 'Print Marksheet A4' or open in a new tab.");
       });
@@ -742,15 +738,6 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
             {foundResult && (
               <div className="flex gap-2 flex-wrap">
-                <button
-                  onClick={handleDownloadPDF}
-                  disabled={isGeneratingPrint}
-                  className={`px-5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-extrabold rounded-lg flex items-center gap-1.5 shadow transition cursor-pointer ${
-                    isGeneratingPrint ? 'opacity-70 cursor-not-allowed' : ''
-                  }`}
-                >
-                  <span>💾 Download Marksheet (PDF)</span>
-                </button>
                 <button
                   onClick={handleLaptopPrint}
                   disabled={isGeneratingPrint}
@@ -985,7 +972,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                   <div style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
                     <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Student Name:</span> 
-                    <div 
+                    <input 
+                      readOnly 
+                      value={foundResult.studentName.toUpperCase()} 
                       style={{ 
                         fontSize: '17px', 
                         fontWeight: 900, 
@@ -996,22 +985,16 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         boxSizing: 'border-box', 
                         height: '32px', 
                         color: '#000000',
-                        display: 'block',
-                        lineHeight: '29px',
-                        padding: '0px 8px',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis'
+                        padding: '4px 8px',
+                        outline: 'none'
                       }}
-                    >
-                      <span style={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {foundResult.studentName.toUpperCase()}
-                      </span>
-                    </div>
+                    />
                   </div>
                   <div style={{ flex: '1.5', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
                     <span style={{ fontSize: '17px', fontWeight: 800, width: '130px', display: 'inline-block' }}>Father Name:</span> 
-                    <div 
+                    <input 
+                      readOnly 
+                      value={foundResult.fatherName.toUpperCase()} 
                       style={{ 
                         fontSize: '17px', 
                         fontWeight: 900, 
@@ -1022,18 +1005,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         boxSizing: 'border-box', 
                         height: '32px', 
                         color: '#000000',
-                        display: 'block',
-                        lineHeight: '29px',
-                        padding: '0px 8px',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis'
+                        padding: '4px 8px',
+                        outline: 'none'
                       }}
-                    >
-                      <span style={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {foundResult.fatherName.toUpperCase()}
-                      </span>
-                    </div>
+                    />
                   </div>
                 </div>
 
@@ -1041,7 +1016,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 <div className="card-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                   <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                     <span style={{ fontSize: '15px', fontWeight: 800, width: '105px', display: 'inline-block' }}>Mother Name:</span> 
-                    <div 
+                    <input 
+                      readOnly 
+                      value={(foundResult.motherName || "ZAREENA KHATOON").toUpperCase()} 
                       style={{ 
                         fontSize: '16px', 
                         fontWeight: 900, 
@@ -1052,22 +1029,16 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         boxSizing: 'border-box', 
                         height: '32px', 
                         color: '#000000',
-                        display: 'block',
-                        lineHeight: '29px',
-                        padding: '0px 8px',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis'
+                        padding: '4px 8px',
+                        outline: 'none'
                       }}
-                    >
-                      <span style={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {(foundResult.motherName || "ZAREENA KHATOON").toUpperCase()}
-                      </span>
-                    </div>
+                    />
                   </div>
                   <div style={{ width: '185px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
-                    <div 
+                    <input 
+                      readOnly 
+                      value={foundResult.dateOfBirth || "12-04-2011"} 
                       style={{ 
                         fontSize: '16px', 
                         fontWeight: 900, 
@@ -1078,23 +1049,17 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         boxSizing: 'border-box', 
                         height: '32px', 
                         color: '#000000',
-                        display: 'block',
-                        lineHeight: '29px',
                         textAlign: 'center',
-                        padding: '0px 8px',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis'
+                        padding: '4px 8px',
+                        outline: 'none'
                       }}
-                    >
-                      <span style={{ display: 'inline-block' }}>
-                        {foundResult.dateOfBirth || "12-04-2011"}
-                      </span>
-                    </div>
+                    />
                   </div>
                   <div style={{ width: '145px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                      <span style={{ fontSize: '15px', fontWeight: 800 }}>Class:</span> 
-                     <div 
+                     <input 
+                       readOnly 
+                       value={formatClassName(foundResult.className)} 
                        style={{ 
                          fontSize: '16px', 
                          fontWeight: 900, 
@@ -1105,23 +1070,17 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                          boxSizing: 'border-box', 
                          height: '32px', 
                          color: '#000000',
-                         display: 'block',
-                         lineHeight: '29px',
                          textAlign: 'center',
-                         padding: '0px 8px',
-                         overflow: 'hidden',
-                         whiteSpace: 'nowrap',
-                         textOverflow: 'ellipsis'
+                         padding: '4px 8px',
+                         outline: 'none'
                        }}
-                     >
-                       <span style={{ display: 'inline-block' }}>
-                         {formatClassName(foundResult.className)}
-                       </span>
-                     </div>
+                     />
                   </div>
                   <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
-                    <div 
+                    <input 
+                      readOnly 
+                      value={foundResult.rollNo} 
                       style={{ 
                         fontSize: '16px', 
                         fontWeight: 900, 
@@ -1132,19 +1091,11 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         boxSizing: 'border-box', 
                         height: '32px', 
                         color: '#000000',
-                        display: 'block',
-                        lineHeight: '29px',
                         textAlign: 'center',
-                        padding: '0px 8px',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis'
+                        padding: '4px 8px',
+                        outline: 'none'
                       }}
-                    >
-                      <span style={{ display: 'inline-block' }}>
-                        {foundResult.rollNo}
-                      </span>
-                    </div>
+                    />
                   </div>
                 </div>
 
@@ -1152,7 +1103,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 <div className="card-details-row" style={{ display: 'flex', gap: '15px', marginBottom: '14px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
                   <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
                     <span style={{ fontSize: '17px', fontWeight: 800, width: '75px', display: 'inline-block' }}>Address:</span> 
-                    <div 
+                    <input 
+                      readOnly 
+                      value={foundResult.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH"} 
                       style={{ 
                         fontSize: '15px', 
                         fontWeight: 900, 
@@ -1163,18 +1116,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                         boxSizing: 'border-box', 
                         height: '32px', 
                         color: '#000000',
-                        display: 'block',
-                        lineHeight: '29px',
-                        padding: '0px 8px',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis'
+                        padding: '4px 8px',
+                        outline: 'none'
                       }}
-                    >
-                      <span style={{ width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {foundResult.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH"}
-                      </span>
-                    </div>
+                    />
                   </div>
                 </div>
 
