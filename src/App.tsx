@@ -138,10 +138,14 @@ export default function App() {
     let configLoaded = false;
     let newsLoaded = false;
     let studentsLoaded = false;
+    let resultsLoaded = false;
+    let teachersLoaded = false;
+    let galleryLoaded = false;
+    let admissionsLoaded = false;
     let hasCheckedLoading = false;
 
     const checkHideLoading = () => {
-      if (configLoaded && newsLoaded && studentsLoaded && !hasCheckedLoading) {
+      if (configLoaded && newsLoaded && studentsLoaded && resultsLoaded && teachersLoaded && galleryLoaded && admissionsLoaded && !hasCheckedLoading) {
         hasCheckedLoading = true;
         setLoading(false);
       }
@@ -154,6 +158,8 @@ export default function App() {
     });
     unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data, fromCache, dataChanged) => {
       if (data && dataChanged) setTeachers(data);
+      if (!fromCache) teachersLoaded = true;
+      checkHideLoading();
     });
     unsubStudents = subscribeToFirebase('schoolData', 'students', (data, fromCache, dataChanged) => {
       if (data && dataChanged) setStudents(data);
@@ -165,9 +171,13 @@ export default function App() {
         const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
         setResults(mapped);
       }
+      if (!fromCache) resultsLoaded = true;
+      checkHideLoading();
     });
     unsubGallery = subscribeToFirebase('schoolData', 'gallery', (data, fromCache, dataChanged) => {
       if (data && dataChanged) setGallery(data);
+      if (!fromCache) galleryLoaded = true;
+      checkHideLoading();
     });
     unsubNews = subscribeToFirebase('schoolData', 'news', (data, fromCache, dataChanged) => {
       if (data && dataChanged) setNews(data);
@@ -176,6 +186,8 @@ export default function App() {
     });
     unsubAdmissions = subscribeToFirebase('schoolData', 'admissions', (data, fromCache, dataChanged) => {
       if (data && dataChanged) setAdmissions(data);
+      if (!fromCache) admissionsLoaded = true;
+      checkHideLoading();
     });
 
     const timer = setTimeout(() => {
@@ -183,7 +195,7 @@ export default function App() {
         hasCheckedLoading = true;
         setLoading(false);
       }
-    }, 4500); // Wait up to 4.5 seconds for fresh data
+    }, 2500); // Wait up to 2.5 seconds for fresh data
 
     return () => {
       clearTimeout(timer);
