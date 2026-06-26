@@ -1280,7 +1280,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                   <div style={{ position: 'relative', width: '250px', textAlign: 'center' }}>
                     {config?.schoolStampUrl ? (
-                      <div style={{ position: 'absolute', bottom: '15px', left: '50%', transform: 'translateX(-50%)', width: '180px', height: '180px', pointerEvents: 'none' }}>
+                      <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', width: '165px', height: '165px', pointerEvents: 'none', zIndex: 10 }}>
                         <img 
                           src={config.schoolStampUrl} 
                           alt="School Stamp" 
