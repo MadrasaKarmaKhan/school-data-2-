@@ -323,11 +323,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
   useEffect(() => {
     // Load custom logos from cloud config first, then fall back to local storage
     const loadLogos = async () => {
-      let sl = config?.marksheetLogo || localStorage.getItem("m_logo");
+      let sl = config?.marksheetLogo || config?.logoUrl || localStorage.getItem("m_logo");
       if (sl) {
         setSchoolLogo(await removeBlackBackground(sl));
-      } else {
-        setSchoolLogo('');
       }
 
       let ul = config?.calligraphyBanner || localStorage.getItem("m_urdu_logo");

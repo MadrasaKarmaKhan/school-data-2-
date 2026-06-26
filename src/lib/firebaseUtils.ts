@@ -40,6 +40,15 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
       if (docSnap.exists() && docSnap.data().data) {
         const docData = docSnap.data();
         const data = docData.data;
+        const lastMod = docData._lastModified || 0;
+        
+        try {
+          const isLoggedIn = localStorage.getItem('nu_islogged') === 'true';
+          const localModString = localStorage.getItem(`nu_${docId}_lastModified`);
+          if (isLoggedIn && localModString && parseInt(localModString, 10) > lastMod) {
+            return; // Ignore older snapshot from cache
+          }
+        } catch(e) {}
         
         const dataString = JSON.stringify(data);
         if (cache.get(cacheKey) === dataString) {

@@ -577,7 +577,7 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
             </div>
           )}
         </div>
-      ) : !config?.isAdmissionOpen ? (
+      ) : config?.isAdmissionOpen === false ? (
         <div className="max-w-xl mx-auto p-10 bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-850 shadow-md text-center space-y-4">
           <div className="w-16 h-16 bg-rose-50 dark:bg-rose-950/30 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <BadgeAlert className="w-8 h-8" />

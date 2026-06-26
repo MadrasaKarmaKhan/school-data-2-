@@ -2057,13 +2057,13 @@ export default function PrincipalDashboard({
                   <input
                     type="file"
                     id="adminLogoUploadInput"
-                    accept="image/png, image/jpeg, image/jpg"
+                    accept="image/png"
                     style={{ display: 'none' }}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        if (file.type !== "image/png" && file.type !== "image/jpeg" && file.type !== "image/jpg") {
-                          alert("Please upload a valid .png or .jpg/.jpeg format logo!");
+                        if (file.type !== "image/png") {
+                          alert("Please upload a transparent .png format logo only to avoid background errors!");
                         }
                         resizeImage(file, 1200, 1200, 0.95).then((url) => {
                           localStorage.setItem("m_logo", url);
@@ -2192,8 +2192,8 @@ export default function PrincipalDashboard({
                           <div className="w-[170px] h-[170px] rounded-full border-4 border-[#1e5631] border-dashed flex flex-col items-center justify-center p-2 bg-[#fffdd0]/40 text-center">
                             <span className="text-[28px]">🕌</span>
                             <span className="text-[10px] font-black leading-tight text-[#1e5631]">Click to Upload</span>
-                            <span className="text-[9px] font-bold text-[#1e5631]">school_logo (PNG / JPG)</span>
-                            <span className="text-[8px] text-[#1e5631] opacity-75">(PNG or JPG supported)</span>
+                            <span className="text-[9px] font-bold text-[#1e5631]">school_logo.png</span>
+                            <span className="text-[8px] text-[#1e5631] opacity-75">(Transparent PNG Only)</span>
                           </div>
                         )}
                       </div>
@@ -4175,13 +4175,13 @@ export default function PrincipalDashboard({
                     <input 
                       type="checkbox" 
                       className="sr-only peer" 
-                      checked={schoolConfig.isAdmissionOpen ?? false}
+                      checked={schoolConfig.isAdmissionOpen ?? true}
                       onChange={(e) => setSchoolConfig({...schoolConfig, isAdmissionOpen: e.target.checked})}
                     />
                     <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-slate-600 peer-checked:bg-emerald-600"></div>
                   </label>
-                  <span className={`font-black text-xs ${schoolConfig.isAdmissionOpen ? 'text-emerald-600' : 'text-rose-600'}`}>
-                    {schoolConfig.isAdmissionOpen ? 'OPEN' : 'CLOSED'}
+                  <span className={`font-black text-xs ${schoolConfig.isAdmissionOpen !== false ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    {schoolConfig.isAdmissionOpen !== false ? 'OPEN' : 'CLOSED'}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 gap-5 text-xs text-slate-700">

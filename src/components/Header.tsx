@@ -45,7 +45,7 @@ export default function Header({
     { id: 'home', label: config.navMenuHomeText || 'Home Page', icon: School, customIcon: config.navMenuHomeIcon },
     { id: 'dua', label: config.navMenuDuaText || 'Daily Duas', icon: BookOpen, customIcon: config.navMenuDuaIcon },
     { id: 'results', label: config.navMenuResultsText || 'Exam Results', icon: GraduationCap, customIcon: config.navMenuResultsIcon },
-    { id: 'admissions', label: config.isAdmissionOpen ? (config.navMenuAdmissionsText || 'Admissions Open') : 'Admissions Closed', icon: FileText, customIcon: config.navMenuAdmissionsIcon },
+    { id: 'admissions', label: config.isAdmissionOpen === false ? 'Admissions Closed' : (config.navMenuAdmissionsText || 'Admissions Open'), icon: FileText, customIcon: config.navMenuAdmissionsIcon },
     { id: 'donate', label: config.navMenuDonateText || 'Donate', icon: Heart, customIcon: config.navMenuDonateIcon },
     { id: 'dashboard', label: config.navMenuDashboardText || (isLoggedIn ? 'Principal Panel' : 'Principal Office'), icon: ShieldAlert, customIcon: config.navMenuDashboardIcon },
   ];
