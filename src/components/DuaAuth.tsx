@@ -14,11 +14,24 @@ export interface DuaStudent {
   memorizedDuas: number[];
 }
 
+import { SchoolConfig } from '../types';
+
 interface DuaAuthProps {
   onLogin: (student: DuaStudent) => void;
+  config?: SchoolConfig;
 }
 
-export default function DuaAuth({ onLogin }: DuaAuthProps) {
+export default function DuaAuth({ onLogin, config }: DuaAuthProps) {
+  const classes = React.useMemo(() => {
+    let list: string[];
+    if (config?.classes && config.classes.length > 0) {
+      list = [...config.classes];
+    } else {
+      list = getSchoolClasses();
+    }
+    return Array.from(new Set(list));
+  }, [config?.classes]);
+
   const [mode, setMode] = useState<'login' | 'register' | 'find-code'>('login');
   
   // Login State
@@ -27,14 +40,14 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
   
   // Register State
   const [regName, setRegName] = useState('');
-  const [regClass, setRegClass] = useState(getSchoolClasses()[0]);
+  const [regClass, setRegClass] = useState(classes[0] || 'EDADIA');
   const [regRoll, setRegRoll] = useState('');
   const [regCodeOut, setRegCodeOut] = useState('');
   const [regError, setRegError] = useState('');
   const [copied, setCopied] = useState(false);
 
   // Find Code State (Forgot Code)
-  const [findClass, setFindClass] = useState(getSchoolClasses()[0]);
+  const [findClass, setFindClass] = useState(classes[0] || 'EDADIA');
   const [findRoll, setFindRoll] = useState('');
   const [findName, setFindName] = useState('');
   const [findError, setFindError] = useState('');
@@ -441,7 +454,7 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
                   onChange={e => setRegClass(e.target.value)}
                   className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:border-amber-500"
                 >
-                  {getSchoolClasses().map(c => (
+                  {classes.map(c => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
@@ -495,7 +508,7 @@ export default function DuaAuth({ onLogin }: DuaAuthProps) {
                 onChange={e => setFindClass(e.target.value)}
                 className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:border-amber-500"
               >
-                {getSchoolClasses().map(c => (
+                {classes.map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>

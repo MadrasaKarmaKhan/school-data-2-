@@ -435,7 +435,7 @@ export default function App() {
         )}
 
         {currentTab === 'dua' && (
-          <DuaPage />
+          <DuaPage config={schoolConfig} />
         )}
 
         {currentTab === 'dashboard' && (

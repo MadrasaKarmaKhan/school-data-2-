@@ -6780,6 +6780,11 @@ export default function PrincipalDashboard({
                     <button
                       type="button"
                       onClick={() => {
+                        localStorage.setItem("school_classes_list", JSON.stringify(customClasses));
+                        localStorage.setItem("school_sessions_list", JSON.stringify(customSessions));
+                        if (syncToFirebase) {
+                          syncToFirebase('schoolData', 'config', schoolConfig);
+                        }
                         const toast = document.createElement('div');
                         toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
                         toast.innerText = 'Classes & Sessions Saved Successfully!';

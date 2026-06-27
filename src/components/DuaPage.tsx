@@ -7,14 +7,29 @@ import { doc, updateDoc, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { getSchoolClasses } from '../data';
 import DuaAuth, { DuaStudent } from './DuaAuth';
+import { SchoolConfig } from '../types';
 
-export default function DuaPage() {
+interface DuaPageProps {
+  config?: SchoolConfig;
+}
+
+export default function DuaPage({ config }: DuaPageProps) {
   const [student, setStudent] = useState<DuaStudent | null>(null);
   const [allStudents, setAllStudents] = useState<DuaStudent[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [memorizedDuas, setMemorizedDuas] = useState<number[]>([]);
   const [selectedClassTab, setSelectedClassTab] = useState<string>('');
+
+  const classes = React.useMemo(() => {
+    let list: string[];
+    if (config?.classes && config.classes.length > 0) {
+      list = [...config.classes];
+    } else {
+      list = getSchoolClasses();
+    }
+    return Array.from(new Set(list));
+  }, [config?.classes]);
 
   // Auto-set selected class tab to student's own class on login
   useEffect(() => {
@@ -226,7 +241,7 @@ export default function DuaPage() {
             </h2>
             <p className="text-slate-600 dark:text-slate-400 font-medium">Please verify your student profile to track your memorization progress.</p>
          </div>
-         <DuaAuth onLogin={(s) => {
+         <DuaAuth config={config} onLogin={(s) => {
            setStudent(s);
            setMemorizedDuas(s.memorizedDuas || []);
            localStorage.setItem('dua_student_code', s.code);
@@ -488,7 +503,7 @@ export default function DuaPage() {
           </p>
           
           <div className="flex gap-2 overflow-x-auto pb-3 pt-1 scroll-smooth hide-scrollbar -mx-2 px-2">
-            {getSchoolClasses().map((className) => {
+            {classes.map((className) => {
               const classStudents = allStudents.filter(s => s.className === className);
               const totalDuasInClass = classStudents.reduce((sum, s) => sum + (s.memorizedDuas?.length || 0), 0);
               const isActive = selectedClassTab === className;
