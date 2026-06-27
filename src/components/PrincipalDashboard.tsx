@@ -885,20 +885,8 @@ export default function PrincipalDashboard({
       return totalB - totalA;
     });
 
-    const compressAndSave = async () => {
-      const compressedResults = [...updatedResults];
-      for (let i = 0; i < compressedResults.length; i++) {
-        const r = compressedResults[i];
-        if (r.photoUrl && r.photoUrl.length > 50000 && r.photoUrl.startsWith('data:image')) {
-          try {
-            r.photoUrl = await compressBase64Image(r.photoUrl, 200, 200, 0.5);
-          } catch(e) {}
-        }
-      }
-      setResults(compressedResults);
-      localStorage.setItem("madarsa_records", JSON.stringify(compressedResults));
-    };
-    compressAndSave();
+    setResults(updatedResults);
+    localStorage.setItem("madarsa_records", JSON.stringify(updatedResults));
 
     // Webhook Sync
     const whList = schoolConfig.googleSheetsWebhooks || [];
@@ -2309,9 +2297,11 @@ export default function PrincipalDashboard({
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        resizeImage(file, 200, 200, 0.5).then((url) => {
-                                setAdminPhoto(url);
-                              }).catch(e => console.error("Compression failed", e));
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setAdminPhoto(reader.result as string);
+                        };
+                        reader.readAsDataURL(file);
                       }
                     }}
                   />
