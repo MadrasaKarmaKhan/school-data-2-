@@ -253,6 +253,39 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
   const [showCelebration, setShowCelebration] = useState(false);
   const [printScale, setPrintScale] = useState(100);
 
+  // Automatically re-evaluate if results change after a search has been triggered
+  useEffect(() => {
+    if (searchTriggered && rollNo) {
+      const potentialMatches = results.filter(
+        (r) =>
+          r.rollNo.toString().trim() === rollNo.trim() &&
+          r.className === selectedClass &&
+          (r.examType || 'Annual').toLowerCase() === selectedExamType.toLowerCase()
+      );
+
+      let match = null;
+      if (potentialMatches.length > 0) {
+        match = potentialMatches.find(
+          (r) => normalizeSession(r.session).toLowerCase() === normalizeSession(selectedSession).toLowerCase()
+        );
+        if (!match) {
+          match = potentialMatches[0];
+          // We only auto-update selectedSession in the direct handleSearch to avoid infinite loops,
+          // but we can set the foundResult here.
+        }
+      }
+
+      setFoundResult(match);
+      if (match && !showCelebration) {
+        setShowCelebration(true);
+        // Sound and effects are usually triggered on click, doing it here might be repetitive,
+        // but it's safe if we only do it when showCelebration transitions from false to true.
+      } else if (!match) {
+        setShowCelebration(false);
+      }
+    }
+  }, [results]); // Only depend on results to handle delayed data fetch from Sheets
+
   // Dynamically extract exam variations or provide robust default ones based on configured sessions
   const availableSessions = React.useMemo(() => {
     let list: string[];
@@ -922,7 +955,11 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
               <label className="text-xs font-bold text-slate-600 dark:text-slate-300 block">Class / Stream</label>
               <select
                 value={selectedClass}
-                onChange={(e) => setSelectedClass(e.target.value as ClassName)}
+                onChange={(e) => {
+                  setSelectedClass(e.target.value as ClassName);
+                  setSearchTriggered(false);
+                  setFoundResult(null);
+                }}
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white font-semibold focus:ring-1 focus:ring-emerald-500"
               >
                 {classes.map((c) => (
@@ -936,7 +973,11 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 <label className="text-xs font-bold text-slate-600 dark:text-slate-300 block">Exam Type</label>
                 <select
                   value={selectedExamType}
-                  onChange={(e) => setSelectedExamType(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedExamType(e.target.value);
+                    setSearchTriggered(false);
+                    setFoundResult(null);
+                  }}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white font-semibold focus:ring-1 focus:ring-emerald-500"
                 >
                   <option value="Annual">Annual Examination</option>
@@ -949,7 +990,11 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 <label className="text-xs font-bold text-slate-600 dark:text-slate-300 block">Academic Year</label>
                 <select
                   value={selectedSession}
-                  onChange={(e) => setSelectedSession(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedSession(e.target.value);
+                    setSearchTriggered(false);
+                    setFoundResult(null);
+                  }}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white font-semibold focus:ring-1 focus:ring-emerald-500"
                 >
                   {availableSessions.map((year) => (
@@ -966,7 +1011,11 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                 required
                 placeholder="e.g. 2026101"
                 value={rollNo}
-                onChange={(e) => setRollNo(e.target.value.replace(/\D/g, ''))}
+                onChange={(e) => {
+                  setRollNo(e.target.value.replace(/\D/g, ''));
+                  setSearchTriggered(false);
+                  setFoundResult(null);
+                }}
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white font-mono font-bold"
               />
               <p className="text-[11px] text-slate-400 mt-1">

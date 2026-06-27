@@ -253,7 +253,8 @@ export default function App() {
                  ...r,
                  rollNo: String(r.rollNo || ''),
                  studentName: String(r.studentName || ''),
-                 className: (r.className || "EDADIA"), 
+                 className: normalizeClassName(r.className),
+                 session: r.session || (webhook.year !== 'Default' ? webhook.year : undefined),
                  marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
                }));
             }

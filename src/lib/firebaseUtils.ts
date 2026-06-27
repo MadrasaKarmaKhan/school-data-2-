@@ -19,7 +19,33 @@ export async function syncToFirebase(collectionName: string, docId: string, data
 
   try {
     const sanitizedData = JSON.parse(dataString);
-    await setDoc(doc(db, collectionName, docId), { data: sanitizedData, _lastModified: Date.now() }, { merge: true });
+    
+    // Check if data is array and large (approaching 1MB limit)
+    // Roughly 800KB string length to be safe
+    if (Array.isArray(sanitizedData) && dataString.length > 800000) {
+      // Save in chunks
+      const CHUNK_SIZE = 50; // 50 items per chunk
+      const chunks = [];
+      for (let i = 0; i < sanitizedData.length; i += CHUNK_SIZE) {
+        chunks.push(sanitizedData.slice(i, i + CHUNK_SIZE));
+      }
+      
+      await setDoc(doc(db, collectionName, docId), { 
+        isChunked: true,
+        numChunks: chunks.length,
+        _lastModified: Date.now() 
+      }, { merge: true });
+      
+      for (let i = 0; i < chunks.length; i++) {
+        await setDoc(doc(db, collectionName, `${docId}_chunk_${i}`), {
+          data: chunks[i],
+          _lastModified: Date.now()
+        }, { merge: true });
+      }
+    } else {
+      await setDoc(doc(db, collectionName, docId), { data: sanitizedData, isChunked: false, _lastModified: Date.now() }, { merge: true });
+    }
+    
     cache.set(cacheKey, dataString);
   } catch (error: any) {
     if (error?.code === 'resource-exhausted') {
@@ -39,10 +65,11 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
       const isFromCache = docSnap.metadata.fromCache;
       receivedSnapshots.add(cacheKey);
       
-      if (docSnap.exists() && docSnap.data().data) {
+        if (docSnap.exists()) {
         const docData = docSnap.data();
-        const data = docData.data;
+        let data = docData.data;
         const lastMod = docData._lastModified || 0;
+        const isChunked = docData.isChunked;
         
         try {
           const isLoggedIn = localStorage.getItem('nu_islogged') === 'true';
@@ -52,14 +79,37 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
           }
         } catch(e) {}
         
-        const dataString = JSON.stringify(data);
-        const dataChanged = cache.get(cacheKey) !== dataString;
+        const processData = async () => {
+          if (isChunked) {
+            const numChunks = docData.numChunks || 0;
+            let allData: any[] = [];
+            for (let i = 0; i < numChunks; i++) {
+              try {
+                const chunkSnap = await getDoc(doc(db, collectionName, `${docId}_chunk_${i}`));
+                if (chunkSnap.exists() && chunkSnap.data().data) {
+                  allData = allData.concat(chunkSnap.data().data);
+                }
+              } catch (e) {
+                console.warn(`[Firebase] Could not fetch chunk ${i} for ${docId}`);
+              }
+            }
+            data = allData;
+          } else if (!data) {
+            callback(null, isFromCache, true);
+            return;
+          }
+          
+          const dataString = JSON.stringify(data);
+          const dataChanged = cache.get(cacheKey) !== dataString;
+          
+          if (dataChanged) {
+            cache.set(cacheKey, dataString);
+          }
+          
+          callback(data, isFromCache, dataChanged);
+        };
         
-        if (dataChanged) {
-          cache.set(cacheKey, dataString);
-        }
-        
-        callback(data, isFromCache, dataChanged);
+        processData();
       } else {
         callback(null, isFromCache, true);
       }
