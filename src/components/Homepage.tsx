@@ -62,9 +62,7 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
     }, 1000);
   };
 
-  const filteredGallery = galleryCategory === 'All'
-    ? gallery
-    : gallery.filter(item => item.category === galleryCategory);
+  // Gallery section has been removed as per user request
 
   return (
     <div className="space-y-20 pb-12">
@@ -156,40 +154,6 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
         </div>
       </section>
 
-      {/* Academic Programs Section */}
-      <section id="academics" className="scroll-mt-20 space-y-8">
-        <div className="text-center space-y-1">
-          <span className="text-xs uppercase font-bold tracking-widest text-amber-600 font-mono">Curriculums Map</span>
-          <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Diverse Academic Programs</h3>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="p-5 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-750/70 rounded-2xl shadow hover:shadow-lg transition-all space-y-3">
-            <span className="inline-block p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-xl text-lg">🏫</span>
-            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog1Title ?? "Primary Education"}</strong>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              {config.prog1Text ?? "Targeted for kids aged 5 to 11. Imparts basic Arabic alphabets, tajweed vocalization, Urdu literature, coupled with English grammar, mathematics, and environmental sciences."}
-            </p>
-          </div>
-
-          <div className="p-5 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-750/70 rounded-2xl shadow hover:shadow-lg transition-all space-y-3">
-            <span className="inline-block p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-xl text-lg">📚</span>
-            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog2Title ?? "Secondary Education"}</strong>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              {config.prog2Text ?? "Standard high-school courses adhering to regional standards alongside theology. Prepares for board evaluations with robust physics, biology, history and computer modules."}
-            </p>
-          </div>
-
-          <div className="p-5 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-750/70 rounded-2xl shadow hover:shadow-lg transition-all space-y-3">
-            <span className="inline-block p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-xl text-lg">🕌</span>
-            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog3Title ?? "Islamic Education (Aalim)"}</strong>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              {config.prog3Text ?? "Deep, multi-year certified theological learning comprising Tafseer-ul-Quran (Interpretation), Usool-ul-Hadith, Fiqh Jurisprudence (Fatwa streams) and Arabic grammar rhetoric."}
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* Smart Campus Facilities Section */}
       <section id="facilities" className="scroll-mt-20 space-y-8">
         <div className="text-center space-y-1">
@@ -236,64 +200,7 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
       </section>
 
       {/* Honorable Faculty / Teacher Profiles Section */}
-      {teachers && teachers.length > 0 && (
-        <section id="teachers" className="relative scroll-mt-20 space-y-8">
-          {isLoggedIn && (
-            <button 
-              onClick={() => setCurrentTab('dashboard')}
-              className="absolute top-0 right-4 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md font-bold text-xs flex items-center gap-1.5 z-10 transition-colors"
-              title="Edit Teachers in Admin Panel"
-            >
-              <Edit2 className="w-3.5 h-3.5" /> Edit Teacher Photos & Details
-            </button>
-          )}
-          <div className="text-center space-y-1">
-            <span className="text-xs uppercase font-bold tracking-widest text-amber-600 font-mono">Our Mentors</span>
-            <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Our Honorable Teachers (हमारे शिक्षक)</h3>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {teachers.map((teacher) => (
-              <div key={teacher.id} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-150 dark:border-slate-750/70 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition-all group">
-                <div className="p-4 space-y-4">
-                  {/* Teacher Photo */}
-                  <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-emerald-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-750">
-                    <img
-                      src={teacher.photoUrl ?? "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200"}
-                      alt={teacher.name}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="space-y-1.5 text-center">
-                    <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">
-                      {teacher.name}
-                    </strong>
-                    <span className="px-2.5 py-0.5 bg-emerald-100 dark:bg-emerald-950/55 text-emerald-800 dark:text-emerald-450 font-bold text-[10px] rounded-full inline-block font-sans uppercase tracking-wider">
-                      {teacher.designation}
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="bg-slate-50 dark:bg-slate-900/40 p-3.5 border-t border-slate-100 dark:border-slate-755 text-[11px] space-y-1">
-                  {teacher.qualification && (
-                    <div className="flex justify-between text-slate-505 dark:text-slate-400">
-                      <span className="font-semibold">Qualification:</span>
-                      <span className="font-bold text-slate-705 dark:text-slate-300">{teacher.qualification}</span>
-                    </div>
-                  )}
-                  {teacher.phone && (
-                    <div className="flex justify-between text-slate-505 dark:text-slate-400">
-                      <span className="font-semibold">Phone:</span>
-                      <a href={`tel:${teacher.phone}`} className="font-bold text-emerald-650 dark:text-emerald-400 font-mono hover:underline">{teacher.phone}</a>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {/* SECTION REMOVED AS PER USER REQUEST */}
 
       {/* Student Achievements / Toppers Section */}
       <section id="achievements" className="space-y-8">
@@ -336,74 +243,7 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
       </section>
 
       {/* Gallery Section with modern Lightbox */}
-      <section id="gallery" className="scroll-mt-20 space-y-6">
-        <div className="text-center space-y-1">
-          <span className="text-xs uppercase font-bold tracking-widest text-amber-600 font-mono">Glimpses of Noorul Uloom</span>
-          <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Institutional Media Gallery</h3>
-        </div>
-
-        {/* Gallery category tabs filter */}
-        <div className="flex flex-wrap justify-center gap-2 pb-2">
-          {['All', 'Campus', 'Events', 'Classes', 'Achievements'].map(cat => (
-            <button
-              key={cat}
-              onClick={() => setGalleryCategory(cat as any)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                galleryCategory === cat
-                  ? 'bg-emerald-650 text-white shadow'
-                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-350'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs font-mono">
-          {filteredGallery.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => setActiveLightbox(item)}
-              className="group relative h-40 rounded-xl overflow-hidden shadow-sm border border-slate-150 dark:border-slate-750 cursor-zoom-in"
-              title="Zoom image view"
-            >
-              <img
-                src={item.url} alt={item.caption} referrerPolicy="no-referrer"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 text-white text-[10px] uppercase font-sans line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                {item.caption}
-              </div>
-              <span className="absolute top-2 left-2 px-1.5 bg-emerald-900/95 text-amber-300 font-mono font-bold text-[9px] rounded uppercase">
-                {item.category}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Dynamic Lightbox zoom overlay */}
-        {activeLightbox && (
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in no-print" onClick={() => setActiveLightbox(null)}>
-            <div className="max-w-3xl w-full space-y-3" onClick={e => e.stopPropagation()}>
-              <div className="flex justify-between items-center text-white text-xs">
-                <span className="px-2.5 py-0.5 bg-emerald-900 text-amber-300 font-mono rounded uppercase text-[10px]">{activeLightbox.category}</span>
-                <button
-                  onClick={() => setActiveLightbox(null)}
-                  className="p-1 px-2.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm cursor-pointer"
-                >
-                  Close &times;
-                </button>
-              </div>
-              <img
-                src={activeLightbox.url} alt={activeLightbox.caption} referrerPolicy="no-referrer"
-                className="w-full max-h-[80vh] object-contain rounded-xl shadow-2xl"
-              />
-              <p className="text-amber-100 text-xs md:text-sm text-center leading-relaxed font-sans">{activeLightbox.caption}</p>
-            </div>
-          </div>
-        )}
-      </section>
+      {/* SECTION REMOVED AS PER USER REQUEST */}
 
       {/* 💰 Madrasa Support & Donation (Sadqat & Zakat) Section */}
       <section id="donate" className="scroll-mt-20 relative bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-3xl p-6 md:p-10 shadow-xl overflow-hidden mt-12 space-y-8">
