@@ -5,7 +5,7 @@ import {
   Search, Upload, Image, ShieldCheck, Mail, Phone, MapPin, RefreshCw, AlertCircle, PlusCircle, Calendar, Printer, Menu
 } from 'lucide-react';
 import { Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName } from '../types';
-import { resizeImage } from '../lib/imageUtils';
+import { resizeImage, compressBase64Image } from '../lib/imageUtils';
 import { removeBlackBackground } from '../lib/removeBlack';
 import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSessions } from '../data';
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
@@ -1307,15 +1307,41 @@ export default function PrincipalDashboard({
   // Website Config update
   const handleUpdateConfig = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('nu_config', JSON.stringify(schoolConfig));
-    localStorage.setItem('nu_config_lastModified', Date.now().toString());
-    if (isLoggedIn) {
-      syncToFirebase('schoolData', 'config', schoolConfig);
-    }
+    
     const toast = document.createElement('div');
+    toast.className = 'fixed bottom-4 right-4 bg-amber-500 text-slate-900 px-6 py-3 rounded-xl shadow-2xl font-bold z-[9999]';
+    toast.innerText = 'Compressing and saving data...';
+    document.body.appendChild(toast);
+
+    let updatedConfig = { ...schoolConfig };
+    
+    // Compress base64 strings if they exist to prevent Firebase 1MB limit issues
+    const keysToCompress: (keyof SchoolConfig)[] = [
+      'principalSignatureUrl', 'logoUrl', 'marksheetLogo', 'schoolStampUrl', 'calligraphyBanner',
+      'principalPhotoUrl', 'heroBg1', 'heroBg2', 'heroBg3', 'fac1Img', 'fac2Img', 'fac3Img'
+    ];
+    
+    for (const key of keysToCompress) {
+      if (typeof updatedConfig[key] === 'string' && updatedConfig[key]!.startsWith('data:image')) {
+        try {
+          // @ts-ignore
+          updatedConfig[key] = await compressBase64Image(updatedConfig[key]!, 600, 400, 0.6);
+        } catch (err) {
+          console.error("Failed to compress", key, err);
+        }
+      }
+    }
+    
+    setSchoolConfig(updatedConfig);
+    localStorage.setItem('nu_config', JSON.stringify(updatedConfig));
+    localStorage.setItem('nu_config_lastModified', Date.now().toString());
+    
+    if (isLoggedIn) {
+      syncToFirebase('schoolData', 'config', updatedConfig);
+    }
+    
     toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-[9999]';
     toast.innerText = 'Website configuration saved successfully!';
-    document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   };
 

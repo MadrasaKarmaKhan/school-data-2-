@@ -22,7 +22,7 @@ export function removeBlackBackground(dataUrl: string): Promise<string> {
           }
         }
         ctx.putImageData(imgData, 0, 0);
-        resolve(canvas.toDataURL('image/png'));
+        resolve(canvas.toDataURL('image/webp', 0.8));
       } catch (e) {
         resolve(dataUrl);
       }

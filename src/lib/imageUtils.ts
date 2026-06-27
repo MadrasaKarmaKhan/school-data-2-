@@ -53,8 +53,8 @@ export function compressBase64Image(base64: string, maxWidth: number, maxHeight:
         }
       }
       
-      const format = isTransparent ? 'image/png' : 'image/jpeg';
-      const output = canvas.toDataURL(format, format === 'image/jpeg' ? quality : undefined);
+      const format = isTransparent ? 'image/webp' : 'image/jpeg';
+      const output = canvas.toDataURL(format, quality);
       resolve(output);
     };
     img.onerror = () => reject(new Error("Failed to load image"));
@@ -111,8 +111,8 @@ export function resizeImage(file: File, maxWidth: number, maxHeight: number, qua
           }
         }
 
-        const format = isTransparent ? 'image/png' : 'image/jpeg';
-        const output = canvas.toDataURL(format, format === 'image/jpeg' ? quality : undefined);
+        const format = isTransparent ? 'image/webp' : 'image/jpeg';
+        const output = canvas.toDataURL(format, quality);
         resolve(output);
       };
       img.onerror = () => reject(new Error("Failed to load image"));
