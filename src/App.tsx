@@ -267,8 +267,22 @@ export default function App() {
         const allResultsArrays = await Promise.all(fetchPromises);
         const mapped = allResultsArrays.flat();
 
-        if (mapped.length > 0 && !isLoggedIn) {
-           setResults(mapped);
+        if (mapped.length > 0) {
+           setResults(prev => {
+             const existingMap = new Map();
+             prev.forEach(r => existingMap.set(`${String(r.rollNo).trim()}-${r.className}-${r.session}`, r));
+             
+             let changed = false;
+             mapped.forEach(gsResult => {
+               const key = `${String(gsResult.rollNo).trim()}-${gsResult.className}-${gsResult.session}`;
+               if (!existingMap.has(key)) {
+                 existingMap.set(key, gsResult);
+                 changed = true;
+               }
+             });
+             
+             return changed ? Array.from(existingMap.values()) : prev;
+           });
         }
       } catch (e) {
         console.error("Error during multiple sheets fetch", e);
