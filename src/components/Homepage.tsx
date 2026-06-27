@@ -93,24 +93,6 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
         </div>
       </section>
 
-      {/* About School Section Grid */}
-      <section id="about" className="scroll-mt-20 pt-6">
-        <div className="p-8 md:p-10 bg-white dark:bg-slate-800 border-2 border-emerald-500/10 rounded-3xl flex flex-col md:flex-row gap-8 items-center shadow-lg relative overflow-hidden">
-          <div className="flex-1 space-y-4">
-            <span className="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-150 dark:border-slate-700 rounded-xl inline-block text-base font-bold">
-              🕌 Our Rich History (हमारा इतिहास)
-            </span>
-            <h4 className="text-slate-850 dark:text-white font-black text-xl md:text-2xl tracking-tight leading-snug">{config.historyHeader ?? "Roots in Scholars education"}</h4>
-            <p className="text-xs md:text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
-              {config.historyText ?? "Founded in Karma Khan, Sant Kabir Nagar, Uttar Pradesh in 1994 under the tutelage of senior Islamic theologians, our Madrasa has grown from a humble study-circle of tajweed to a pioneering full-fledged campus imparting higher Islamic sciences along with contemporary high-school modern syllabus."}
-            </p>
-          </div>
-          <div className="w-full md:w-1/3 flex justify-center shrink-0">
-            <span className="text-8xl select-none animate-pulse">📜</span>
-          </div>
-        </div>
-      </section>
-
       {/* Principal Message message desk */}
       <section id="principal" className="relative scroll-mt-20 p-6 md:p-10 bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-500/20 shadow-2xl grid grid-cols-1 md:grid-cols-3 gap-8 items-center.">
         {isLoggedIn && (
