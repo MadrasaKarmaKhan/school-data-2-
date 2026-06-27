@@ -123,6 +123,18 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
     return Array.from(new Set(list));
   }, [config?.classes]) as ClassName[];
 
+  useEffect(() => {
+    if (classes.length > 0 && !classes.includes(formData.className)) {
+      setFormData(prev => ({ ...prev, className: classes[0] }));
+    }
+  }, [classes]);
+
+  useEffect(() => {
+    if (availableYears.length > 0 && !availableYears.includes(formData.academicYear)) {
+      setFormData(prev => ({ ...prev, academicYear: availableYears[0] }));
+    }
+  }, [availableYears]);
+
   const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

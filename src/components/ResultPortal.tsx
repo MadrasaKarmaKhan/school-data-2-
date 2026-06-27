@@ -354,6 +354,12 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     }
   }, [classes, selectedClass]);
 
+  useEffect(() => {
+    if (availableSessions.length > 0 && !availableSessions.includes(selectedSession)) {
+      setSelectedSession(availableSessions[0]);
+    }
+  }, [availableSessions, selectedSession]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!rollNo.trim()) {
