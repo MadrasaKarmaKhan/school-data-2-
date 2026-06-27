@@ -82,12 +82,16 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
   }, [addressFields]);
 
   const availableYears = React.useMemo(() => {
-    const years = getSchoolSessions().slice().reverse();
+    let baseSessions = getSchoolSessions();
+    if (config?.sessions && config.sessions.length > 0) {
+      baseSessions = config.sessions;
+    }
+    const years = baseSessions.slice().reverse();
     if (config?.defaultAcademicSession && !years.includes(config.defaultAcademicSession)) {
       years.unshift(config.defaultAcademicSession);
     }
     return years;
-  }, [config?.defaultAcademicSession]);
+  }, [config?.defaultAcademicSession, config?.sessions]);
 
   const [submittedApp, setSubmittedApp] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);

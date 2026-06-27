@@ -419,7 +419,18 @@ export default function PrincipalDashboard({
   }, [adminSclass, subjectConfigChangeCounter]);
 
   const [customClasses, setCustomClasses] = useState<string[]>(() => getSchoolClasses());
-  const [customSessions, setCustomSessions] = useState<string[]>(() => getSchoolSessions());
+  const [customSessions, setCustomSessions] = useState<string[]>(() => {
+    return schoolConfig.sessions && schoolConfig.sessions.length > 0 
+      ? schoolConfig.sessions 
+      : getSchoolSessions();
+  });
+
+  useEffect(() => {
+    if (schoolConfig.sessions && schoolConfig.sessions.length > 0) {
+      setCustomSessions(schoolConfig.sessions);
+    }
+  }, [schoolConfig.sessions]);
+
   const [addSessionInput, setAddSessionInput] = useState("");
   const [editingSessionOldName, setEditingSessionOldName] = useState<string | null>(null);
   const [editingSessionNewName, setEditingSessionNewName] = useState("");
@@ -438,6 +449,7 @@ export default function PrincipalDashboard({
 
     const updatedSessions = [...customSessions, normalized];
     setCustomSessions(updatedSessions);
+    setSchoolConfig(prev => ({ ...prev, sessions: updatedSessions }));
     localStorage.setItem("school_sessions_list", JSON.stringify(updatedSessions));
     setAddSessionInput("");
     alert(`Academic Session "${normalized}" has been successfully added to the system!`);
@@ -451,6 +463,7 @@ export default function PrincipalDashboard({
 
     const updatedSessions = customSessions.filter(sess => sess !== sessionName);
     setCustomSessions(updatedSessions);
+    setSchoolConfig(prev => ({ ...prev, sessions: updatedSessions }));
     localStorage.setItem("school_sessions_list", JSON.stringify(updatedSessions));
 
     const fallbackSession = updatedSessions[0] || '2025-2026';
@@ -494,6 +507,7 @@ export default function PrincipalDashboard({
 
     const updatedSessions = customSessions.map(sess => sess === oldName ? normalizedNewName : sess);
     setCustomSessions(updatedSessions);
+    setSchoolConfig(prev => ({ ...prev, sessions: updatedSessions }));
     localStorage.setItem("school_sessions_list", JSON.stringify(updatedSessions));
 
     setStudents(prev => prev.map(stud => {

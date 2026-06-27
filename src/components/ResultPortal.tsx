@@ -255,20 +255,28 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
   // Dynamically extract exam variations or provide robust default ones based on configured sessions
   const availableSessions = React.useMemo(() => {
-    const list = new Set<string>(getSchoolSessions());
+    const list = new Set<string>();
+    
+    // Add default sessions and globally configured sessions
+    getSchoolSessions().forEach(s => list.add(s));
+    if (config?.sessions) {
+      config.sessions.forEach(s => list.add(s));
+    }
+    
+    // Add any sessions found in results
     results.forEach(res => {
       if (res.session) list.add(normalizeSession(res.session));
     });
+    
     return Array.from(list).sort().reverse();
-  }, [results]);
+  }, [results, config?.sessions]);
 
   const examSessions: any[] = [];
   const b_examSessions = React.useMemo(() => {
     const list: { examType: string; session: string; label: string }[] = [];
     
-    // Add defaults first
-    const activeSessions = getSchoolSessions();
-    const defaults = activeSessions.flatMap(sess => [
+    // Add defaults first based on all available sessions
+    const defaults = availableSessions.flatMap(sess => [
       { examType: "Annual", session: sess, label: `Annual Examination - ${sess} (सालाना / सालانہ)` },
       { examType: "Half-Yearly", session: sess, label: `Half-Yearly Examination - ${sess} (छमाही / शश ماہی)` },
       { examType: "Quarterly", session: sess, label: `Quarterly Examination - ${sess} (तिमाही / سہ ماہی)` },
@@ -310,7 +318,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
       }
     });
     return uniques;
-  }, [results]);
+  }, [results, availableSessions]);
 
   // Custom persistent logos from principal control panel uploads
   const [schoolLogo, setSchoolLogo] = useState<string>('');
