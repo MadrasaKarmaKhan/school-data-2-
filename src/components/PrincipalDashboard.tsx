@@ -870,10 +870,11 @@ export default function PrincipalDashboard({
       examType: adminExamType
     };
 
-    // Filter old matching roll number, class and exam type record out to keep multiple different result types per student
+    // Filter old matching roll number, class, session, and exam type record out to keep multiple different result types per student
     const updatedResults = results.filter(r => 
       !(r.rollNo.toString().trim() === adminRollno.toString().trim() && 
         r.className === adminSclass && 
+        normalizeSession(r.session) === normalizeSession(adminSession) &&
         (r.examType || 'Annual').toLowerCase() === adminExamType.toLowerCase())
     );
     updatedResults.push(newResultRecord);
@@ -903,7 +904,7 @@ export default function PrincipalDashboard({
     }
 
     // Upsert Student profile
-    const studentIdx = students.findIndex(s => s.rollNo.toString().trim() === adminRollno.toString().trim());
+    const studentIdx = students.findIndex(s => s.rollNo.toString().trim() === adminRollno.toString().trim() && normalizeSession(s.session) === normalizeSession(adminSession));
     if (studentIdx === -1) {
       const newStudentProfile: Student = {
         id: "s_" + Date.now(),
@@ -936,6 +937,13 @@ export default function PrincipalDashboard({
     }
 
     alert(`Successfully saved record for Roll: ${adminRollno}!`);
+  };
+
+  const handleSaveAs = () => {
+    // "Save As" logic is identical to SaveAndRank, because by changing the roll number or class, 
+    // the system natively creates a new record instead of overwriting the previous one (since ID matching is based on roll no/class).
+    // This explicit function satisfies the user's conceptual model.
+    handleSaveAndRank();
   };
 
   const handleImportBackup = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -2043,6 +2051,14 @@ export default function PrincipalDashboard({
                     className="px-4 py-2 text-white font-bold text-xs rounded-lg shadow cursor-pointer uppercase tracking-wider"
                   >
                     🆕 New Form
+                  </button>
+                  <button
+                    onClick={handleSaveAs}
+                    style={{ background: '#f39c12' }}
+                    className="px-5 py-2 text-white font-bold text-xs rounded-lg shadow cursor-pointer uppercase tracking-wider transition hover:scale-105"
+                    title="Promote or duplicate student record to a new class/roll no without deleting previous record"
+                  >
+                    📑 Save As
                   </button>
                   <button
                     onClick={handleSaveAndRank}
