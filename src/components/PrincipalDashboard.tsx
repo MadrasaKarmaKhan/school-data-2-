@@ -6775,6 +6775,22 @@ export default function PrincipalDashboard({
                       </div>
                     </div>
                   </div>
+                  
+                  <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const toast = document.createElement('div');
+                        toast.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl font-bold animate-bounce z-50';
+                        toast.innerText = 'Classes & Sessions Saved Successfully!';
+                        document.body.appendChild(toast);
+                        setTimeout(() => toast.remove(), 3000);
+                      }}
+                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-sm transition-all text-xs flex items-center gap-2"
+                    >
+                      <Check className="w-4 h-4" /> Save Classes & Sessions
+                    </button>
+                  </div>
                 </div>
 
                 {/* 2. CLASS WISE SUBJECT SETTING BLOCK (PREVIOUS SYSTEM) */}
