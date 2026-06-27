@@ -119,24 +119,6 @@ export interface SchoolConfig {
   stat4Num?: string;
   stat4Label?: string;
 
-  // About Section blocks
-  historyHeader?: string;
-  historyText?: string;
-  missionHeader?: string;
-  missionText?: string;
-  visionHeader?: string;
-  visionText?: string;
-
-  // Dynamic academic programs
-  prog1Title?: string;
-  prog1Text?: string;
-  prog2Title?: string;
-  prog2Text?: string;
-  prog3Title?: string;
-  prog3Text?: string;
-  prog4Title?: string;
-  prog4Text?: string;
-
   // Facilities
   fac1Title?: string;
   fac1Img?: string;
