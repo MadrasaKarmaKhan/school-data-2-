@@ -255,21 +255,14 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
   // Dynamically extract exam variations or provide robust default ones based on configured sessions
   const availableSessions = React.useMemo(() => {
-    const list = new Set<string>();
-    
-    // Add default sessions and globally configured sessions
-    getSchoolSessions().forEach(s => list.add(s));
-    if (config?.sessions) {
-      config.sessions.forEach(s => list.add(s));
+    let list: string[];
+    if (config?.sessions && config.sessions.length > 0) {
+      list = [...config.sessions];
+    } else {
+      list = getSchoolSessions();
     }
-    
-    // Add any sessions found in results
-    results.forEach(res => {
-      if (res.session) list.add(normalizeSession(res.session));
-    });
-    
-    return Array.from(list).sort().reverse();
-  }, [results, config?.sessions]);
+    return Array.from(new Set(list)).sort().reverse();
+  }, [config?.sessions]);
 
   const examSessions: any[] = [];
   const b_examSessions = React.useMemo(() => {

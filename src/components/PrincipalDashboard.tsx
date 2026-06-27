@@ -466,30 +466,7 @@ export default function PrincipalDashboard({
     setSchoolConfig(prev => ({ ...prev, sessions: updatedSessions }));
     localStorage.setItem("school_sessions_list", JSON.stringify(updatedSessions));
 
-    const fallbackSession = updatedSessions[0] || '2025-2026';
-    
-    setStudents(prev => prev.map(stud => {
-      if (stud.session === sessionName) {
-        return { ...stud, session: fallbackSession };
-      }
-      return stud;
-    }));
-
-    setResults(prev => prev.map(res => {
-      if (res.session === sessionName) {
-        return { ...res, session: fallbackSession };
-      }
-      return res;
-    }));
-
-    setAdmissions(prev => prev.map(adm => {
-      if (adm.academicYear === sessionName) {
-        return { ...adm, academicYear: fallbackSession };
-      }
-      return adm;
-    }));
-
-    alert(`Academic Session "${sessionName}" has been deleted. Any student profiles, report cards, or admission files linked to it have been moved to fallback session "${fallbackSession}".`);
+    alert(`Academic Session "${sessionName}" has been removed from the dropdown list. Existing students and results for this year are preserved.`);
   };
 
   const renameSchoolSession = (oldName: string, newName: string) => {
