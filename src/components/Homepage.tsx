@@ -39,9 +39,9 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
   // Auto Hero Slider State
   const [heroSlide, setHeroSlide] = useState(0);
   const heroBackgrounds = [
-    config.heroBg1 || "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=1200",
-    config.heroBg2 || "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=1200",
-    config.heroBg3 || "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&q=80&w=1200"
+    config.heroBg1 ?? "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=1200",
+    config.heroBg2 ?? "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=1200",
+    config.heroBg3 ?? "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&q=80&w=1200"
   ];
 
   useEffect(() => {
@@ -102,9 +102,9 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
             <span className="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-150 dark:border-slate-700 rounded-xl inline-block text-base font-bold">
               🕌 Our Rich History (हमारा इतिहास)
             </span>
-            <h4 className="text-slate-850 dark:text-white font-black text-xl md:text-2xl tracking-tight leading-snug">{config.historyHeader || "Roots in Scholars education"}</h4>
+            <h4 className="text-slate-850 dark:text-white font-black text-xl md:text-2xl tracking-tight leading-snug">{config.historyHeader ?? "Roots in Scholars education"}</h4>
             <p className="text-xs md:text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
-              {config.historyText || "Founded in Karma Khan, Sant Kabir Nagar, Uttar Pradesh in 1994 under the tutelage of senior Islamic theologians, our Madrasa has grown from a humble study-circle of tajweed to a pioneering full-fledged campus imparting higher Islamic sciences along with contemporary high-school modern syllabus."}
+              {config.historyText ?? "Founded in Karma Khan, Sant Kabir Nagar, Uttar Pradesh in 1994 under the tutelage of senior Islamic theologians, our Madrasa has grown from a humble study-circle of tajweed to a pioneering full-fledged campus imparting higher Islamic sciences along with contemporary high-school modern syllabus."}
             </p>
           </div>
           <div className="w-full md:w-1/3 flex justify-center shrink-0">
@@ -139,7 +139,7 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
           </div>
           <div className="pt-3 space-y-0.5">
             <strong className="text-xs text-slate-800 dark:text-white block">{config.principalName}</strong>
-            <span className="text-[10px] font-mono text-emerald-650 dark:text-amber-400 uppercase font-black">{config.principalSub || "Sheikh-ul-Hadith & Mufti"}</span>
+            <span className="text-[10px] font-mono text-emerald-650 dark:text-amber-400 uppercase font-black">{config.principalSub ?? "Sheikh-ul-Hadith & Mufti"}</span>
           </div>
         </div>
 
@@ -147,11 +147,11 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
         <div className="md:col-span-2 space-y-4 font-sans text-xs md:text-sm text-slate-700 dark:text-slate-350 leading-relaxed">
           <div className="flex items-center gap-1">
             <span className="text-2xl text-emerald-600">“</span>
-            <h3 className="font-extrabold text-lg text-emerald-950 dark:text-amber-300 font-serif">{config.principalTitleHeading || "Message from Hazrat Maulana's desk"}</h3>
+            <h3 className="font-extrabold text-lg text-emerald-950 dark:text-amber-300 font-serif">{config.principalTitleHeading ?? "Message from Hazrat Maulana's desk"}</h3>
           </div>
           <p className="indent-4 italic">{config.principalMessage}</p>
           <div className="pt-2 flex items-center gap-1.5 font-bold font-mono text-[10px] text-emerald-600 dark:text-emerald-450 uppercase tracking-widest">
-            <Shield className="w-3.5 h-3.5 text-amber-500" /> {config.principalLedgerTag || "Authorized Institution Ledger 2026"}
+            <Shield className="w-3.5 h-3.5 text-amber-500" /> {config.principalLedgerTag ?? "Authorized Institution Ledger 2026"}
           </div>
         </div>
       </section>
@@ -166,25 +166,25 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-750/70 rounded-2xl shadow hover:shadow-lg transition-all space-y-3">
             <span className="inline-block p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-xl text-lg">🏫</span>
-            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog1Title || "Primary Education"}</strong>
+            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog1Title ?? "Primary Education"}</strong>
             <p className="text-[11px] text-slate-500 leading-relaxed">
-              {config.prog1Text || "Targeted for kids aged 5 to 11. Imparts basic Arabic alphabets, tajweed vocalization, Urdu literature, coupled with English grammar, mathematics, and environmental sciences."}
+              {config.prog1Text ?? "Targeted for kids aged 5 to 11. Imparts basic Arabic alphabets, tajweed vocalization, Urdu literature, coupled with English grammar, mathematics, and environmental sciences."}
             </p>
           </div>
 
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-750/70 rounded-2xl shadow hover:shadow-lg transition-all space-y-3">
             <span className="inline-block p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-xl text-lg">📚</span>
-            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog2Title || "Secondary Education"}</strong>
+            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog2Title ?? "Secondary Education"}</strong>
             <p className="text-[11px] text-slate-500 leading-relaxed">
-              {config.prog2Text || "Standard high-school courses adhering to regional standards alongside theology. Prepares for board evaluations with robust physics, biology, history and computer modules."}
+              {config.prog2Text ?? "Standard high-school courses adhering to regional standards alongside theology. Prepares for board evaluations with robust physics, biology, history and computer modules."}
             </p>
           </div>
 
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-750/70 rounded-2xl shadow hover:shadow-lg transition-all space-y-3">
             <span className="inline-block p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-xl text-lg">🕌</span>
-            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog3Title || "Islamic Education (Aalim)"}</strong>
+            <strong className="text-sm font-extrabold text-slate-850 dark:text-white block">{config.prog3Title ?? "Islamic Education (Aalim)"}</strong>
             <p className="text-[11px] text-slate-500 leading-relaxed">
-              {config.prog3Text || "Deep, multi-year certified theological learning comprising Tafseer-ul-Quran (Interpretation), Usool-ul-Hadith, Fiqh Jurisprudence (Fatwa streams) and Arabic grammar rhetoric."}
+              {config.prog3Text ?? "Deep, multi-year certified theological learning comprising Tafseer-ul-Quran (Interpretation), Usool-ul-Hadith, Fiqh Jurisprudence (Fatwa streams) and Arabic grammar rhetoric."}
             </p>
           </div>
         </div>
@@ -200,19 +200,19 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              title: config.fac1Title || "Islamic Reference Library",
-              img: config.fac1Img || "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600",
-              text: config.fac1Text || "Houses over 10,000 reference volumes of Hadith collection, jurisprudential scrolls (Hanafi, Shafi, etc.) along with global history encyclopedias and textbooks."
+              title: config.fac1Title ?? "Islamic Reference Library",
+              img: config.fac1Img ?? "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600",
+              text: config.fac1Text ?? "Houses over 10,000 reference volumes of Hadith collection, jurisprudential scrolls (Hanafi, Shafi, etc.) along with global history encyclopedias and textbooks."
             },
             {
-              title: config.fac2Title || "Digital Computing Center",
-              img: config.fac2Img || "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600",
-              text: config.fac2Text || "Equipped with high-performance computer terminals, smart multimedia overhead projectors, and safe filtered high-speed internet connections."
+              title: config.fac2Title ?? "Digital Computing Center",
+              img: config.fac2Img ?? "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600",
+              text: config.fac2Text ?? "Equipped with high-performance computer terminals, smart multimedia overhead projectors, and safe filtered high-speed internet connections."
             },
             {
-              title: config.fac3Title || "Athletics & Assembly Ground",
-              img: config.fac3Img || "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=600",
-              text: config.fac3Text || "Spacious open courtyards configured for daily physical assemblies, and physical health recreation files like football, badminton, and running tracks."
+              title: config.fac3Title ?? "Athletics & Assembly Ground",
+              img: config.fac3Img ?? "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=600",
+              text: config.fac3Text ?? "Spacious open courtyards configured for daily physical assemblies, and physical health recreation files like football, badminton, and running tracks."
             }
           ].map((fac, idx) => (
             <div key={idx} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-150 dark:border-slate-755 shadow hover:shadow-lg transition-all overflow-hidden group">
@@ -259,7 +259,7 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
                   {/* Teacher Photo */}
                   <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-emerald-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-750">
                     <img
-                      src={teacher.photoUrl || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200"}
+                      src={teacher.photoUrl ?? "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200"}
                       alt={teacher.name}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
@@ -306,30 +306,30 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
           <div className="p-5 bg-gradient-to-br from-amber-50/50 to-white dark:from-slate-755 dark:to-slate-800/20 border border-amber-200/50 dark:border-slate-700 rounded-2xl flex gap-4 items-center shadow-sm relative overflow-hidden">
             <span className="text-4xl">🥇</span>
             <div className="space-y-1">
-              <span className="font-mono text-amber-600 dark:text-amber-400 uppercase text-[9px] font-extrabold tracking-widest block">{config.topper1Heading || "Topper #1 (First Place)"}</span>
-              <strong className="text-sm text-slate-900 dark:text-white block">{config.topper1Name || "Mohammad Zaheer Khan"}</strong>
-              <span className="font-semibold text-slate-500 uppercase text-[9px] block">{config.topper1Badge || "91.2% (Secondary Board First)"}</span>
-              <p className="text-[11px] text-slate-505 dark:text-slate-400 leading-relaxed italic">{config.topper1Blurb || "Overall highest scorer in combined contemporary sciences curriculum."}</p>
+              <span className="font-mono text-amber-600 dark:text-amber-400 uppercase text-[9px] font-extrabold tracking-widest block">{config.topper1Heading ?? "Topper #1 (First Place)"}</span>
+              <strong className="text-sm text-slate-900 dark:text-white block">{config.topper1Name ?? "Mohammad Zaheer Khan"}</strong>
+              <span className="font-semibold text-slate-500 uppercase text-[9px] block">{config.topper1Badge ?? "91.2% (Secondary Board First)"}</span>
+              <p className="text-[11px] text-slate-505 dark:text-slate-400 leading-relaxed italic">{config.topper1Blurb ?? "Overall highest scorer in combined contemporary sciences curriculum."}</p>
             </div>
           </div>
 
           <div className="p-5 bg-gradient-to-br from-emerald-50/50 to-white dark:from-slate-755 dark:to-slate-800/20 border border-emerald-250/30 dark:border-slate-700 rounded-2xl flex gap-4 items-center shadow-sm relative overflow-hidden">
             <span className="text-4xl">🥇</span>
             <div className="space-y-1">
-              <span className="font-mono text-emerald-700 dark:text-emerald-400 uppercase text-[9px] font-extrabold tracking-widest block">{config.topper2Heading || "Topper #2 (Saba Top)"}</span>
-              <strong className="text-sm text-slate-900 dark:text-white block">{config.topper2Name || "Ahmad Mujtaba"}</strong>
-              <span className="font-semibold text-slate-500 uppercase text-[9px] block">{config.topper2Badge || "98% (Quran Memorization Top)"}</span>
-              <p className="text-[11px] text-slate-505 dark:text-slate-400 leading-relaxed italic">{config.topper2Blurb || "Perfect score in tajweed accents saba' Recitation mode files."}</p>
+              <span className="font-mono text-emerald-700 dark:text-emerald-400 uppercase text-[9px] font-extrabold tracking-widest block">{config.topper2Heading ?? "Topper #2 (Saba Top)"}</span>
+              <strong className="text-sm text-slate-900 dark:text-white block">{config.topper2Name ?? "Ahmad Mujtaba"}</strong>
+              <span className="font-semibold text-slate-500 uppercase text-[9px] block">{config.topper2Badge ?? "98% (Quran Memorization Top)"}</span>
+              <p className="text-[11px] text-slate-505 dark:text-slate-400 leading-relaxed italic">{config.topper2Blurb ?? "Perfect score in tajweed accents saba' Recitation mode files."}</p>
             </div>
           </div>
 
           <div className="p-5 bg-gradient-to-br from-slate-55 to-white dark:from-slate-755 dark:to-slate-800/20 border border-slate-200 dark:border-slate-700 rounded-2xl flex gap-4 items-center shadow-sm relative overflow-hidden">
             <span className="text-4xl">🥈</span>
             <div className="space-y-1">
-              <span className="font-mono text-slate-600 dark:text-slate-400 uppercase text-[9px] font-extrabold tracking-widest block">{config.topper3Heading || "Topper #3 (Aalim Topper)"}</span>
-              <strong className="text-sm text-slate-900 dark:text-white block">{config.topper3Name || "Fatima Bi"}</strong>
-              <span className="font-semibold text-slate-500 uppercase text-[9px] block">{config.topper3Badge || "88.5% (Aalimiat Class Topper)"}</span>
-              <p className="text-[11px] text-slate-550 dark:text-slate-400 leading-relaxed italic">{config.topper3Blurb || "Exemplary scores in Arabic Jurisprudence (Fiqh/Tafseer studies)."}</p>
+              <span className="font-mono text-slate-600 dark:text-slate-400 uppercase text-[9px] font-extrabold tracking-widest block">{config.topper3Heading ?? "Topper #3 (Aalim Topper)"}</span>
+              <strong className="text-sm text-slate-900 dark:text-white block">{config.topper3Name ?? "Fatima Bi"}</strong>
+              <span className="font-semibold text-slate-500 uppercase text-[9px] block">{config.topper3Badge ?? "88.5% (Aalimiat Class Topper)"}</span>
+              <p className="text-[11px] text-slate-550 dark:text-slate-400 leading-relaxed italic">{config.topper3Blurb ?? "Exemplary scores in Arabic Jurisprudence (Fiqh/Tafseer studies)."}</p>
             </div>
           </div>
         </div>
@@ -415,10 +415,10 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
             <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500 animate-pulse" /> HELP & FINANCIAL SUPPORT (मदरसा की इमदाद / ज़कात व सदाक़ात)
           </span>
           <h3 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight">
-            {config.donateSectionTitle || "Support Our Noble Cause (मदरसा की इमदाद करें)"}
+            {config.donateSectionTitle ?? "Support Our Noble Cause (मदरसा की इमदाद करें)"}
           </h3>
           <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-semibold leading-relaxed">
-            {config.donateSectionSubtitle || "अनाथ, गरीब एवं असहाय बच्चों की निःशुल्क दीनी तालीम, आधुनिक विद्यालयीय पाठ्यक्रम, कंप्यूटर शिक्षा, भोजन और रहने की व्यवस्था (मदरसा के संचालन) में अपनी ज़कात-सदक़ा से सहयोग करें।"}
+            {config.donateSectionSubtitle ?? "अनाथ, गरीब एवं असहाय बच्चों की निःशुल्क दीनी तालीम, आधुनिक विद्यालयीय पाठ्यक्रम, कंप्यूटर शिक्षा, भोजन और रहने की व्यवस्था (मदरसा के संचालन) में अपनी ज़कात-सदक़ा से सहयोग करें।"}
           </p>
         </div>
 
@@ -427,10 +427,10 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
           <div className="lg:col-span-4 p-6 bg-slate-50 dark:bg-slate-950 border border-slate-150 dark:border-slate-800 rounded-2xl flex flex-col justify-between gap-6 shadow-sm">
             <div className="space-y-4">
               <strong className="text-xs uppercase font-extrabold text-emerald-800 dark:text-emerald-400 block border-b border-emerald-100 dark:border-emerald-900/40 pb-2 tracking-wider">
-                {config.whySupportHeading || "Why Support Us? (सहयोग करें)"}
+                {config.whySupportHeading ?? "Why Support Us? (सहयोग करें)"}
               </strong>
               <p className="text-[11px] md:text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
-                {config.whySupportText || "Our Madrasa provides free housing, uniforms, study materials, primary, secondary board education, and intensive theological classes to hundreds of students coming from disadvantaged backgrounds, solely supported by public contributors like you."}
+                {config.whySupportText ?? "Our Madrasa provides free housing, uniforms, study materials, primary, secondary board education, and intensive theological classes to hundreds of students coming from disadvantaged backgrounds, solely supported by public contributors like you."}
               </p>
               
               <div className="space-y-2 pt-2">
@@ -465,10 +465,10 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
                 <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-2 px-3 rounded-lg border border-slate-100 dark:border-slate-800/80">
                   <div className="space-y-0.5">
                     <span className="text-[8px] uppercase tracking-wider font-extrabold text-slate-400">Bank Name</span>
-                    <strong className="block text-slate-800 dark:text-slate-100 font-bold text-[11px]">{config.bankName || "State Bank of India (SBI)"}</strong>
+                    <strong className="block text-slate-800 dark:text-slate-100 font-bold text-[11px]">{config.bankName ?? "State Bank of India (SBI)"}</strong>
                   </div>
                   <button 
-                    onClick={() => handleCopy(config.bankName || "State Bank of India (SBI)", "bankName")}
+                    onClick={() => handleCopy(config.bankName ?? "State Bank of India (SBI)", "bankName")}
                     className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-350 rounded-md transition-all cursor-pointer"
                     title="Copy Bank Name"
                   >
@@ -480,10 +480,10 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
                 <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-2 px-3 rounded-lg border border-slate-100 dark:border-slate-800/80">
                   <div className="space-y-0.5 max-w-[80%]">
                     <span className="text-[8px] uppercase tracking-wider font-extrabold text-slate-400">Account Holder Name (खाताधारक नाम)</span>
-                    <strong className="block text-slate-800 dark:text-slate-100 font-bold text-[10px] break-all uppercase">{config.accountName || "MADRASA ARABIA NOORUL ULOOM"}</strong>
+                    <strong className="block text-slate-800 dark:text-slate-100 font-bold text-[10px] break-all uppercase">{config.accountName ?? "MADRASA ARABIA NOORUL ULOOM"}</strong>
                   </div>
                   <button 
-                    onClick={() => handleCopy(config.accountName || "MADRASA ARABIA NOORUL ULOOM", "accountName")}
+                    onClick={() => handleCopy(config.accountName ?? "MADRASA ARABIA NOORUL ULOOM", "accountName")}
                     className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-350 rounded-md transition-all cursor-pointer"
                     title="Copy Account Name"
                   >
@@ -495,10 +495,10 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
                 <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-2 px-3 rounded-lg border border-slate-100 dark:border-slate-800/80">
                   <div className="space-y-0.5">
                     <span className="text-[8px] uppercase tracking-wider font-extrabold text-slate-400">Account Number (खाता संख्या)</span>
-                    <strong className="block text-slate-900 dark:text-white font-mono text-sm tracking-wider font-bold">{config.accountNumber || "38920192831"}</strong>
+                    <strong className="block text-slate-900 dark:text-white font-mono text-sm tracking-wider font-bold">{config.accountNumber ?? "38920192831"}</strong>
                   </div>
                   <button 
-                    onClick={() => handleCopy(config.accountNumber || "38920192831", "accountNumber")}
+                    onClick={() => handleCopy(config.accountNumber ?? "38920192831", "accountNumber")}
                     className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-350 rounded-md transition-all cursor-pointer"
                     title="Copy Account Number"
                   >
@@ -510,10 +510,10 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
                 <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-2 px-3 rounded-lg border border-slate-100 dark:border-slate-800/80">
                   <div className="space-y-0.5">
                     <span className="text-[8px] uppercase tracking-wider font-extrabold text-slate-400">IFSC Code (आईएफएससी कोड)</span>
-                    <strong className="block text-emerald-650 dark:text-emerald-400 font-mono text-sm uppercase tracking-wider font-bold">{config.ifscCode || "SBIN0001234"}</strong>
+                    <strong className="block text-emerald-650 dark:text-emerald-400 font-mono text-sm uppercase tracking-wider font-bold">{config.ifscCode ?? "SBIN0001234"}</strong>
                   </div>
                   <button 
-                    onClick={() => handleCopy(config.ifscCode || "SBIN0001234", "ifscCode")}
+                    onClick={() => handleCopy(config.ifscCode ?? "SBIN0001234", "ifscCode")}
                     className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-350 rounded-md transition-all cursor-pointer"
                     title="Copy IFSC Code"
                   >
@@ -560,7 +560,7 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
                       {config.upiId}
                     </span>
                     <button 
-                      onClick={() => handleCopy(config.upiId || "", "upiId")}
+                      onClick={() => handleCopy(config.upiId ?? "", "upiId")}
                       className="p-1 hover:text-emerald-600 rounded transition-colors cursor-pointer"
                       title="Copy UPI ID"
                     >
