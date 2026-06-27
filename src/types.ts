@@ -102,6 +102,7 @@ export interface SchoolConfig {
   address: string;
   whatsappNumber: string;
   sessions?: string[];
+  classes?: string[];
 
   // Hero backgrounds
   heroBg1?: string;

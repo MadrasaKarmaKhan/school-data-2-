@@ -113,7 +113,15 @@ export default function AdmissionForm({ onSubmit, admissions, gallery = [], conf
     setHasSearched(true);
   };
 
-  const classes = getSchoolClasses() as ClassName[];
+  const classes = React.useMemo(() => {
+    let list: string[];
+    if (config?.classes && config.classes.length > 0) {
+      list = [...config.classes];
+    } else {
+      list = getSchoolClasses();
+    }
+    return Array.from(new Set(list));
+  }, [config?.classes]) as ClassName[];
 
   const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 

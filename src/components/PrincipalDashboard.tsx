@@ -418,7 +418,18 @@ export default function PrincipalDashboard({
     });
   }, [adminSclass, subjectConfigChangeCounter]);
 
-  const [customClasses, setCustomClasses] = useState<string[]>(() => getSchoolClasses());
+  const [customClasses, setCustomClasses] = useState<string[]>(() => {
+    return schoolConfig.classes && schoolConfig.classes.length > 0
+      ? schoolConfig.classes
+      : getSchoolClasses();
+  });
+  
+  useEffect(() => {
+    if (schoolConfig.classes && schoolConfig.classes.length > 0) {
+      setCustomClasses(schoolConfig.classes);
+    }
+  }, [schoolConfig.classes]);
+
   const [customSessions, setCustomSessions] = useState<string[]>(() => {
     return schoolConfig.sessions && schoolConfig.sessions.length > 0 
       ? schoolConfig.sessions 
@@ -534,6 +545,7 @@ export default function PrincipalDashboard({
     // 1. Update the classes array
     const updatedClasses = customClasses.map(cls => cls === oldName ? normalizedNewName : cls);
     setCustomClasses(updatedClasses);
+    setSchoolConfig(prev => ({ ...prev, classes: updatedClasses }));
     localStorage.setItem("school_classes_list", JSON.stringify(updatedClasses));
 
     // 2. Update the subjects mapping in local storage
@@ -592,6 +604,7 @@ export default function PrincipalDashboard({
     // 1. Update the classes array
     const updatedClasses = customClasses.filter(cls => cls !== className);
     setCustomClasses(updatedClasses);
+    setSchoolConfig(prev => ({ ...prev, classes: updatedClasses }));
     localStorage.setItem("school_classes_list", JSON.stringify(updatedClasses));
 
     // 2. Update subjects mapping 
@@ -648,6 +661,7 @@ export default function PrincipalDashboard({
     // 1. Update array
     const updatedClasses = [...customClasses, normalized];
     setCustomClasses(updatedClasses);
+    setSchoolConfig(prev => ({ ...prev, classes: updatedClasses }));
     localStorage.setItem("school_classes_list", JSON.stringify(updatedClasses));
 
     // 2. Setup subjects mapping

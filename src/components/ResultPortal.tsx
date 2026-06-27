@@ -338,7 +338,21 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     loadLogos();
   }, [searchTriggered, config]);
 
-  const classes = getSchoolClasses() as ClassName[];
+  const classes = React.useMemo(() => {
+    let list: string[];
+    if (config?.classes && config.classes.length > 0) {
+      list = [...config.classes];
+    } else {
+      list = getSchoolClasses();
+    }
+    return Array.from(new Set(list));
+  }, [config?.classes]) as ClassName[];
+
+  useEffect(() => {
+    if (classes.length > 0 && !classes.includes(selectedClass)) {
+      setSelectedClass(classes[0]);
+    }
+  }, [classes, selectedClass]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
