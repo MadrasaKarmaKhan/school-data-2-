@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   FileText, Send, Calendar, Phone, Mail, User, MapPin, CheckCircle, 
   GraduationCap, Award, ShieldCheck, QrCode, Upload, Smartphone, 
