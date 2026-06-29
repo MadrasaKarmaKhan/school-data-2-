@@ -152,9 +152,15 @@ export default function DuaAuth({ onLogin, config }: DuaAuthProps) {
       
       await setDoc(doc(db, 'students', code), newStudent);
       setRegCodeOut(code);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setRegError('Could not register. Please try again.');
+      if (err?.code === 'resource-exhausted') {
+        setRegError('सर्वर बहुत व्यस्त है (Quota Exceeded)। कृपया कल प्रयास करें।');
+      } else if (err?.code === 'permission-denied') {
+        setRegError('Permission Denied (अनुमति नहीं है)।');
+      } else {
+        setRegError(err instanceof Error ? err.message : String(err));
+      }
     }
     setLoading(false);
   };
