@@ -2616,7 +2616,7 @@ export default function PrincipalDashboard({
                         style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                       />
                     </div>
-                    <div style={{ width: '140px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    <div style={{ width: '180px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                       <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                       <input 
                         value={adminDob}
@@ -3815,7 +3815,7 @@ export default function PrincipalDashboard({
                               style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                             />
                           </div>
-                          <div style={{ width: '140px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                          <div style={{ width: '180px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                             <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                             <input 
                               readOnly 

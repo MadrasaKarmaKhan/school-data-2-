@@ -1377,7 +1377,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                       }}
                     />
                   </div>
-                  <div style={{ width: '140px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <div style={{ width: '180px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                     <input 
                       readOnly 
