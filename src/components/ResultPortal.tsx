@@ -3,7 +3,7 @@ import { Search, Printer, RefreshCw, Award } from 'lucide-react';
 import { Result, ClassName, SchoolConfig } from '../types';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getClassSubjects, getSchoolClasses, getSchoolSessions, matchClasses } from '../data';
+import { getClassSubjects, getSchoolClasses, getSchoolSessions, matchClasses, formatSessionDisplay } from '../data';
 import { removeBlackBackground } from '../lib/removeBlack';
 import confetti from 'canvas-confetti';
 
@@ -934,7 +934,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           <Award className="w-3.5 h-3.5" /> Examination Results Portal
         </div>
         <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white tracking-tight">
-          Annual Examination Mark List
+          {selectedExamType === 'Annual' ? 'Annual' : selectedExamType} Examination {formatSessionDisplay(selectedSession, selectedExamType)} Mark List
         </h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
           Enter student credentials to generate and print beautiful color-patterned dynamic certificates.
@@ -998,7 +998,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white font-semibold focus:ring-1 focus:ring-emerald-500"
                 >
                   {availableSessions.map((year) => (
-                    <option key={year} value={year}>{year}</option>
+                    <option key={year} value={year}>{formatSessionDisplay(year, selectedExamType)}</option>
                   ))}
                 </select>
               </div>
@@ -1275,7 +1275,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                               ? 'Quarterly Examination'
                               : foundResult.examType)
                         : 'Annual Examination'
-                      } - {normalizeSession(foundResult.session)}
+                      } - {formatSessionDisplay(normalizeSession(foundResult.session), foundResult.examType || 'Annual')}
                     </div>
                   </div>
 

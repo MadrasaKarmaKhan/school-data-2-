@@ -7,7 +7,7 @@ import {
 import { Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName } from '../types';
 import { resizeImage, compressBase64Image } from '../lib/imageUtils';
 import { removeBlackBackground } from '../lib/removeBlack';
-import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSessions } from '../data';
+import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSessions, formatSessionDisplay } from '../data';
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { DAILY_DUAS } from '../data/duas';
@@ -2540,7 +2540,7 @@ export default function PrincipalDashboard({
                           }}
                         >
                           {customSessions.slice().reverse().map(yr => (
-                            <option key={yr} value={yr}>{yr}</option>
+                            <option key={yr} value={yr}>{formatSessionDisplay(yr, adminExamType)}</option>
                           ))}
                         </select>
                       </div>
@@ -3750,7 +3750,7 @@ export default function PrincipalDashboard({
                                 fontWeight: 900
                               }}
                             >
-                              {res.examType || "Annual"} Examination - {res.session || getCurrentSession()}
+                              {res.examType || "Annual"} Examination - {formatSessionDisplay(res.session || getCurrentSession(), res.examType || 'Annual')}
                             </div>
                           </div>
 

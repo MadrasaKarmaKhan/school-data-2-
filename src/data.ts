@@ -449,3 +449,16 @@ export const matchClasses = (c1: string | undefined, c2: string | undefined): bo
   return false;
 };
 
+export const formatSessionDisplay = (session: string, examType: string): string => {
+  if (!session) return '';
+  if (examType === 'Annual') {
+    return session;
+  }
+  // For Half-Yearly or Quarterly, return only the first part of the session (e.g., "2026" from "2026-2027")
+  if (session.includes('-')) {
+    return session.split('-')[0];
+  }
+  return session;
+};
+
+
