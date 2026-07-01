@@ -48,8 +48,8 @@ function normalizeClassName(rawClass: any): any {
     '1ST', '2ND', '3RD', '4TH', '5TH'
   ];
   if (valid.includes(str)) return str;
-  const found = valid.find(c => str.includes(c) || c.includes(str));
-  if (found) return found;
+  const caseInsensitiveMatch = valid.find(c => c.toLowerCase() === str.toLowerCase());
+  if (caseInsensitiveMatch) return caseInsensitiveMatch;
   return str;
 }
 

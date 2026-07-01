@@ -59,18 +59,18 @@ export function normalizeClassName(rawClass: any): ClassName {
   
   // If exact match of known types, return it
   const validClasses: ClassName[] = [
-    ...getSchoolClasses() as ClassName[],
+    ...(getSchoolClasses() as ClassName[]),
     '1ST', '2ND', '3RD', '4TH', '5TH'
   ];
   if (validClasses.includes(str as any)) {
     return str as ClassName;
   }
   
-  // Try substring search
-  const found = validClasses.find(c => str.includes(c) || c.includes(str));
-  if (found) return found;
+  // Try case-insensitive exact match
+  const caseInsensitiveMatch = validClasses.find(c => c.toLowerCase() === str.toLowerCase());
+  if (caseInsensitiveMatch) return caseInsensitiveMatch;
 
-  return str as ClassName; // Keep the string instead of defaulting to EDADIA
+  return str as ClassName; // Keep the exact string instead of corrupting it with substring matches
 }
 
 export function formatClassName(className: string | undefined): string {

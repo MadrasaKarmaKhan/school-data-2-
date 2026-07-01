@@ -29,24 +29,6 @@ export const INITIAL_CONFIG: SchoolConfig = {
   stat4Num: "15+",
   stat4Label: "Smart IT courses",
 
-  // Credentials
-  historyHeader: "Roots in Scholars education",
-  historyText: "Founded in Karma Khan, Sant Kabir Nagar, Uttar Pradesh in 1994 under the tutelage of senior Islamic theologians, our Madrasa has grown from a humble study-circle of tajweed to a pioneering full-fledged campus imparting higher Islamic sciences along with contemporary high-school modern syllabus.",
-  missionHeader: "Equipping with dual wisdom",
-  missionText: "To provide the younger generations with precise spiritual grounding, accurate recitation accents, authentic moral jurisprudence (Ifta guides) along with dynamic secular literacy in computer coding and physical science, producing leaders of tomorrow.",
-  visionHeader: "Excel in Dunia & Akhirah",
-  visionText: "We envision an society where future leaders hold the Holy Quran in their hearts and state-of-the-art technological literacy in their hands — fostering religious harmony, research advancements, and highly righteous human characters.",
-
-  // Academic programs
-  prog1Title: "Primary Education",
-  prog1Text: "Targeted for kids aged 5 to 11. Imparts basic Arabic alphabets, tajweed vocalization, Urdu literature, coupled with English grammar, mathematics, and environmental sciences.",
-  prog2Title: "Secondary Education",
-  prog2Text: "Standard high-school courses adhering to regional standards alongside theology. Prepares for board evaluations with robust physics, biology, history and computer modules.",
-  prog3Title: "Islamic Education (Aalim)",
-  prog3Text: "Deep, multi-year certified theological learning comprising Tafseer-ul-Quran (Interpretation), Usool-ul-Hadith, Fiqh Jurisprudence (Fatwa streams) and Arabic grammar rhetoric.",
-  prog4Title: "Computer & IT Literacy",
-  prog4Text: "Advanced computer science training covering web architecture, basic algorithms (TypeScript), digital graphic tools, and online documentation databases for modern professions.",
-
   // Smart Campus facilities
   fac1Title: "Islamic Reference Library",
   fac1Img: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600",
