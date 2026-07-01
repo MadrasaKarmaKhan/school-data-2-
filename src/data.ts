@@ -431,3 +431,21 @@ export const getClassSubjects = (className: string, marks?: any): string[] => {
   return DEFAULT_CLASS_SUBJECTS[className] || ORIGINAL_10_SUBJECTS;
 };
 
+export const matchClasses = (c1: string | undefined, c2: string | undefined): boolean => {
+  if (!c1 || !c2) return false;
+  const norm1 = String(c1).trim().toUpperCase();
+  const norm2 = String(c2).trim().toUpperCase();
+  if (norm1 === norm2) return true;
+  
+  const idadiyaVariants = ["EDADIA", "IDADIA", "IDADYAH", "EDADYAH", "IDAADIYA", "IDADIYA", "I'DADIYAH", "I'DADIYA"];
+  if (idadiyaVariants.includes(norm1) && idadiyaVariants.includes(norm2)) return true;
+  
+  const farsiVariants = ["FARSI", "PERSIAN"];
+  if (farsiVariants.includes(norm1) && farsiVariants.includes(norm2)) return true;
+
+  const arbiVariants = ["ARBI", "ARABIC", "ARABI"];
+  if (arbiVariants.includes(norm1) && arbiVariants.includes(norm2)) return true;
+  
+  return false;
+};
+

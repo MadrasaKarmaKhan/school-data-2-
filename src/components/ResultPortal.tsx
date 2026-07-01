@@ -3,7 +3,7 @@ import { Search, Printer, RefreshCw, Award } from 'lucide-react';
 import { Result, ClassName, SchoolConfig } from '../types';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { getClassSubjects, getSchoolClasses, getSchoolSessions } from '../data';
+import { getClassSubjects, getSchoolClasses, getSchoolSessions, matchClasses } from '../data';
 import { removeBlackBackground } from '../lib/removeBlack';
 import confetti from 'canvas-confetti';
 
@@ -259,7 +259,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
       const potentialMatches = results.filter(
         (r) =>
           r.rollNo.toString().trim() === rollNo.trim() &&
-          r.className === selectedClass &&
+          matchClasses(r.className, selectedClass) &&
           (r.examType || 'Annual').toLowerCase() === selectedExamType.toLowerCase()
       );
 
@@ -405,7 +405,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     const potentialMatches = results.filter(
       (r) =>
         r.rollNo.toString().trim() === rollNo.trim() &&
-        r.className === selectedClass &&
+        matchClasses(r.className, selectedClass) &&
         (r.examType || 'Annual').toLowerCase() === selectedExamType.toLowerCase()
     );
 
@@ -782,7 +782,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
   // Determine current student's autocalculated rank relative to others
   const getAutocalculatedRank = (res: Result): string => {
     if (!res) return "-";
-    const filteredByClass = results.filter(r => r.className === res.className);
+    const filteredByClass = results.filter(r => matchClasses(r.className, res.className));
     if (filteredByClass.length === 0) return "1";
     
     // Sort all by accumulated total
@@ -827,7 +827,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
               </div>
               <div className="flex justify-between border-b border-slate-100 pb-1.5 items-center">
                 <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">Class</span>
-                <span className="text-slate-900 font-extrabold text-sm">{formatClassName(foundResult.className)}</span>
+                <span className="text-slate-900 font-extrabold text-sm">{formatClassName(selectedClass)}</span>
               </div>
               <div className="flex justify-between pb-0.5 items-center">
                 <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">Roll No</span>
@@ -1416,7 +1416,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                          padding: '4px 8px'
                        }}
                      >
-                       {formatClassName(foundResult.className)}
+                       {formatClassName(selectedClass)}
                      </div>
                   </div>
                   <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
