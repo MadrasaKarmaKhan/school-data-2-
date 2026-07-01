@@ -35,6 +35,20 @@ interface PrincipalDashboardProps {
 export function normalizeClassName(rawClass: any): ClassName {
   if (!rawClass) return "EDADIA";
   const str = String(rawClass).trim().toUpperCase();
+
+  // If exact match of known types, return it
+  const validClasses: ClassName[] = [
+    ...(getSchoolClasses() as ClassName[]),
+    '1ST', '2ND', '3RD', '4TH', '5TH'
+  ];
+  if (validClasses.includes(str as any)) {
+    return str as ClassName;
+  }
+  
+  // Try case-insensitive exact match
+  const caseInsensitiveMatch = validClasses.find(c => c.toLowerCase() === str.toLowerCase());
+  if (caseInsensitiveMatch) return caseInsensitiveMatch;
+
   if (str === "L.K.G" || str === "LKG" || str === "L. K. G.") return "L.K.G";
   if (str === "U.K.G" || str === "UKG" || str === "U. K. G.") return "U.K.G";
   if (str === "1ST A" || str === "1 A" || str === "1A" || str === "CLASS 1 A" || str.includes("1ST A") || str.includes("1 A")) return "1ST A";
@@ -56,19 +70,6 @@ export function normalizeClassName(rawClass: any): ClassName {
   if (str === "EDADIA" || str === "IDADIA" || str === "IDADYAH" || str === "EDADYAH" || str === "IDAADIYA" || str === "IDADIYA" || str === "I'DADIYAH" || str === "I'DADIYA") return "EDADIA";
   if (str === "FARSI") return "FARSI";
   if (str === "ARBI" || str === "ARABIC") return "ARBI";
-  
-  // If exact match of known types, return it
-  const validClasses: ClassName[] = [
-    ...(getSchoolClasses() as ClassName[]),
-    '1ST', '2ND', '3RD', '4TH', '5TH'
-  ];
-  if (validClasses.includes(str as any)) {
-    return str as ClassName;
-  }
-  
-  // Try case-insensitive exact match
-  const caseInsensitiveMatch = validClasses.find(c => c.toLowerCase() === str.toLowerCase());
-  if (caseInsensitiveMatch) return caseInsensitiveMatch;
 
   return str as ClassName; // Keep the exact string instead of corrupting it with substring matches
 }
@@ -3387,7 +3388,7 @@ export default function PrincipalDashboard({
                         </th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Roll No</th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Student Name</th>
-                        <th className="p-2 border border-slate-200 dark:border-slate-700">Class</th>
+                        <th className="p-2 border border-slate-200 dark:border-slate-700 whitespace-nowrap">Class</th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Total Score</th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Class Rank</th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Actions</th>
@@ -3458,7 +3459,7 @@ export default function PrincipalDashboard({
                                 {r.studentName}
                               </td>
                               <td className="p-2.5 border border-slate-200 dark:border-slate-700">
-                                <span className="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-150 dark:border-slate-700 rounded-full text-[10px] font-black uppercase tracking-wider">
+                                <span className="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-150 dark:border-slate-700 rounded-full text-[10px] font-black uppercase tracking-wider whitespace-nowrap">
                                   {r.className}
                                 </span>
                               </td>

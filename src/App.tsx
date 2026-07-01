@@ -21,6 +21,15 @@ import { compressBase64Image } from './lib/imageUtils';
 function normalizeClassName(rawClass: any): any {
   if (!rawClass) return "EDADIA";
   const str = String(rawClass).trim().toUpperCase();
+  
+  const valid = [
+    ...getSchoolClasses(),
+    '1ST', '2ND', '3RD', '4TH', '5TH'
+  ];
+  if (valid.includes(str)) return str;
+  const caseInsensitiveMatch = valid.find(c => c.toLowerCase() === str.toLowerCase());
+  if (caseInsensitiveMatch) return caseInsensitiveMatch;
+
   if (str === "L.K.G" || str === "LKG" || str === "L. K. G.") return "L.K.G";
   if (str === "U.K.G" || str === "UKG" || str === "U. K. G.") return "U.K.G";
   if (str === "1ST A" || str === "1 A" || str === "1A" || str === "CLASS 1 A" || str.includes("1ST A") || str.includes("1 A")) return "1ST A";
@@ -43,13 +52,6 @@ function normalizeClassName(rawClass: any): any {
   if (str === "FARSI") return "FARSI";
   if (str === "ARBI" || str === "ARABIC") return "ARBI";
   
-  const valid = [
-    ...getSchoolClasses(),
-    '1ST', '2ND', '3RD', '4TH', '5TH'
-  ];
-  if (valid.includes(str)) return str;
-  const caseInsensitiveMatch = valid.find(c => c.toLowerCase() === str.toLowerCase());
-  if (caseInsensitiveMatch) return caseInsensitiveMatch;
   return str;
 }
 
