@@ -2597,7 +2597,7 @@ export default function PrincipalDashboard({
 
                   {/* Row 2 */}
                   <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
-                    <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+                    <div style={{ flex: '1', minWidth: 0, display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                       <span style={{ fontSize: '15px', fontWeight: 800, width: '95px', display: 'inline-block' }}>Mother Name:</span> 
                       <input 
                         value={adminMname}
@@ -2615,7 +2615,7 @@ export default function PrincipalDashboard({
                         style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                       />
                     </div>
-                    <div style={{ width: '200px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                       <span style={{ fontSize: '15px', fontWeight: 800 }}>Class:</span> 
                       <select 
                         value={adminSclass}
@@ -2629,7 +2629,7 @@ export default function PrincipalDashboard({
                           });
                           setAdminMarks(newInitialMarks);
                         }}
-                        style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
+                        style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                       >
                         {customClasses.map(cls => (
                           <option key={cls} value={cls}>{cls}</option>
@@ -3797,7 +3797,7 @@ export default function PrincipalDashboard({
 
                         {/* Row 2 */}
                         <div className="card-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
-                          <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+                          <div style={{ flex: '1', minWidth: 0, display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                             <span style={{ fontSize: '15px', fontWeight: 800, width: '95px', display: 'inline-block' }}>Mother Name:</span> 
                             <input 
                               readOnly 
@@ -3813,13 +3813,13 @@ export default function PrincipalDashboard({
                               style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                             />
                           </div>
-                           <div style={{ width: '200px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                           <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                             <span style={{ fontSize: '15px', fontWeight: 800 }}>Class:</span> 
-                            <input 
-                              readOnly 
-                              value={formatClassName(res.className)} 
-                              style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000', textAlign: 'center' }}
-                            />
+                            <div 
+                              style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', boxSizing: 'border-box', height: '32px', color: '#000000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                              {formatClassName(res.className)}
+                            </div>
                           </div>
                           <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                             <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 

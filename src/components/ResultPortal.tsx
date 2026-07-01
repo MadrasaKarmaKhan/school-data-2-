@@ -1357,7 +1357,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
                 {/* Row 2 */}
                 <div className="card-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center', color: '#1e5631', width: '100%' }}>
-                  <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+                  <div style={{ flex: '1', minWidth: 0, display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                     <span style={{ fontSize: '15px', fontWeight: 800, width: '95px', display: 'inline-block' }}>Mother Name:</span> 
                     <input 
                       readOnly 
@@ -1398,26 +1398,26 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                       }}
                     />
                   </div>
-                  <div style={{ width: '200px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                      <span style={{ fontSize: '15px', fontWeight: 800 }}>Class:</span> 
-                     <input 
-                       readOnly 
-                       value={formatClassName(foundResult.className)} 
+                     <div 
                        style={{ 
                          fontSize: '16px', 
                          fontWeight: 900, 
                          border: '1.5px solid #1e5631', 
                          borderRadius: '4px', 
                          background: '#f9fff9', 
-                         width: '100%', 
                          boxSizing: 'border-box', 
                          height: '32px', 
                          color: '#000000',
-                         textAlign: 'center',
-                         padding: '4px 8px',
-                         outline: 'none'
+                         display: 'flex',
+                         alignItems: 'center',
+                         justifyContent: 'center',
+                         padding: '4px 8px'
                        }}
-                     />
+                     >
+                       {formatClassName(foundResult.className)}
+                     </div>
                   </div>
                   <div style={{ width: '115px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
