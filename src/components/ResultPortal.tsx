@@ -244,7 +244,7 @@ export function formatClassName(className: string | undefined): string {
 
 export default function ResultPortal({ results, config }: ResultPortalProps) {
   const [rollNo, setRollNo] = useState('');
-  const [selectedClass, setSelectedClass] = useState<ClassName>('EDADIA');
+  const [selectedClass, setSelectedClass] = useState<ClassName>(() => (config?.classes?.[0] || getSchoolClasses()[0] || 'EDADIA') as ClassName);
   const [selectedExamType, setSelectedExamType] = useState<string>('Annual');
   const [selectedSession, setSelectedSession] = useState<string>(getCurrentSession());
   const [passingYear, setPassingYear] = useState('2526'); // Matches Urdu numerals 2026 / 1447 AH

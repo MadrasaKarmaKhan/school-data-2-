@@ -48,9 +48,18 @@ function normalizeClassName(rawClass: any): any {
   if (str === "3" || str === "3RD" || str === "THIRD" || str === "III" || str === "CLASS 3" || str === "CLASS 3RD") return "3RD A";
   if (str === "4" || str === "4TH" || str === "FOURTH" || str === "IV" || str === "CLASS 4" || str === "CLASS 4TH") return "4TH A";
   if (str === "5" || str === "5TH" || str === "FIFTH" || str === "V" || str === "CLASS 5" || str === "CLASS 5TH") return "5TH A";
-  if (str === "EDADIA" || str === "IDADIA" || str === "IDADYAH" || str === "EDADYAH" || str === "IDAADIYA" || str === "IDADIYA" || str === "I'DADIYAH" || str === "I'DADIYA") return "EDADIA";
-  if (str === "FARSI") return "FARSI";
-  if (str === "ARBI" || str === "ARABIC") return "ARBI";
+  if (["EDADIA", "IDADIA", "IDADYAH", "EDADYAH", "IDAADIYA", "IDADIYA", "I'DADIYAH", "I'DADIYA"].includes(str)) {
+    const configured = valid.find(c => ["EDADIA", "IDADIA", "IDADYAH", "EDADYAH", "IDAADIYA", "IDADIYA", "I'DADIYAH", "I'DADIYA"].includes(c.toUpperCase()));
+    return configured || "EDADIA";
+  }
+  if (["FARSI", "PERSIAN"].includes(str)) {
+    const configured = valid.find(c => ["FARSI", "PERSIAN"].includes(c.toUpperCase()));
+    return configured || "FARSI";
+  }
+  if (["ARBI", "ARABIC", "ARABI"].includes(str)) {
+    const configured = valid.find(c => ["ARBI", "ARABIC", "ARABI"].includes(c.toUpperCase()));
+    return configured || "ARBI";
+  }
   
   return str;
 }

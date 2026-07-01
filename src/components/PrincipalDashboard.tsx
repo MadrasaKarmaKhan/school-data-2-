@@ -67,9 +67,18 @@ export function normalizeClassName(rawClass: any): ClassName {
   if (str === "3" || str === "3RD" || str === "THIRD" || str === "III" || str === "CLASS 3" || str === "CLASS 3RD") return "3RD A";
   if (str === "4" || str === "4TH" || str === "FOURTH" || str === "IV" || str === "CLASS 4" || str === "CLASS 4TH") return "4TH A";
   if (str === "5" || str === "5TH" || str === "FIFTH" || str === "V" || str === "CLASS 5" || str === "CLASS 5TH") return "5TH A";
-  if (str === "EDADIA" || str === "IDADIA" || str === "IDADYAH" || str === "EDADYAH" || str === "IDAADIYA" || str === "IDADIYA" || str === "I'DADIYAH" || str === "I'DADIYA") return "EDADIA";
-  if (str === "FARSI") return "FARSI";
-  if (str === "ARBI" || str === "ARABIC") return "ARBI";
+  if (["EDADIA", "IDADIA", "IDADYAH", "EDADYAH", "IDAADIYA", "IDADIYA", "I'DADIYAH", "I'DADIYA"].includes(str)) {
+    const configured = validClasses.find(c => ["EDADIA", "IDADIA", "IDADYAH", "EDADYAH", "IDAADIYA", "IDADIYA", "I'DADIYAH", "I'DADIYA"].includes(c.toUpperCase()));
+    return (configured || "EDADIA") as ClassName;
+  }
+  if (["FARSI", "PERSIAN"].includes(str)) {
+    const configured = validClasses.find(c => ["FARSI", "PERSIAN"].includes(c.toUpperCase()));
+    return (configured || "FARSI") as ClassName;
+  }
+  if (["ARBI", "ARABIC", "ARABI"].includes(str)) {
+    const configured = validClasses.find(c => ["ARBI", "ARABIC", "ARABI"].includes(c.toUpperCase()));
+    return (configured || "ARBI") as ClassName;
+  }
 
   return str as ClassName; // Keep the exact string instead of corrupting it with substring matches
 }
@@ -387,7 +396,7 @@ export default function PrincipalDashboard({
   const [adminFname, setAdminFname] = useState("");
   const [adminMname, setAdminMname] = useState("");
   const [adminDob, setAdminDob] = useState("12-04-2011");
-  const [adminSclass, setAdminSclass] = useState<ClassName>("EDADIA");
+  const [adminSclass, setAdminSclass] = useState<ClassName>(() => (schoolConfig.classes?.[0] || getSchoolClasses()[0] || 'EDADIA') as ClassName);
   const [adminAddress, setAdminAddress] = useState("VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH");
   const [adminDivision, setAdminDivision] = useState("");
   const [adminSession, setAdminSession] = useState(getCurrentSession());
