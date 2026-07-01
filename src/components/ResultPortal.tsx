@@ -1477,7 +1477,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {getClassSubjects(foundResult.className).map((sub, idx) => {
+                    {getClassSubjects(foundResult.className, foundResult.marks).map((sub, idx) => {
                       const mark = getSubjectMark(foundResult, sub, idx);
                       const color = SUBJECT_COLORS[idx % SUBJECT_COLORS.length];
 
@@ -1495,9 +1495,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     {/* Autocalculated Row Total */}
                     <tr style={{ background: '#f9fff9' }}>
                       <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Total</th>
-                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>{getClassSubjects(foundResult.className).length * 100}</th>
+                      <th style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>{getClassSubjects(foundResult.className, foundResult.marks).length * 100}</th>
                       <th id="total" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
-                        {getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0)}
+                        {getClassSubjects(foundResult.className, foundResult.marks).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0)}
                       </th>
                     </tr>
                     
@@ -1505,8 +1505,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     <tr style={{ background: '#f9fff9' }}>
                       <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Percentage</th>
                       <th colSpan={2} id="percent" style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>
-                        {getClassSubjects(foundResult.className).length > 0 ? (
-                          (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length).toFixed(2)
+                        {getClassSubjects(foundResult.className, foundResult.marks).length > 0 ? (
+                          (getClassSubjects(foundResult.className, foundResult.marks).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className, foundResult.marks).length).toFixed(2)
                         ) : '0.00'}%
                       </th>
                     </tr>
@@ -1554,18 +1554,18 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                    {/* PASS✓ Label Block */}
                   <span 
                     className={`status-label ${
-                      (getClassSubjects(foundResult.className).length > 0 &&
-                       (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length) >= 23) 
+                      (getClassSubjects(foundResult.className, foundResult.marks).length > 0 &&
+                       (getClassSubjects(foundResult.className, foundResult.marks).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className, foundResult.marks).length) >= 23) 
                         ? 'opacity-100 bg-white font-black' 
                         : 'opacity-25 line-through font-normal'
                     }`}
                     style={{
                       padding: '2px 20px',
                       borderRadius: '5px',
-                      border: (getClassSubjects(foundResult.className).length > 0 &&
-                              (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length) >= 23) ? '2.5px solid #1b5e20' : '1px solid currentColor',
-                      color: (getClassSubjects(foundResult.className).length > 0 &&
-                              (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length) >= 23) ? '#1b5e20' : '#888'
+                      border: (getClassSubjects(foundResult.className, foundResult.marks).length > 0 &&
+                              (getClassSubjects(foundResult.className, foundResult.marks).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className, foundResult.marks).length) >= 23) ? '2.5px solid #1b5e20' : '1px solid currentColor',
+                      color: (getClassSubjects(foundResult.className, foundResult.marks).length > 0 &&
+                              (getClassSubjects(foundResult.className, foundResult.marks).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className, foundResult.marks).length) >= 23) ? '#1b5e20' : '#888'
                     }}
                   >
                     PASS ✓
@@ -1574,18 +1574,18 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   {/* FAIL✗ Label Block */}
                   <span 
                     className={`status-label ${
-                      (getClassSubjects(foundResult.className).length === 0 ||
-                       (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length) < 23) 
+                      (getClassSubjects(foundResult.className, foundResult.marks).length === 0 ||
+                       (getClassSubjects(foundResult.className, foundResult.marks).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className, foundResult.marks).length) < 23) 
                         ? 'opacity-100 bg-white font-black' 
                         : 'opacity-25 line-through font-normal'
                     }`}
                     style={{
                       padding: '2px 20px',
                       borderRadius: '5px',
-                      border: (getClassSubjects(foundResult.className).length === 0 ||
-                              (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length) < 23) ? '2.5px solid #d32f2f' : '1px solid currentColor',
-                      color: (getClassSubjects(foundResult.className).length === 0 ||
-                              (getClassSubjects(foundResult.className).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className).length) < 23) ? '#d32f2f' : '#888'
+                      border: (getClassSubjects(foundResult.className, foundResult.marks).length === 0 ||
+                              (getClassSubjects(foundResult.className, foundResult.marks).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className, foundResult.marks).length) < 23) ? '2.5px solid #d32f2f' : '1px solid currentColor',
+                      color: (getClassSubjects(foundResult.className, foundResult.marks).length === 0 ||
+                              (getClassSubjects(foundResult.className, foundResult.marks).reduce((sum, sub, i) => sum + getSubjectMark(foundResult, sub, i), 0) / getClassSubjects(foundResult.className, foundResult.marks).length) < 23) ? '#d32f2f' : '#888'
                     }}
                   >
                     FAIL ✗

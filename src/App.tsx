@@ -50,7 +50,7 @@ function normalizeClassName(rawClass: any): any {
   if (valid.includes(str)) return str;
   const found = valid.find(c => str.includes(c) || c.includes(str));
   if (found) return found;
-  return "EDADIA";
+  return str;
 }
 
 export default function App() {

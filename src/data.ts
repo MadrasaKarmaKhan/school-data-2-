@@ -427,7 +427,11 @@ export const DEFAULT_CLASS_SUBJECTS: Record<string, string[]> = {
   "ARBI": [...ORIGINAL_10_SUBJECTS]
 };
 
-export const getClassSubjects = (className: string): string[] => {
+export const getClassSubjects = (className: string, marks?: any): string[] => {
+  if (marks && !Array.isArray(marks) && typeof marks === 'object') {
+    const keys = Object.keys(marks);
+    if (keys.length > 0) return keys;
+  }
   if (typeof window === 'undefined') {
     return DEFAULT_CLASS_SUBJECTS[className] || ORIGINAL_10_SUBJECTS;
   }

@@ -70,7 +70,7 @@ export function normalizeClassName(rawClass: any): ClassName {
   const found = validClasses.find(c => str.includes(c) || c.includes(str));
   if (found) return found;
 
-  return "EDADIA"; // Default fallback
+  return str as ClassName; // Keep the string instead of defaulting to EDADIA
 }
 
 export function formatClassName(className: string | undefined): string {
