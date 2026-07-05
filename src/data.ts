@@ -7,7 +7,7 @@ export const INITIAL_CONFIG: SchoolConfig = {
   principalName: "Hazrat Maulana Mufti Muhammad Shafiullah Sahib",
   principalMessage: "Dear Students, Parents, and Well-wishers, Welcome to Madrasa Arabia Noorul Uloom. Our mission is to nurture the hearts and minds of the next generation with authentic Islamic values alongside high-quality modern academic streams. We strive to develop righteous characters who excel in science, computer technology, and Quranic wisdom. May Allah accept our humble efforts.",
   googleSheetsWebhookUrl: "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec",
-  principalPhotoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=350",
+  principalPhotoUrl: "",
   contactPhone: "+91 9193984452",
   contactEmail: "info@noorululoom.edu",
   address: "Noorul Uloom Campus Karma Khan District Sant Kabir Nagar Uttar Pradesh -272126",
@@ -15,9 +15,9 @@ export const INITIAL_CONFIG: SchoolConfig = {
   isAdmissionOpen: false,
 
   // Default sliders
-  heroBg1: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=1200",
-  heroBg2: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=1200",
-  heroBg3: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&q=80&w=1200",
+  heroBg1: "",
+  heroBg2: "",
+  heroBg3: "",
 
   // Stats Counters
   stat1Num: "30+",
@@ -31,13 +31,13 @@ export const INITIAL_CONFIG: SchoolConfig = {
 
   // Smart Campus facilities
   fac1Title: "Islamic Reference Library",
-  fac1Img: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600",
+  fac1Img: "",
   fac1Text: "Houses over 10,000 reference volumes of Hadith collection, jurisprudential scrolls (Hanafi, Shafi, etc.) along with global history encyclopedias and textbooks.",
   fac2Title: "Digital Computing Center",
-  fac2Img: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600",
+  fac2Img: "",
   fac2Text: "Equipped with high-performance computer terminals, smart multimedia overhead projectors, and safe filtered high-speed internet connections.",
   fac3Title: "Athletics & Assembly Ground",
-  fac3Img: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=600",
+  fac3Img: "",
   fac3Text: "Spacious open courtyards configured for daily physical assemblies, and physical health recreation files like football, badminton, and running tracks.",
 
   // New config entries

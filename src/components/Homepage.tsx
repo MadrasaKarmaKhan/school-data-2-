@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   BookOpen, Landmark, Eye, Heart, Milestone, GraduationCap, Award, MapPin, Phone, Mail,
   Send, RefreshCw, Layers, Monitor, Play, Sparkles, Book, Compass, Shield, ArrowRight,
-  Copy, Check, QrCode, Edit2
+  Copy, Check, QrCode, Edit2, School
 } from 'lucide-react';
 import { Teacher, GalleryItem, SchoolConfig, ClassName, AdmissionApplication } from '../types';
 
@@ -108,12 +108,19 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
         {/* Principal Portrait */}
         <div className="flex-shrink-0 flex flex-col items-center gap-3 text-center self-center md:self-start w-full md:w-64">
           <div className="relative">
-            <img
-              src={config.principalPhotoUrl}
-              alt={config.principalName}
-              referrerPolicy="no-referrer"
-              className="w-44 h-52 object-cover rounded-2xl border-4 border-amber-400 shadow-xl"
-            />
+            {config.principalPhotoUrl ? (
+              <img
+                src={config.principalPhotoUrl}
+                alt={config.principalName}
+                referrerPolicy="no-referrer"
+                className="w-44 h-52 object-cover rounded-2xl border-4 border-amber-400 shadow-xl"
+              />
+            ) : (
+              <div className="w-44 h-52 flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-2xl border-4 border-amber-400 shadow-xl text-slate-400">
+                <School className="w-12 h-12 mb-2 opacity-50" />
+                <span className="text-[10px] uppercase font-bold tracking-wider opacity-60">Principal Photo</span>
+              </div>
+            )}
             <div className="absolute -bottom-3 inset-x-0 mx-auto w-fit px-3.5 py-1 bg-emerald-850 text-amber-400 text-[10px] font-bold uppercase rounded-full shadow border border-emerald-800 font-mono tracking-widest">
               PRINCIPAL DESK
             </div>
@@ -149,19 +156,19 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              title: config.fac1Title ?? "Islamic Reference Library",
-              img: config.fac1Img ?? "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600",
-              text: config.fac1Text ?? "Houses over 10,000 reference volumes of Hadith collection, jurisprudential scrolls (Hanafi, Shafi, etc.) along with global history encyclopedias and textbooks."
+              title: config.fac1Title || "Islamic Reference Library",
+              img: config.fac1Img || "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600",
+              text: config.fac1Text || "Houses over 10,000 reference volumes of Hadith collection, jurisprudential scrolls (Hanafi, Shafi, etc.) along with global history encyclopedias and textbooks."
             },
             {
-              title: config.fac2Title ?? "Digital Computing Center",
-              img: config.fac2Img ?? "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600",
-              text: config.fac2Text ?? "Equipped with high-performance computer terminals, smart multimedia overhead projectors, and safe filtered high-speed internet connections."
+              title: config.fac2Title || "Digital Computing Center",
+              img: config.fac2Img || "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=600",
+              text: config.fac2Text || "Equipped with high-performance computer terminals, smart multimedia overhead projectors, and safe filtered high-speed internet connections."
             },
             {
-              title: config.fac3Title ?? "Athletics & Assembly Ground",
-              img: config.fac3Img ?? "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=600",
-              text: config.fac3Text ?? "Spacious open courtyards configured for daily physical assemblies, and physical health recreation files like football, badminton, and running tracks."
+              title: config.fac3Title || "Athletics & Assembly Ground",
+              img: config.fac3Img || "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=600",
+              text: config.fac3Text || "Spacious open courtyards configured for daily physical assemblies, and physical health recreation files like football, badminton, and running tracks."
             }
           ].map((fac, idx) => (
             <div key={idx} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-150 dark:border-slate-755 shadow hover:shadow-lg transition-all overflow-hidden group">
