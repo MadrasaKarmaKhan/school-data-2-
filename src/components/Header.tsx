@@ -153,8 +153,8 @@ export default function Header({
       {/* Main Brand Header Container */}
       <div className="max-w-7xl mx-auto px-4 py-4 md:py-5 flex flex-col md:flex-row justify-between items-center gap-4">
         {/* Logo and Animated School Name */}
-        <div className="flex items-center gap-3.5 group cursor-pointer" onClick={() => setCurrentTab('home')}>
-          <div className="relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-amber-400 via-emerald-650 to-emerald-800 p-0.5 shadow-md shadow-emerald-900/10">
+        <div className="flex items-center gap-3.5 group cursor-pointer flex-1 min-w-0" onClick={() => setCurrentTab('home')}>
+          <div className="flex-shrink-0 relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-amber-400 via-emerald-650 to-emerald-800 p-0.5 shadow-md shadow-emerald-900/10">
             <div className="w-full h-full bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center text-emerald-700 dark:text-emerald-400 overflow-hidden">
               {config.logoUrl ? (
                 <img src={config.logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
@@ -175,7 +175,7 @@ export default function Header({
             </button>
           )}
  
-          <div className="flex-1 max-w-[280px] sm:max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl min-w-0 justify-center">
+          <div className="flex-1 min-w-0 justify-center">
             {/* High-visibility background shape (pill/capsule) under the sliding text */}
             <div className="relative w-full h-11 sm:h-12 md:h-14 bg-gradient-to-r from-emerald-50/75 via-slate-50/90 to-amber-50/75 dark:from-slate-950/95 dark:via-slate-900/90 dark:to-slate-950/95 border-2 border-emerald-600/20 dark:border-emerald-500/25 rounded-2xl overflow-hidden flex items-center shadow-inner">
               <div className="custom-ticker-container select-none">

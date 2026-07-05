@@ -94,7 +94,7 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
       </section>
 
       {/* Principal Message message desk */}
-      <section id="principal" className="relative scroll-mt-20 p-6 md:p-10 bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-500/20 shadow-2xl grid grid-cols-1 md:grid-cols-3 gap-8 items-center.">
+      <section id="principal" className="relative scroll-mt-20 p-6 md:p-10 bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-500/20 shadow-2xl flex flex-col md:flex-row gap-8 items-start">
         {isLoggedIn && (
           <button 
             onClick={() => setCurrentTab('dashboard')}
@@ -104,8 +104,9 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
             <Edit2 className="w-3.5 h-3.5" /> Edit Principal Photo & Text
           </button>
         )}
+
         {/* Principal Portrait */}
-        <div className="md:col-span-1 flex flex-col items-center gap-3 text-center self-center">
+        <div className="flex-shrink-0 flex flex-col items-center gap-3 text-center self-center md:self-start w-full md:w-64">
           <div className="relative">
             <img
               src={config.principalPhotoUrl}
@@ -119,14 +120,14 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
           </div>
           <div className="pt-3 space-y-0.5">
             <strong className="text-xs text-slate-800 dark:text-white block">{config.principalName}</strong>
-            <div className="text-[10px] whitespace-pre-wrap font-mono text-emerald-650 dark:text-amber-400 uppercase font-black">
+            <div className="text-[9px] md:text-[10px] whitespace-pre-wrap font-mono text-emerald-650 dark:text-amber-400 uppercase font-black leading-tight">
               {config.principalSub ?? "Director of Education, Madrasa Arabia Noorul Uloom, Karma Khan, District Sant Kabir Nagar (U.P.)\nGeneral Secretary, Jamiat Ulema Khalilabad, Sant Kabir Nagar (U.P.)"}
             </div>
           </div>
         </div>
 
         {/* Message body */}
-        <div className="md:col-span-2 space-y-4 font-sans text-xs md:text-sm text-slate-700 dark:text-slate-350 leading-relaxed">
+        <div className="flex-1 space-y-4 font-sans text-xs md:text-sm text-slate-700 dark:text-slate-350 leading-relaxed">
           <div className="flex items-center gap-1">
             <span className="text-2xl text-emerald-600">“</span>
             <h3 className="font-extrabold text-lg text-emerald-950 dark:text-amber-300 font-serif">{config.principalTitleHeading ?? "Message from Hazrat Maulana's desk"}</h3>
