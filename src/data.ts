@@ -43,7 +43,7 @@ export const INITIAL_CONFIG: SchoolConfig = {
   // New config entries
   admissionNotice: "ADMISSION 2026: Online Applications Open",
   establishedYear: "Est. 1994",
-  principalSub: "Sheikh-ul-Hadith & Mufti",
+  principalSub: "Director of Education, Madrasa Arabia Noorul Uloom, Karma Khan, District Sant Kabir Nagar (U.P.)\nGeneral Secretary, Jamiat Ulema Khalilabad, Sant Kabir Nagar (U.P.)",
   principalTitleHeading: "Message from Hazrat Maulana's desk",
   principalLedgerTag: "Authorized Institution Ledger 2026",
   topper1Heading: "Topper #1 (First Place)",
@@ -192,7 +192,7 @@ export const INITIAL_TEACHERS: Teacher[] = [
   {
     id: "t1",
     name: "Hazrat Maulana Mufti Muhammad Shafiullah Sahib",
-    designation: "Principal & Senior Sheikh-ul-Hadith",
+    designation: "Director of Education & General Secretary",
     qualification: "Fazeelat from Darul Uloom Deoband, Specialization in Ifta (Fatwa)",
     photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300",
     phone: "+91 98765 00111",

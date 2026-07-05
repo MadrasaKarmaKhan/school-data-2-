@@ -136,12 +136,42 @@ export default function App() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
+        let updated = false;
         if (parsed && (parsed.address?.includes("Lucknow") || parsed.contactPhone === "+91 98765 43210")) {
           parsed.address = "Noorul Uloom Campus Karma Khan District Sant Kabir Nagar Uttar Pradesh -272126";
           parsed.contactPhone = "+91 9193984452";
           parsed.whatsappNumber = "+919193984452";
+          updated = true;
+        }
+        if (parsed && parsed.principalSub === "Sheikh-ul-Hadith & Mufti") {
+          parsed.principalSub = "Director of Education, Madrasa Arabia Noorul Uloom, Karma Khan, District Sant Kabir Nagar (U.P.)\nGeneral Secretary, Jamiat Ulema Khalilabad, Sant Kabir Nagar (U.P.)";
+          updated = true;
+        }
+        if (updated) {
           localStorage.setItem('nu_config', JSON.stringify(parsed));
           setSchoolConfig(parsed);
+        }
+      } catch (e) {
+        console.error("Migration error: ", e);
+      }
+    }
+
+    const storedTeachers = localStorage.getItem('nu_teachers');
+    if (storedTeachers) {
+      try {
+        const parsedT = JSON.parse(storedTeachers);
+        if (Array.isArray(parsedT)) {
+          let updated = false;
+          parsedT.forEach(t => {
+            if (t.id === "t1" && t.designation === "Principal & Senior Sheikh-ul-Hadith") {
+              t.designation = "Director of Education & General Secretary";
+              updated = true;
+            }
+          });
+          if (updated) {
+            localStorage.setItem('nu_teachers', JSON.stringify(parsedT));
+            setTeachers(parsedT);
+          }
         }
       } catch (e) {
         console.error("Migration error: ", e);
@@ -174,12 +204,28 @@ export default function App() {
     };
 
     unsubSchoolConfig = subscribeToFirebase('schoolData', 'config', (data, fromCache, dataChanged) => {
-      if (data && dataChanged) { lastFirebaseData.current['config'] = JSON.stringify(data); setSchoolConfig(data); }
+      if (data && dataChanged) { 
+        if (data.principalSub === "Sheikh-ul-Hadith & Mufti") {
+          data.principalSub = "Director of Education, Madrasa Arabia Noorul Uloom, Karma Khan, District Sant Kabir Nagar (U.P.)\nGeneral Secretary, Jamiat Ulema Khalilabad, Sant Kabir Nagar (U.P.)";
+        }
+        lastFirebaseData.current['config'] = JSON.stringify(data); 
+        setSchoolConfig(data); 
+      }
       if (!fromCache) configLoaded = true;
       checkHideLoading();
     });
     unsubTeachers = subscribeToFirebase('schoolData', 'teachers', (data, fromCache, dataChanged) => {
-      if (data && dataChanged) { lastFirebaseData.current['teachers'] = JSON.stringify(data); setTeachers(data); }
+      if (data && dataChanged) { 
+        if (Array.isArray(data)) {
+          data.forEach(t => {
+            if (t.id === "t1" && t.designation === "Principal & Senior Sheikh-ul-Hadith") {
+              t.designation = "Director of Education & General Secretary";
+            }
+          });
+        }
+        lastFirebaseData.current['teachers'] = JSON.stringify(data); 
+        setTeachers(data); 
+      }
       if (!fromCache) teachersLoaded = true;
       checkHideLoading();
     });

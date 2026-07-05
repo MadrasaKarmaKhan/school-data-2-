@@ -5475,12 +5475,12 @@ export default function PrincipalDashboard({
                     </div>
                     <div className="space-y-1">
                       <label className="font-bold text-slate-600 dark:text-slate-300">Principal Subtitle Line</label>
-                      <input
-                        type="text"
+                      <textarea
                         value={schoolConfig.principalSub || ""}
                         onChange={(e) => setSchoolConfig({ ...schoolConfig, principalSub: e.target.value })}
                         className="w-full p-2.5 border border-slate-250 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-950"
-                        placeholder="Sheikh-ul-Hadith & Mufti"
+                        placeholder="Director of Education, Madrasa Arabia Noorul Uloom..."
+                        rows={3}
                       />
                     </div>
                     <div className="space-y-1">

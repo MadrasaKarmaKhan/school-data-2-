@@ -119,7 +119,9 @@ export default function Homepage({ config, teachers, gallery, setCurrentTab, onA
           </div>
           <div className="pt-3 space-y-0.5">
             <strong className="text-xs text-slate-800 dark:text-white block">{config.principalName}</strong>
-            <span className="text-[10px] font-mono text-emerald-650 dark:text-amber-400 uppercase font-black">{config.principalSub ?? "Sheikh-ul-Hadith & Mufti"}</span>
+            <div className="text-[10px] whitespace-pre-wrap font-mono text-emerald-650 dark:text-amber-400 uppercase font-black">
+              {config.principalSub ?? "Director of Education, Madrasa Arabia Noorul Uloom, Karma Khan, District Sant Kabir Nagar (U.P.)\nGeneral Secretary, Jamiat Ulema Khalilabad, Sant Kabir Nagar (U.P.)"}
+            </div>
           </div>
         </div>
 
