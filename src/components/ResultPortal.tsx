@@ -411,22 +411,10 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
     let match = null;
     if (potentialMatches.length > 0) {
-      // First try to find exact match with the currently selected session
+      // Find exact match with the currently selected session
       match = potentialMatches.find(
         (r) => normalizeSession(r.session).toLowerCase() === normalizeSession(selectedSession).toLowerCase()
       );
-      
-      // If no exact match for the selected session, but other sessions exist, pick the most recent one
-      if (!match) {
-        // Sort descending so the highest/newest year is first
-        potentialMatches.sort((a, b) => normalizeSession(b.session).localeCompare(normalizeSession(a.session)));
-        match = potentialMatches[0];
-        
-        // Auto-update the session dropdown to reflect the found result's actual session
-        if (match.session) {
-          setSelectedSession(normalizeSession(match.session));
-        }
-      }
     }
 
     if (match) {
