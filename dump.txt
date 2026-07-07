@@ -1,0 +1,10 @@
+                            className="p-2 text-rose-500 hover:bg-rose-50 rounded-md"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex max-w-sm gap-2">

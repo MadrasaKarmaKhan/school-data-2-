@@ -139,8 +139,6 @@ export interface SchoolConfig {
   navMenuResultsIcon?: string;
   navMenuAdmissionsText?: string;
   navMenuAdmissionsIcon?: string;
-  navMenuDonateText?: string;
-  navMenuDonateIcon?: string;
   navMenuDashboardText?: string;
   navMenuDashboardIcon?: string;
 
@@ -176,12 +174,6 @@ export interface SchoolConfig {
   ifscCode?: string;
   upiId?: string;
   qrCodeUrl?: string;
-
-  // Donation section texts
-  donateSectionTitle?: string;
-  donateSectionSubtitle?: string;
-  whySupportHeading?: string;
-  whySupportText?: string;
 
   // Admission form settings
   admissionFormTitle?: string;

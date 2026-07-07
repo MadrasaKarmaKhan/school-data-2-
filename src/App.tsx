@@ -121,14 +121,6 @@ export default function App() {
     config: true,
   });
 
-  useEffect(() => {
-    if (currentTab === 'donate') {
-      setTimeout(() => {
-        document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
-  }, [currentTab]);
-
   // Initial loader and migration effect
   useEffect(() => {
     // Migrate old default address/phone if present in stored local storage config to ensure user immediately sees the new address
@@ -282,7 +274,7 @@ export default function App() {
   useEffect(() => {
     const fetchFromSheets = async () => {
       // The user provided this exact macro, so we will fetch from it by default if custom config is missing.
-      const defaultWebhookUrl = schoolConfig?.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
+      const defaultWebhookUrl = schoolConfig?.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbyzUVQfHEceaWb4k5XMA3zQsY-MCZmeXjQDbzTJG4ElT2J83SzlLy1hQcM07Dt_cwbncQ/exec";
       
       const webhooks = [...(schoolConfig?.googleSheetsWebhooks || [])];
       
@@ -473,7 +465,7 @@ export default function App() {
 
       {/* Main dynamic section content area */}
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 w-full flex-grow">
-        {(currentTab === 'home' || currentTab === 'donate') && (
+        {currentTab === 'home' && (
           <Homepage
             config={schoolConfig}
             teachers={teachers}

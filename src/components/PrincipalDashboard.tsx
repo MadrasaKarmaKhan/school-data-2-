@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import {
-  ShieldAlert, LogIn, Award, Users, BookOpen, FileText, Settings, Sparkles, Plus, Trash2, Edit2, Check, X,
+  ShieldAlert, LogIn, Award, Users, BookOpen, FileText, Settings, Copy, Sparkles, Plus, Trash2, Edit2, Check, X,
   Search, Upload, Image, ShieldCheck, Mail, Phone, MapPin, RefreshCw, AlertCircle, PlusCircle, Calendar, Printer, Menu
 } from 'lucide-react';
 import { Student, Result, Teacher, AdmissionApplication, GalleryItem, NewsItem, SchoolConfig, ClassName } from '../types';
@@ -907,7 +907,7 @@ export default function PrincipalDashboard({
     // Webhook Sync
     const whList = schoolConfig.googleSheetsWebhooks || [];
     const specific = whList.find(w => w.year === newResultRecord.session || w.year === String(newResultRecord.passingYear));
-    const webhookUrl = specific?.url || schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
+    const webhookUrl = specific?.url || schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbyzUVQfHEceaWb4k5XMA3zQsY-MCZmeXjQDbzTJG4ElT2J83SzlLy1hQcM07Dt_cwbncQ/exec";
     if (webhookUrl) {
       fetch(webhookUrl, {
         method: 'POST',
@@ -4994,7 +4994,6 @@ export default function PrincipalDashboard({
                       { id: 'Dua', label: 'Daily Duas' },
                       { id: 'Results', label: 'Exam Results' },
                       { id: 'Admissions', label: 'Admissions' },
-                      { id: 'Donate', label: 'Donate' },
                       { id: 'Dashboard', label: 'Principal Panel' },
                     ].map((nav) => (
                       <div key={nav.id} className="p-3 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-950 space-y-3">
@@ -5788,52 +5787,7 @@ export default function PrincipalDashboard({
                               </div>
                             </div>
 
-                            {/* Donation Page custom texts */}
-                            <div className="space-y-1 md:col-span-2 lg:col-span-3 border-t border-dashed border-slate-250 dark:border-slate-800 pt-4 mt-2">
-                              <strong className="text-[11px] text-emerald-800 dark:text-emerald-450 block uppercase tracking-wider">
-                                📢 Custom Donation Section Texts (सहयोग पेज के टेक्स्ट बदलें)
-                              </strong>
-                            </div>
-                            <div className="space-y-1 md:col-span-1 lg:col-span-1">
-                              <label className="font-bold text-slate-655 dark:text-slate-350 block text-[11px]">Donation Section Title (दान / सहयोग बॉक्स का मुख्य शीर्षक)</label>
-                              <input
-                                type="text"
-                                value={schoolConfig.donateSectionTitle || ""}
-                                onChange={(e) => setSchoolConfig({ ...schoolConfig, donateSectionTitle: e.target.value })}
-                                className="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-white dark:bg-slate-900 text-xs font-semibold text-slate-800 dark:text-slate-100"
-                                placeholder="Support Our Noble Cause (मदरसा की इमदाद करें)"
-                              />
-                            </div>
-                            <div className="space-y-1 md:col-span-2 lg:col-span-2">
-                              <label className="font-bold text-slate-655 dark:text-slate-355 block text-[11px]">Donation Section Subtitle (मुख्य विवरण नीचे वाला)</label>
-                              <input
-                                type="text"
-                                value={schoolConfig.donateSectionSubtitle || ""}
-                                onChange={(e) => setSchoolConfig({ ...schoolConfig, donateSectionSubtitle: e.target.value })}
-                                className="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-white dark:bg-slate-900 text-xs font-semibold text-slate-800 dark:text-slate-100"
-                                placeholder="अनाथ, गरीब एवं असहाय बच्चों की निःशुल्क दीनी तालीम..."
-                              />
-                            </div>
-                            <div className="space-y-1 md:col-span-1 lg:col-span-1">
-                              <label className="font-bold text-slate-655 dark:text-slate-350 block text-[11px]">"Why Support Us" Heading ("हमे सहयोग क्यों करें" हेडिंग)</label>
-                              <input
-                                type="text"
-                                value={schoolConfig.whySupportHeading || ""}
-                                onChange={(e) => setSchoolConfig({ ...schoolConfig, whySupportHeading: e.target.value })}
-                                className="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-white dark:bg-slate-900 text-xs font-semibold text-slate-800 dark:text-slate-100"
-                                placeholder="Why Support Us? (सहयोग करें)"
-                              />
-                            </div>
-                            <div className="space-y-1 md:col-span-2 lg:col-span-2">
-                              <label className="font-bold text-slate-655 dark:text-slate-355 block text-[11px]">"Why Support Us" Description Text (सहयोग करने का विवरण)</label>
-                              <textarea
-                                rows={2}
-                                value={schoolConfig.whySupportText || ""}
-                                onChange={(e) => setSchoolConfig({ ...schoolConfig, whySupportText: e.target.value })}
-                                className="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded bg-white dark:bg-slate-900 text-[11px] text-slate-850 dark:text-slate-100 font-semibold"
-                                placeholder="Our Madrasa provides free housing, uniforms, study materials..."
-                              />
-                            </div>
+
                           </div>
                         </div>
                       </div>
@@ -5914,6 +5868,163 @@ export default function PrincipalDashboard({
                     </div>
                   </div>
 
+                  <div className="mt-8 space-y-3 border-t border-slate-100 dark:border-slate-800 pt-6">
+                    <h5 className="text-sm font-bold text-slate-800 dark:text-white">Google Apps Script Code</h5>
+                    <p className="text-xs text-slate-500">Copy this code, paste it into your Google Apps Script editor (Extensions &gt; Apps Script), deploy as a Web App (execute as "Me", access "Anyone"), and paste the URL above.</p>
+                    <div className="relative group">
+                      <pre className="p-4 bg-slate-900 text-slate-300 text-[10px] sm:text-xs font-mono rounded-lg overflow-x-auto border border-slate-700 whitespace-pre">
+{`function doGet(e) {
+  var sheet = SpreadsheetApp.openById("1IxL_zEbQYwae0hNuG8Awp8Gqsl4tXTmjDIY_YPQZPLY").getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return ContentService.createTextOutput("[]").setMimeType(ContentService.MimeType.JSON);
+  
+  var headers = data[0];
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var obj = {};
+    for (var j = 0; j < headers.length; j++) {
+      if (headers[j]) obj[headers[j]] = data[i][j];
+    }
+    result.push(obj);
+  }
+  return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.openById("1IxL_zEbQYwae0hNuG8Awp8Gqsl4tXTmjDIY_YPQZPLY").getActiveSheet();
+    var headers = sheet.getDataRange().getValues()[0] || [];
+    
+    if (headers.length === 0) {
+      headers = Object.keys(data);
+      sheet.appendRow(headers);
+    }
+    
+    var rollNo = String(data.rollNo || '');
+    var session = String(data.session || data.passingYear || '');
+    var className = String(data.className || '');
+    var allData = sheet.getDataRange().getValues();
+    var hRollNo = headers.indexOf('rollNo');
+    var hSession = headers.indexOf('session');
+    if (hSession === -1) hSession = headers.indexOf('passingYear');
+    var hClass = headers.indexOf('className');
+    
+    var rowIndex = -1;
+    if (hRollNo !== -1 && hClass !== -1) {
+      for (var i = 1; i < allData.length; i++) {
+        var rRoll = String(allData[i][hRollNo] || '');
+        var rSess = hSession !== -1 ? String(allData[i][hSession] || '') : '';
+        var rClass = String(allData[i][hClass] || '');
+        if (rRoll === rollNo && rSess === session && rClass === className) {
+          rowIndex = i + 1;
+          break;
+        }
+      }
+    }
+    
+    var rowData = [];
+    for (var j = 0; j < headers.length; j++) {
+      var h = headers[j];
+      var v = data[h] !== undefined ? data[h] : '';
+      if (typeof v === 'object') v = JSON.stringify(v);
+      rowData.push(v);
+    }
+    
+    if (rowIndex !== -1) {
+      sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
+    } else {
+      sheet.appendRow(rowData);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}`}
+                      </pre>
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(`function doGet(e) {
+  var sheet = SpreadsheetApp.openById("1IxL_zEbQYwae0hNuG8Awp8Gqsl4tXTmjDIY_YPQZPLY").getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return ContentService.createTextOutput("[]").setMimeType(ContentService.MimeType.JSON);
+  
+  var headers = data[0];
+  var result = [];
+  for (var i = 1; i < data.length; i++) {
+    var obj = {};
+    for (var j = 0; j < headers.length; j++) {
+      if (headers[j]) obj[headers[j]] = data[i][j];
+    }
+    result.push(obj);
+  }
+  return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.openById("1IxL_zEbQYwae0hNuG8Awp8Gqsl4tXTmjDIY_YPQZPLY").getActiveSheet();
+    var headers = sheet.getDataRange().getValues()[0] || [];
+    
+    if (headers.length === 0) {
+      headers = Object.keys(data);
+      sheet.appendRow(headers);
+    }
+    
+    var rollNo = String(data.rollNo || '');
+    var session = String(data.session || data.passingYear || '');
+    var className = String(data.className || '');
+    var allData = sheet.getDataRange().getValues();
+    var hRollNo = headers.indexOf('rollNo');
+    var hSession = headers.indexOf('session');
+    if (hSession === -1) hSession = headers.indexOf('passingYear');
+    var hClass = headers.indexOf('className');
+    
+    var rowIndex = -1;
+    if (hRollNo !== -1 && hClass !== -1) {
+      for (var i = 1; i < allData.length; i++) {
+        var rRoll = String(allData[i][hRollNo] || '');
+        var rSess = hSession !== -1 ? String(allData[i][hSession] || '') : '';
+        var rClass = String(allData[i][hClass] || '');
+        if (rRoll === rollNo && rSess === session && rClass === className) {
+          rowIndex = i + 1;
+          break;
+        }
+      }
+    }
+    
+    var rowData = [];
+    for (var j = 0; j < headers.length; j++) {
+      var h = headers[j];
+      var v = data[h] !== undefined ? data[h] : '';
+      if (typeof v === 'object') v = JSON.stringify(v);
+      rowData.push(v);
+    }
+    
+    if (rowIndex !== -1) {
+      sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
+    } else {
+      sheet.appendRow(rowData);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}`);
+                          alert("Code copied to clipboard!");
+                        }}
+                        className="absolute top-3 right-3 p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded shadow transition-colors"
+                        title="Copy Code"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="mt-4 flex max-w-sm gap-2">
                     <button
                       type="button"
@@ -5926,7 +6037,7 @@ export default function PrincipalDashboard({
                           try {
                             const whList = schoolConfig.googleSheetsWebhooks || [];
                             const specific = whList.find(w => w.year === result.session || w.year === String(result.passingYear));
-                            const webhookUrl = specific?.url || schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec";
+                            const webhookUrl = specific?.url || schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbyzUVQfHEceaWb4k5XMA3zQsY-MCZmeXjQDbzTJG4ElT2J83SzlLy1hQcM07Dt_cwbncQ/exec";
                             
                             if (!webhookUrl) continue;
                             

@@ -6,7 +6,7 @@ export const INITIAL_CONFIG: SchoolConfig = {
   tagline: "Inspiring Excellence in Islamic Knowledge and Modern Education",
   principalName: "Hazrat Maulana Mufti Muhammad Shafiullah Sahib",
   principalMessage: "Dear Students, Parents, and Well-wishers, Welcome to Madrasa Arabia Noorul Uloom. Our mission is to nurture the hearts and minds of the next generation with authentic Islamic values alongside high-quality modern academic streams. We strive to develop righteous characters who excel in science, computer technology, and Quranic wisdom. May Allah accept our humble efforts.",
-  googleSheetsWebhookUrl: "https://script.google.com/macros/s/AKfycbzlXCkVwXgVQPqgAm3qbUsPZTrWAYeaZg_BLyj7ozCt3C7Ns1Y-teOFVcyA9esIqQA-tw/exec",
+  googleSheetsWebhookUrl: "https://script.google.com/macros/s/AKfycbyzUVQfHEceaWb4k5XMA3zQsY-MCZmeXjQDbzTJG4ElT2J83SzlLy1hQcM07Dt_cwbncQ/exec",
   principalPhotoUrl: "",
   contactPhone: "+91 9193984452",
   contactEmail: "info@noorululoom.edu",
@@ -72,12 +72,6 @@ export const INITIAL_CONFIG: SchoolConfig = {
   ifscCode: "SBIN0001234",
   upiId: "madrasanoorululoom@sbi",
   qrCodeUrl: "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&q=80&w=300",
-
-  // Default Donation section texts
-  donateSectionTitle: "Support Our Noble Cause (मदरसा की इमदाद करें)",
-  donateSectionSubtitle: "अनाथ, गरीब एवं असहाय बच्चों की निःशुल्क दीनी तालीम, आधुनिक विद्यालयीय पाठ्यक्रम, कंप्यूटर शिक्षा, भोजन और रहने की व्यवस्था (मदरसा के संचालन) में अपनी ज़कात-सदक़ा से सहयोग करें।",
-  whySupportHeading: "Why Support Us? (सहयोग करें)",
-  whySupportText: "Our Madrasa provides free housing, uniforms, study materials, primary, secondary board education, and intensive theological classes to hundreds of students coming from disadvantaged backgrounds, solely supported by public contributors like you.",
 
   // Custom Logo URL
   logoUrl: ""
