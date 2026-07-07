@@ -5896,7 +5896,7 @@ function doPost(e) {
     var sheet = SpreadsheetApp.openById("1IxL_zEbQYwae0hNuG8Awp8Gqsl4tXTmjDIY_YPQZPLY").getActiveSheet();
     var headers = sheet.getDataRange().getValues()[0] || [];
     
-    if (headers.length === 0) {
+    if (!headers || headers.length === 0 || (headers.length === 1 && headers[0] === "")) {
       headers = Object.keys(data);
       sheet.appendRow(headers);
     }
@@ -5969,7 +5969,7 @@ function doPost(e) {
     var sheet = SpreadsheetApp.openById("1IxL_zEbQYwae0hNuG8Awp8Gqsl4tXTmjDIY_YPQZPLY").getActiveSheet();
     var headers = sheet.getDataRange().getValues()[0] || [];
     
-    if (headers.length === 0) {
+    if (!headers || headers.length === 0 || (headers.length === 1 && headers[0] === "")) {
       headers = Object.keys(data);
       sheet.appendRow(headers);
     }
