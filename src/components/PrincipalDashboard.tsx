@@ -1860,8 +1860,8 @@ export default function PrincipalDashboard({
                           </tr>
                         );
                       }
-                      return list.map((s) => (
-                        <tr key={s.id} className="hover:bg-slate-50/40 dark:hover:bg-slate-850/20">
+                      return list.map((s, idx) => (
+                        <tr key={s.id ? s.id + "-" + idx : idx} className="hover:bg-slate-50/40 dark:hover:bg-slate-850/20">
                           <td className="p-3 font-mono font-bold text-emerald-800 dark:text-amber-400">{s.rollNo}</td>
                           <td className="p-3 font-semibold text-slate-850 dark:text-slate-105 dark:text-white">{s.name}</td>
                           <td className="p-3 font-medium text-emerald-750 dark:text-emerald-450">{s.className}</td>
@@ -3426,7 +3426,7 @@ export default function PrincipalDashboard({
                             return totalB - totalA;
                           });
 
-                        return filteredResults.map((r) => {
+                        return filteredResults.map((r, rIdx) => {
                           const total = Object.values(r.marks || {}).reduce((sum, v) => sum + (Number(v)||0), 0);
                           const numSubs = getClassSubjects(r.className).length;
                           const maxScore = numSubs * 100;
@@ -3447,7 +3447,7 @@ export default function PrincipalDashboard({
                           const classRank = classRankIndex !== -1 ? classRankIndex + 1 : 1;
 
                           return (
-                            <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                            <tr key={r.id ? r.id + "-" + rIdx : rIdx} className="hover:bg-slate-50 dark:hover:bg-slate-900/40">
                               <td className="p-2.5 border border-slate-200 dark:border-slate-700 text-center">
                                 <input
                                   type="checkbox"
@@ -3636,7 +3636,7 @@ export default function PrincipalDashboard({
 
                     return (
                       <div 
-                        key={res.id || index}
+                        key={res.id ? res.id + "-" + index : index}
                         className="printable-card-item"
                         style={{
                           width: '900px',
@@ -4022,8 +4022,8 @@ export default function PrincipalDashboard({
                 {admissions.length === 0 ? (
                   <p className="text-slate-400 text-center py-6">No applications standard. Fresh registrations would pop up here.</p>
                 ) : (
-                  admissions.map((item) => (
-                    <div key={item.id} className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl relative flex flex-col md:flex-row gap-5 shadow-sm">
+                  admissions.map((item, idx) => (
+                    <div key={item.id ? item.id + "-" + idx : idx} className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl relative flex flex-col md:flex-row gap-5 shadow-sm">
                       
                       {/* Left side: Avatar portrait and key class */}
                       <div className="flex flex-col items-center justify-start gap-2 w-24 shrink-0 text-center">
