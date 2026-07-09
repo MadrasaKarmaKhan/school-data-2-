@@ -252,6 +252,28 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
   const [foundResult, setFoundResult] = useState<Result | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const [printScale, setPrintScale] = useState(100);
+  const [cardScale, setCardScale] = useState(1);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        // 16px padding on each side -> 32px total
+        const availableWidth = containerWidth - 32;
+        if (availableWidth < 900) {
+          setCardScale(availableWidth / 900);
+        } else {
+          setCardScale(1);
+        }
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [foundResult]);
 
   // Automatically re-evaluate if results change after a search has been triggered
   useEffect(() => {
@@ -533,9 +555,13 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                   -webkit-print-color-adjust: exact !important;
                   print-color-adjust: exact !important;
                 }
-                body, #card-printed-view, #card-printed-view * {
+                body, #card-printed-view { transform: none !important; }
+              #card-printed-view, #card-printed-view * {
                   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
                 }
+              #card-printed-view {
+                transform: none !important;
+              }
                 .font-mono, [class*="font-mono"] {
                   font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
                 }
@@ -681,6 +707,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
             const fontStyle = clonedDoc.createElement('style');
             fontStyle.textContent = `
+              #card-printed-view { transform: none !important; }
               #card-printed-view, #card-printed-view * {
                 font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
               }
@@ -877,7 +904,8 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
           body * {
             visibility: hidden;
           }
-          #card-printed-view, #card-printed-view * {
+          #card-printed-view { transform: none !important; }
+              #card-printed-view, #card-printed-view * {
             visibility: visible !important;
           }
           #card-printed-view {
@@ -1097,11 +1125,19 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
 
           {foundResult ? (
             /* EXACT HTML RENDERING WRAPPER WITH DIRECT SCALE SUPPORT FOR FULL COMPATIBILITY WITH IMAGE EXPORT */
-            <div className="overflow-x-auto py-4">
+            <div className="flex justify-center py-4 w-full" ref={containerRef}>
+              <div 
+                style={{
+                  width: `${900 * cardScale}px`,
+                  height: `${1311 * cardScale}px`,
+                  position: 'relative'
+                }}
+              >
               <div
                 id="card-printed-view"
-                className="bg-white text-black font-sans font-bold shadow-2xl relative select-none rounded-[16px]"
+                className="bg-white text-black font-sans font-bold shadow-2xl relative select-none rounded-[16px] origin-top-left"
                 style={{
+                  transform: `scale(${cardScale})`,
                   width: '900px',
                   maxWidth: '900px',
                   height: '1311px',
@@ -1635,6 +1671,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     <div style={{ borderTop: '1.5px solid #1e5631', paddingTop: '4px', fontWeight: 900 }}>Stamp / Seal</div>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           ) : (

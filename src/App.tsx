@@ -14,7 +14,7 @@ import {
   INITIAL_CONFIG, INITIAL_STUDENTS, INITIAL_RESULTS, INITIAL_TEACHERS,
   INITIAL_ADMISSIONS, INITIAL_GALLERY, INITIAL_NEWS, getStoredData, setStoredData, getSchoolClasses
 } from './data';
-import { ArrowUp, MessageSquare, ShieldCheck, HelpCircle } from 'lucide-react';
+import { ArrowUp, MessageSquare, ShieldCheck, HelpCircle, Monitor, Tablet, Smartphone } from 'lucide-react';
 import { syncToFirebase, subscribeToFirebase } from './lib/firebaseUtils';
 import { compressBase64Image } from './lib/imageUtils';
 
@@ -99,6 +99,7 @@ export default function App() {
   const [schoolConfig, setSchoolConfig] = useState<SchoolConfig>(() => getStoredData('nu_config', INITIAL_CONFIG));
 
   // Visual/Environment parameters
+  const [deviceView, setDeviceView] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const [currentTab, setCurrentTab] = useState('home');
   const [darkMode, setDarkMode] = useState(() => getStoredData('nu_darkmode', false));
   const [isLoggedIn, setIsLoggedIn] = useState(() => getStoredData('nu_islogged', false));
@@ -443,8 +444,8 @@ export default function App() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors flex flex-col justify-between font-sans selection:bg-emerald-650 selection:text-white pb-0">
+    const appContent = (
+    <div className={`bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors flex flex-col justify-between font-sans selection:bg-emerald-650 selection:text-white pb-0 ${deviceView === 'desktop' ? 'min-h-screen' : 'min-h-full'}`}>
       
       {/* Upper Navigation section */}
       <div>
@@ -550,7 +551,56 @@ export default function App() {
           <ArrowUp className="w-5 h-5" />
         </button>
       )}
-
     </div>
+  );
+
+  return (
+    <>
+      {deviceView === 'desktop' ? appContent : (
+        <div className="min-h-screen bg-slate-200 dark:bg-slate-900 flex flex-col items-center py-4 md:py-8 justify-center overflow-hidden relative">
+          <div 
+            className={`bg-white dark:bg-slate-950 shadow-[0_0_50px_rgba(0,0,0,0.3)] rounded-[2.5rem] overflow-hidden border-[10px] border-slate-800 relative transition-all duration-300 flex flex-col ${
+              deviceView === 'mobile' ? 'w-[375px] h-[812px] max-h-[90vh]' : 'w-[768px] h-[1024px] max-h-[90vh]'
+            }`}
+          >
+            {/* Mock Device Notch */}
+            <div className="absolute top-0 inset-x-0 h-6 bg-slate-800 z-50 flex justify-center items-center rounded-b-3xl w-40 mx-auto">
+               <div className="w-12 h-1.5 rounded-full bg-slate-700"></div>
+            </div>
+            
+            <div className="w-full h-full overflow-x-hidden overflow-y-auto hide-scrollbar pt-2">
+              {appContent}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Device Toggle */}
+      {currentTab === 'home' && (
+        <div className="fixed bottom-20 right-6 md:bottom-6 md:right-20 z-[100] flex bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border border-slate-200 dark:border-slate-700 rounded-full shadow-2xl p-1.5 space-x-1">
+          <button 
+            onClick={() => setDeviceView('mobile')}
+            className={`p-2.5 rounded-full transition-colors ${deviceView === 'mobile' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400' : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'}`}
+            title="Mobile View"
+          >
+            <Smartphone className="w-4 h-4" />
+          </button>
+          <button 
+            onClick={() => setDeviceView('tablet')}
+            className={`p-2.5 rounded-full transition-colors ${deviceView === 'tablet' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400' : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'}`}
+            title="Tablet View"
+          >
+            <Tablet className="w-4 h-4" />
+          </button>
+          <button 
+            onClick={() => setDeviceView('desktop')}
+            className={`p-2.5 rounded-full transition-colors ${deviceView === 'desktop' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400' : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'}`}
+            title="Desktop View"
+          >
+            <Monitor className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+    </>
   );
 }
