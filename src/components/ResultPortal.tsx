@@ -476,6 +476,9 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
     if (marksData[subject] !== undefined) {
       return Number(marksData[subject]) || 0;
     }
+    if (subject.toLowerCase() === "ginti" && marksData["Math"] !== undefined) {
+      return Number(marksData["Math"]) || 0;
+    }
     const keys = Object.keys(marksData);
     const values = Object.values(marksData);
 

@@ -49,8 +49,8 @@ export function normalizeClassName(rawClass: any): ClassName {
   const caseInsensitiveMatch = validClasses.find(c => c.toLowerCase() === str.toLowerCase());
   if (caseInsensitiveMatch) return caseInsensitiveMatch;
 
-  if (str === "L.K.G" || str === "LKG" || str === "L. K. G.") return "L.K.G";
-  if (str === "U.K.G" || str === "UKG" || str === "U. K. G.") return "U.K.G";
+  if (str === "L.K.G" || str === "LKG" || str === "L. K. G." || str === "L K G") return "L.K.G";
+  if (str === "U.K.G" || str === "UKG" || str === "U. K. G." || str === "U K G") return "U.K.G";
   if (str === "1ST A" || str === "1 A" || str === "1A" || str === "CLASS 1 A" || str.includes("1ST A") || str.includes("1 A")) return "1ST A";
   if (str === "1ST B" || str === "1 B" || str === "1B" || str === "CLASS 1 B" || str.includes("1ST B") || str.includes("1 B")) return "1ST B";
   if (str === "2ND A" || str === "2 A" || str === "2A" || str === "CLASS 2 A" || str.includes("2ND A") || str.includes("2 A")) return "2ND A";
@@ -1269,6 +1269,8 @@ export default function PrincipalDashboard({
         let val = 75;
         if (match.marks && match.marks[sub] !== undefined) {
           val = Number(match.marks[sub]);
+        } else if (sub.toLowerCase() === 'ginti' && match.marks && match.marks['Math'] !== undefined) {
+          val = Number(match.marks['Math']);
         } else if (match.marks) {
           // Fallback parsing
           const keys = Object.keys(match.marks);

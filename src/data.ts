@@ -395,9 +395,30 @@ export const getSchoolSessions = (): string[] => {
 
 export const ORIGINAL_10_SUBJECTS = ["Quran", "Hifz", "Deeniyat", "Urdu", "English", "Hindi", "Science", "Social Science", "Math", "Dua & Kalma"];
 
+export const DEFAULT_LKG_SUBJECTS = [
+  "Noorani Qaida",
+  "Dua & Kalma",
+  "Ginti"
+];
+
+export const DEFAULT_UKG_SUBJECTS = [
+  "Noorani Qaida",
+  "Hifz",
+  "Abr-E-Rehmat",
+  "Urdu",
+  "English",
+  "Hindi",
+  "Math",
+  "Dua & Kalma"
+];
+
 export const DEFAULT_CLASS_SUBJECTS: Record<string, string[]> = {
-  "L.K.G": [...ORIGINAL_10_SUBJECTS],
-  "U.K.G": [...ORIGINAL_10_SUBJECTS],
+  "L.K.G": [...DEFAULT_LKG_SUBJECTS],
+  "LKG": [...DEFAULT_LKG_SUBJECTS],
+  "L K G": [...DEFAULT_LKG_SUBJECTS],
+  "U.K.G": [...DEFAULT_UKG_SUBJECTS],
+  "UKG": [...DEFAULT_UKG_SUBJECTS],
+  "U K G": [...DEFAULT_UKG_SUBJECTS],
   "1ST": [...ORIGINAL_10_SUBJECTS],
   "2ND": [...ORIGINAL_10_SUBJECTS],
   "3RD": [...ORIGINAL_10_SUBJECTS],
@@ -418,26 +439,95 @@ export const DEFAULT_CLASS_SUBJECTS: Record<string, string[]> = {
   "ARBI": [...ORIGINAL_10_SUBJECTS]
 };
 
+export const syncDefaultSubjects = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const stored = window.localStorage.getItem("madarsa_class_subjects");
+    let parsed: Record<string, string[]> = stored ? JSON.parse(stored) : {};
+    let changed = false;
+
+    // Check L.K.G - ensure "Ginti" is present instead of "Math"
+    const lkgSubs = parsed["L.K.G"] || parsed["LKG"] || parsed["L K G"];
+    if (!lkgSubs || (Array.isArray(lkgSubs) && (lkgSubs.length === 10 || lkgSubs.includes("Science") || lkgSubs.includes("Math") || !lkgSubs.includes("Ginti")))) {
+      parsed["L.K.G"] = [...DEFAULT_LKG_SUBJECTS];
+      parsed["LKG"] = [...DEFAULT_LKG_SUBJECTS];
+      parsed["L K G"] = [...DEFAULT_LKG_SUBJECTS];
+      changed = true;
+    }
+
+    // Check U.K.G - ensure 8 subjects with Math
+    const ukgSubs = parsed["U.K.G"] || parsed["UKG"] || parsed["U K G"];
+    if (!ukgSubs || (Array.isArray(ukgSubs) && (ukgSubs.length === 10 || lkgSubs?.includes("Science") || !ukgSubs.includes("Abr-E-Rehmat")))) {
+      parsed["U.K.G"] = [...DEFAULT_UKG_SUBJECTS];
+      parsed["UKG"] = [...DEFAULT_UKG_SUBJECTS];
+      parsed["U K G"] = [...DEFAULT_UKG_SUBJECTS];
+      changed = true;
+    }
+
+    if (changed) {
+      window.localStorage.setItem("madarsa_class_subjects", JSON.stringify(parsed));
+    }
+  } catch (e) {
+    console.error("Error syncing subjects:", e);
+  }
+};
+
+// Immediately invoke subject sync if in browser
+if (typeof window !== 'undefined') {
+  syncDefaultSubjects();
+}
+
 export const getClassSubjects = (className: string, marks?: any): string[] => {
+  const norm = String(className || '').trim();
+  const upper = norm.toUpperCase();
+  let canonicalClass = norm;
+  if (upper === "LKG" || upper === "L.K.G" || upper === "L K G" || upper === "L. K. G.") {
+    canonicalClass = "L.K.G";
+  } else if (upper === "UKG" || upper === "U.K.G" || upper === "U K G" || upper === "U. K. G.") {
+    canonicalClass = "U.K.G";
+  }
+
   if (marks && !Array.isArray(marks) && typeof marks === 'object') {
     const keys = Object.keys(marks);
-    if (keys.length > 0) return keys;
+    if (keys.length > 0) {
+      // If legacy 10 subjects mark object or Math for LKG, use the new defaults
+      if (canonicalClass === "L.K.G" && (keys.length === 10 || keys.includes("Science") || keys.includes("Math") || !keys.includes("Ginti"))) {
+        return DEFAULT_LKG_SUBJECTS;
+      }
+      if (canonicalClass === "U.K.G" && (keys.length === 10 || keys.includes("Science") || !keys.includes("Abr-E-Rehmat"))) {
+        return DEFAULT_UKG_SUBJECTS;
+      }
+      return keys;
+    }
   }
+
   if (typeof window === 'undefined') {
-    return DEFAULT_CLASS_SUBJECTS[className] || ORIGINAL_10_SUBJECTS;
+    return DEFAULT_CLASS_SUBJECTS[canonicalClass] || DEFAULT_CLASS_SUBJECTS[className] || ORIGINAL_10_SUBJECTS;
   }
+
   try {
     const stored = window.localStorage.getItem("madarsa_class_subjects");
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (parsed && parsed[className] && Array.isArray(parsed[className])) {
-        return parsed[className];
+      if (parsed) {
+        const subs = parsed[canonicalClass] || parsed[className] || parsed[norm];
+        if (Array.isArray(subs) && subs.length > 0) {
+          // If stored value has old list or has Math in LKG, upgrade to the user's specific subjects
+          if (canonicalClass === "L.K.G" && (subs.length === 10 || subs.includes("Science") || subs.includes("Math") || !subs.includes("Ginti"))) {
+            return [...DEFAULT_LKG_SUBJECTS];
+          }
+          if (canonicalClass === "U.K.G" && (subs.length === 10 || subs.includes("Science") || !subs.includes("Abr-E-Rehmat"))) {
+            return [...DEFAULT_UKG_SUBJECTS];
+          }
+          return subs;
+        }
       }
     }
   } catch (e) {
     console.error("Error reading madarsa_class_subjects:", e);
   }
-  return DEFAULT_CLASS_SUBJECTS[className] || ORIGINAL_10_SUBJECTS;
+
+  return DEFAULT_CLASS_SUBJECTS[canonicalClass] || DEFAULT_CLASS_SUBJECTS[className] || ORIGINAL_10_SUBJECTS;
 };
 
 export const matchClasses = (c1: string | undefined, c2: string | undefined): boolean => {

@@ -12,7 +12,8 @@ import {
 } from './types';
 import {
   INITIAL_CONFIG, INITIAL_STUDENTS, INITIAL_RESULTS, INITIAL_TEACHERS,
-  INITIAL_ADMISSIONS, INITIAL_GALLERY, INITIAL_NEWS, getStoredData, setStoredData, getSchoolClasses
+  INITIAL_ADMISSIONS, INITIAL_GALLERY, INITIAL_NEWS, getStoredData, setStoredData, getSchoolClasses,
+  syncDefaultSubjects
 } from './data';
 import { ArrowUp, MessageSquare, ShieldCheck, HelpCircle } from 'lucide-react';
 import { syncToFirebase, subscribeToFirebase } from './lib/firebaseUtils';
@@ -30,8 +31,8 @@ function normalizeClassName(rawClass: any): any {
   const caseInsensitiveMatch = valid.find(c => c.toLowerCase() === str.toLowerCase());
   if (caseInsensitiveMatch) return caseInsensitiveMatch;
 
-  if (str === "L.K.G" || str === "LKG" || str === "L. K. G.") return "L.K.G";
-  if (str === "U.K.G" || str === "UKG" || str === "U. K. G.") return "U.K.G";
+  if (str === "L.K.G" || str === "LKG" || str === "L. K. G." || str === "L K G") return "L.K.G";
+  if (str === "U.K.G" || str === "UKG" || str === "U. K. G." || str === "U K G") return "U.K.G";
   if (str === "1ST A" || str === "1 A" || str === "1A" || str === "CLASS 1 A" || str.includes("1ST A") || str.includes("1 A")) return "1ST A";
   if (str === "1ST B" || str === "1 B" || str === "1B" || str === "CLASS 1 B" || str.includes("1ST B") || str.includes("1 B")) return "1ST B";
   if (str === "2ND A" || str === "2 A" || str === "2A" || str === "CLASS 2 A" || str.includes("2ND A") || str.includes("2 A")) return "2ND A";
@@ -128,6 +129,7 @@ export default function App() {
 
   // Initial loader and migration effect
   useEffect(() => {
+    syncDefaultSubjects();
     // Migrate old default address/phone if present in stored local storage config to ensure user immediately sees the new address
     const stored = localStorage.getItem('nu_config');
     if (stored) {
