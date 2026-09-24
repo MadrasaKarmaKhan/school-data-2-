@@ -1555,12 +1555,47 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                       </th>
                     </tr>
 
-                    {/* Calculated Division Row */}
+                    {/* Attendance (Teaching Days, Present Day, Absent Day) & Division Row */}
                     <tr style={{ backgroundColor: '#fffdd0' }}>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Division</th>
-                      <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, color: '#000000', fontStyle: 'italic', verticalAlign: 'middle' }}>
-                        {foundResult.division || ""}
-                      </th>
+                      <td colSpan={4} style={{ border: '1.5px solid #1e5631', padding: 0 }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', border: 'none', margin: 0 }}>
+                          <tbody>
+                            <tr>
+                              <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                Teaching Days
+                              </th>
+                              <th id="teachingDays" style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle', width: '10%' }}>
+                                {foundResult.teachingDays || (foundResult.attendance?.includes('/') ? foundResult.attendance.split('/')[1]?.replace(/[^\d]/g, '') : '') || "-"}
+                              </th>
+                              <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                Present Day
+                              </th>
+                              <th id="presentDays" style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle', width: '10%' }}>
+                                {foundResult.presentDays || (foundResult.attendance?.includes('/') ? foundResult.attendance.split('/')[0]?.replace(/[^\d]/g, '') : '') || "-"}
+                              </th>
+                              <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                Absent Day
+                              </th>
+                              <th id="absentDays" style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle', width: '10%' }}>
+                                {foundResult.absentDays !== undefined && foundResult.absentDays !== ""
+                                  ? foundResult.absentDays
+                                  : (() => {
+                                      const t = parseInt(foundResult.teachingDays || (foundResult.attendance?.includes('/') ? foundResult.attendance.split('/')[1]?.replace(/[^\d]/g, '') : '') || '', 10);
+                                      const p = parseInt(foundResult.presentDays || (foundResult.attendance?.includes('/') ? foundResult.attendance.split('/')[0]?.replace(/[^\d]/g, '') : '') || '', 10);
+                                      return (!isNaN(t) && !isNaN(p) && t >= p) ? String(t - p) : "-";
+                                    })()
+                                }
+                              </th>
+                              <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '11%' }}>
+                                Division
+                              </th>
+                              <th id="division" style={{ padding: '6px 4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', fontStyle: 'italic', verticalAlign: 'middle', width: '14%' }}>
+                                {foundResult.division || ""}
+                              </th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
                     </tr>
                   </tfoot>
                 </table>

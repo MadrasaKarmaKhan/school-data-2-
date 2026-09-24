@@ -88,6 +88,10 @@ export default function App() {
       rollNo: String(r.rollNo || ''),
       studentName: String(r.studentName || (r as any).name || ''),
       examType: r.examType || 'Annual',
+      attendance: r.attendance !== undefined ? String(r.attendance) : '',
+      teachingDays: r.teachingDays !== undefined ? String(r.teachingDays) : '',
+      presentDays: r.presentDays !== undefined ? String(r.presentDays) : '',
+      absentDays: r.absentDays !== undefined ? String(r.absentDays) : '',
       className: normalizeClassName(r.className) as ClassName,
       marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
     }));

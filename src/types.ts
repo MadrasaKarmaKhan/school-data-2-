@@ -38,6 +38,10 @@ export interface Result {
   regNo?: string;
   udise?: string;
   division?: string;
+  attendance?: string;
+  teachingDays?: string;
+  presentDays?: string;
+  absentDays?: string;
   rank?: string;
   examType?: string;
 }

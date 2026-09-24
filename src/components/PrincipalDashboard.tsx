@@ -399,6 +399,28 @@ export default function PrincipalDashboard({
   const [adminSclass, setAdminSclass] = useState<ClassName>(() => (schoolConfig.classes?.[0] || getSchoolClasses()[0] || 'EDADIA') as ClassName);
   const [adminAddress, setAdminAddress] = useState("VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH");
   const [adminDivision, setAdminDivision] = useState("");
+  const [adminAttendance, setAdminAttendance] = useState("");
+  const [adminTeachingDays, setAdminTeachingDays] = useState("220");
+  const [adminPresentDays, setAdminPresentDays] = useState("205");
+  const [adminAbsentDays, setAdminAbsentDays] = useState("15");
+
+  const handleTeachingDaysChange = (val: string) => {
+    setAdminTeachingDays(val);
+    const t = parseInt(val, 10);
+    const p = parseInt(adminPresentDays, 10);
+    if (!isNaN(t) && !isNaN(p) && t >= p) {
+      setAdminAbsentDays(String(t - p));
+    }
+  };
+
+  const handlePresentDaysChange = (val: string) => {
+    setAdminPresentDays(val);
+    const t = parseInt(adminTeachingDays, 10);
+    const p = parseInt(val, 10);
+    if (!isNaN(t) && !isNaN(p) && t >= p) {
+      setAdminAbsentDays(String(t - p));
+    }
+  };
   const [adminSession, setAdminSession] = useState(getCurrentSession());
   const [adminExamType, setAdminExamType] = useState("Annual");
   const [adminPhoto, setAdminPhoto] = useState("");
@@ -826,6 +848,10 @@ export default function PrincipalDashboard({
       setAdminMname("");
       setAdminDob("12-04-2011");
       setAdminDivision("");
+      setAdminAttendance("");
+      setAdminTeachingDays("");
+      setAdminPresentDays("");
+      setAdminAbsentDays("");
       setAdminPhoto("");
       
       const resetMarks: { [subject: string]: number } = {};
@@ -882,6 +908,10 @@ export default function PrincipalDashboard({
       regNo: adminRegNo,
       udise: adminUdise,
       division: computedDivision,
+      attendance: adminPresentDays && adminTeachingDays ? `${adminPresentDays}/${adminTeachingDays} Din` : adminAttendance.trim(),
+      teachingDays: adminTeachingDays.trim(),
+      presentDays: adminPresentDays.trim(),
+      absentDays: adminAbsentDays.trim(),
       examType: adminExamType
     };
 
@@ -1050,6 +1080,10 @@ export default function PrincipalDashboard({
               regNo: item.regNo || "",
               udise: item.udise || "",
               division: item.division || "",
+              attendance: item.attendance || "",
+              teachingDays: item.teachingDays || item["Teaching Days"] || "",
+              presentDays: item.presentDays || item["Present Day"] || item["Present Days"] || "",
+              absentDays: item.absentDays || item["Absent Day"] || item["Absent Days"] || "",
               examType: examVal
             };
           });
@@ -1176,6 +1210,10 @@ export default function PrincipalDashboard({
       row["Total"] = tot;
       row["Max Total"] = maxTot;
       row["Percentage"] = percentage.toFixed(2) + "%";
+      row["Teaching Days"] = r.teachingDays || "";
+      row["Present Day"] = r.presentDays || "";
+      row["Absent Day"] = r.absentDays || "";
+      row["Attendance"] = r.attendance || "";
       row["Division"] = r.division || "";
       row["Status"] = percentage >= 23 ? "PASS" : "FAIL";
       row["Rank"] = index + 1;
@@ -1217,6 +1255,10 @@ export default function PrincipalDashboard({
       setAdminSclass(normClass);
       setAdminAddress(match.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH");
       setAdminDivision(match.division || "");
+      setAdminAttendance(match.attendance || "");
+      setAdminTeachingDays(match.teachingDays ? String(match.teachingDays) : (match.attendance?.includes('/') ? match.attendance.split('/')[1]?.replace(/[^\d]/g, '') : "220"));
+      setAdminPresentDays(match.presentDays ? String(match.presentDays) : (match.attendance?.includes('/') ? match.attendance.split('/')[0]?.replace(/[^\d]/g, '') : "205"));
+      setAdminAbsentDays(match.absentDays ? String(match.absentDays) : "15");
       const rawSess = match.session || getCurrentSession();
       setAdminSession(normalizeSession(rawSess));
       setAdminExamType(match.examType || "Annual");
@@ -3022,17 +3064,64 @@ export default function PrincipalDashboard({
                         </th>
                       </tr>
 
-                      {/* Division string field */}
+                      {/* Attendance (Teaching Days, Present Day, Absent Day) and Division Row */}
                       <tr style={{ backgroundColor: '#fffdd0' }}>
-                        <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900 }}>Division</th>
-                        <th colSpan={3} style={{ border: '1.5px solid #1e5631', padding: '4px', textAlign: 'center' }}>
-                          <input 
-                            value={adminDivision} 
-                            onChange={(e) => setAdminDivision(e.target.value)}
-                            placeholder="e.g. First Division"
-                            style={{ width: '90%', border: 'none', background: 'transparent', textAlign: 'center', fontSize: '18px', fontWeight: 900, fontStyle: 'italic', color: '#000000', outline: 'none' }}
-                          />
-                        </th>
+                        <td colSpan={5} style={{ border: '1.5px solid #1e5631', padding: 0 }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', border: 'none', margin: 0 }}>
+                            <tbody>
+                              <tr>
+                                <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                  Teaching Days
+                                </th>
+                                <th style={{ borderRight: '1.5px solid #1e5631', padding: '2px 4px', textAlign: 'center', width: '10%' }}>
+                                  <input 
+                                    value={adminTeachingDays} 
+                                    onChange={(e) => handleTeachingDaysChange(e.target.value)}
+                                    placeholder="220"
+                                    title="कुल कितने दिन पढ़ाई हुई (Teaching Days)"
+                                    style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', outline: 'none' }}
+                                  />
+                                </th>
+                                <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                  Present Day
+                                </th>
+                                <th style={{ borderRight: '1.5px solid #1e5631', padding: '2px 4px', textAlign: 'center', width: '10%' }}>
+                                  <input 
+                                    value={adminPresentDays} 
+                                    onChange={(e) => handlePresentDaysChange(e.target.value)}
+                                    placeholder="205"
+                                    title="बच्चा कितने दिन आया (Present Days)"
+                                    style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', outline: 'none' }}
+                                  />
+                                </th>
+                                <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                  Absent Day
+                                </th>
+                                <th style={{ borderRight: '1.5px solid #1e5631', padding: '2px 4px', textAlign: 'center', width: '10%' }}>
+                                  <input 
+                                    value={adminAbsentDays} 
+                                    onChange={(e) => setAdminAbsentDays(e.target.value)}
+                                    placeholder="15"
+                                    title="बच्चा कितने दिन नहीं आया (Absent Days)"
+                                    style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', outline: 'none' }}
+                                  />
+                                </th>
+                                <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '11%' }}>
+                                  Division
+                                </th>
+                                <th style={{ padding: '2px 4px', textAlign: 'center', width: '14%' }}>
+                                  <input 
+                                    value={adminDivision} 
+                                    onChange={(e) => setAdminDivision(e.target.value)}
+                                    placeholder="e.g. First Division"
+                                    title="डिवीजन (Division)"
+                                    style={{ width: '100%', border: 'none', background: 'transparent', textAlign: 'center', fontSize: '14px', fontWeight: 900, fontStyle: 'italic', color: '#000000', outline: 'none' }}
+                                  />
+                                </th>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
                       </tr>
                     </tfoot>
                   </table>
@@ -3399,6 +3488,7 @@ export default function PrincipalDashboard({
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Student Name</th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700 whitespace-nowrap">Class</th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Total Score</th>
+                        <th className="p-2 border border-slate-200 dark:border-slate-700 whitespace-nowrap">Days / Attendance</th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Class Rank</th>
                         <th className="p-2 border border-slate-200 dark:border-slate-700">Actions</th>
                       </tr>
@@ -3475,6 +3565,16 @@ export default function PrincipalDashboard({
                               <td className="p-2.5 border border-slate-200 dark:border-slate-700 font-mono text-slate-700 dark:text-slate-300">
                                 {total} / {maxScore}
                               </td>
+                              <td className="p-2.5 border border-slate-200 dark:border-slate-700 font-semibold text-slate-700 dark:text-slate-200 text-xs">
+                                {r.teachingDays || r.presentDays ? (
+                                  <div className="flex flex-col text-[11px] leading-tight">
+                                    <span>Pres: <b>{r.presentDays || "0"}</b> / Teach: <b>{r.teachingDays || "0"}</b></span>
+                                    <span className="text-slate-500 text-[10px]">Abs: {r.absentDays !== undefined && r.absentDays !== "" ? r.absentDays : "0"}</span>
+                                  </div>
+                                ) : (
+                                  r.attendance || "-"
+                                )}
+                              </td>
                               <td className="p-2.5 border border-slate-200 dark:border-slate-700 font-bold font-mono text-[#1e5631] dark:text-amber-400">
                                 #{classRank}
                               </td>
@@ -3500,7 +3600,7 @@ export default function PrincipalDashboard({
                       })()}
                       {results.length === 0 && (
                         <tr>
-                          <td colSpan={7} className="p-8 text-slate-400 font-bold italic">
+                          <td colSpan={8} className="p-8 text-slate-400 font-bold italic">
                             No records registered yet. Create your first record above!
                           </td>
                         </tr>
@@ -3916,11 +4016,47 @@ export default function PrincipalDashboard({
                               <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Rank</th>
                               <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, color: '#000000', verticalAlign: 'middle' }}>{index + 1}</th>
                             </tr>
+                            {/* Attendance (Teaching Days, Present Day, Absent Day) & Division Row */}
                             <tr style={{ backgroundColor: '#fffdd0' }}>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '17px', fontStyle: 'italic', color: '#000000', fontWeight: 900, verticalAlign: 'middle' }}>Division</th>
-                              <th colSpan={2} style={{ border: '1.5px solid #1e5631', padding: '6px', textAlign: 'center', fontSize: '18px', fontWeight: 900, fontStyle: 'italic', color: '#000000', verticalAlign: 'middle' }}>
-                                {res.division || ""}
-                              </th>
+                              <td colSpan={4} style={{ border: '1.5px solid #1e5631', padding: 0 }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', border: 'none', margin: 0 }}>
+                                  <tbody>
+                                    <tr>
+                                      <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                        Teaching Days
+                                      </th>
+                                      <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle', width: '10%' }}>
+                                        {res.teachingDays || (res.attendance?.includes('/') ? res.attendance.split('/')[1]?.replace(/[^\d]/g, '') : '') || "-"}
+                                      </th>
+                                      <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                        Present Day
+                                      </th>
+                                      <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle', width: '10%' }}>
+                                        {res.presentDays || (res.attendance?.includes('/') ? res.attendance.split('/')[0]?.replace(/[^\d]/g, '') : '') || "-"}
+                                      </th>
+                                      <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '15%' }}>
+                                        Absent Day
+                                      </th>
+                                      <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, color: '#000000', verticalAlign: 'middle', width: '10%' }}>
+                                        {res.absentDays !== undefined && res.absentDays !== ""
+                                          ? res.absentDays
+                                          : (() => {
+                                              const t = parseInt(res.teachingDays || (res.attendance?.includes('/') ? res.attendance.split('/')[1]?.replace(/[^\d]/g, '') : '') || '', 10);
+                                              const p = parseInt(res.presentDays || (res.attendance?.includes('/') ? res.attendance.split('/')[0]?.replace(/[^\d]/g, '') : '') || '', 10);
+                                              return (!isNaN(t) && !isNaN(p) && t >= p) ? String(t - p) : "-";
+                                            })()
+                                        }
+                                      </th>
+                                      <th style={{ borderRight: '1.5px solid #1e5631', padding: '6px 4px', textAlign: 'center', fontSize: '14px', fontStyle: 'italic', color: '#000000', fontWeight: 900, whiteSpace: 'nowrap', width: '11%' }}>
+                                        Division
+                                      </th>
+                                      <th style={{ padding: '6px 4px', textAlign: 'center', fontSize: '15px', fontWeight: 900, fontStyle: 'italic', color: '#000000', verticalAlign: 'middle', width: '14%' }}>
+                                        {res.division || ""}
+                                      </th>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
                             </tr>
                           </tfoot>
                         </table>

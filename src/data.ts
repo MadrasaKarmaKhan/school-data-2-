@@ -135,6 +135,11 @@ export const INITIAL_RESULTS: Result[] = [
     totalMarks: 700,
     percentage: 91.2,
     isPassed: true,
+    division: "First Division",
+    attendance: "205/220 Din",
+    teachingDays: "220",
+    presentDays: "205",
+    absentDays: "15",
     examType: "Annual"
   },
   {
@@ -156,6 +161,11 @@ export const INITIAL_RESULTS: Result[] = [
     totalMarks: 500,
     percentage: 92.8,
     isPassed: true,
+    division: "First Division (Mumtaz)",
+    attendance: "212/220 Din",
+    teachingDays: "220",
+    presentDays: "212",
+    absentDays: "8",
     examType: "Annual"
   },
   {
@@ -178,6 +188,11 @@ export const INITIAL_RESULTS: Result[] = [
     totalMarks: 600,
     percentage: 88.5,
     isPassed: true,
+    division: "First Division",
+    attendance: "198/220 Din",
+    teachingDays: "220",
+    presentDays: "198",
+    absentDays: "22",
     examType: "Annual"
   }
 ];
