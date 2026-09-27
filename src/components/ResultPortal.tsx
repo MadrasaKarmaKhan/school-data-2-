@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Printer, RefreshCw, Award } from 'lucide-react';
-import { Result, ClassName, SchoolConfig } from '../types';
+import { Result, ClassName, SchoolConfig, Student } from '../types';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { getClassSubjects, getSchoolClasses, getSchoolSessions, matchClasses, formatSessionDisplay } from '../data';
@@ -183,6 +183,7 @@ const triggerPatake = () => {
 interface ResultPortalProps {
   results: Result[];
   config?: SchoolConfig;
+  students?: Student[];
 }
 
 const SUBJECTS = [
@@ -242,7 +243,7 @@ export function formatClassName(className: string | undefined): string {
   });
 }
 
-export default function ResultPortal({ results, config }: ResultPortalProps) {
+export default function ResultPortal({ results, config, students }: ResultPortalProps) {
   const [rollNo, setRollNo] = useState('');
   const [selectedClass, setSelectedClass] = useState<ClassName>(() => (config?.classes?.[0] || getSchoolClasses()[0] || 'EDADIA') as ClassName);
   const [selectedExamType, setSelectedExamType] = useState<string>('Annual');
@@ -1420,7 +1421,7 @@ export default function ResultPortal({ results, config }: ResultPortalProps) {
                     <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                     <input 
                       readOnly 
-                      value={foundResult.dateOfBirth || "12-04-2011"} 
+                      value={foundResult.dateOfBirth || students?.find(s => s.rollNo.toString().trim() === foundResult.rollNo.toString().trim())?.dateOfBirth || ""} 
                       style={{ 
                         fontSize: '16px', 
                         fontWeight: 900, 

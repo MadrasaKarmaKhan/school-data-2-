@@ -84,18 +84,25 @@ export default function App() {
         loaded = INITIAL_RESULTS;
       }
     }
-    return loaded.filter(Boolean).map(r => ({
-      ...r,
-      rollNo: String(r.rollNo || ''),
-      studentName: String(r.studentName || (r as any).name || ''),
-      examType: r.examType || 'Annual',
-      attendance: r.attendance !== undefined ? String(r.attendance) : '',
-      teachingDays: r.teachingDays !== undefined ? String(r.teachingDays) : '',
-      presentDays: r.presentDays !== undefined ? String(r.presentDays) : '',
-      absentDays: r.absentDays !== undefined ? String(r.absentDays) : '',
-      className: normalizeClassName(r.className) as ClassName,
-      marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
-    }));
+    const storedStudents = getStoredData<Student[]>('nu_students', INITIAL_STUDENTS);
+    return loaded.filter(Boolean).map(r => {
+      const matchingStudent = storedStudents.find(s => String(s.rollNo).trim() === String(r.rollNo).trim());
+      const existingDob = (r.dateOfBirth && r.dateOfBirth !== "12-04-2011") ? r.dateOfBirth : undefined;
+      const dob = existingDob || (matchingStudent?.dateOfBirth && matchingStudent.dateOfBirth !== "12-04-2011" ? matchingStudent.dateOfBirth : "") || r.dateOfBirth || "";
+      return {
+        ...r,
+        rollNo: String(r.rollNo || ''),
+        studentName: String(r.studentName || (r as any).name || ''),
+        examType: r.examType || 'Annual',
+        dateOfBirth: dob,
+        attendance: r.attendance !== undefined ? String(r.attendance) : '',
+        teachingDays: r.teachingDays !== undefined ? String(r.teachingDays) : '',
+        presentDays: r.presentDays !== undefined ? String(r.presentDays) : '',
+        absentDays: r.absentDays !== undefined ? String(r.absentDays) : '',
+        className: normalizeClassName(r.className) as ClassName,
+        marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
+      };
+    });
   });
   const [teachers, setTeachers] = useState<Teacher[]>(() => getStoredData('nu_teachers', INITIAL_TEACHERS));
   const [admissions, setAdmissions] = useState<AdmissionApplication[]>(() => getStoredData('nu_admissions', INITIAL_ADMISSIONS));
@@ -175,6 +182,35 @@ export default function App() {
       } catch (e) {
         console.error("Migration error: ", e);
       }
+    }
+
+    // Auto-migrate dateOfBirth for existing saved results from nu_students or INITIAL_STUDENTS
+    try {
+      const storedResultsRaw = localStorage.getItem('madarsa_records') || localStorage.getItem('nu_results');
+      const storedStudentsRaw = localStorage.getItem('nu_students');
+      if (storedResultsRaw) {
+        const parsedR = JSON.parse(storedResultsRaw);
+        const parsedS = storedStudentsRaw ? JSON.parse(storedStudentsRaw) : INITIAL_STUDENTS;
+        if (Array.isArray(parsedR) && Array.isArray(parsedS)) {
+          let updatedResults = false;
+          parsedR.forEach((r: any) => {
+            if (!r.dateOfBirth || r.dateOfBirth === "12-04-2011") {
+              const matchedS = parsedS.find((s: any) => String(s.rollNo).trim() === String(r.rollNo).trim());
+              if (matchedS && matchedS.dateOfBirth && matchedS.dateOfBirth !== "12-04-2011") {
+                r.dateOfBirth = matchedS.dateOfBirth;
+                updatedResults = true;
+              }
+            }
+          });
+          if (updatedResults) {
+            localStorage.setItem('madarsa_records', JSON.stringify(parsedR));
+            localStorage.setItem('nu_results', JSON.stringify(parsedR));
+            setResults(parsedR);
+          }
+        }
+      }
+    } catch (e) {
+      console.error("DOB migration error: ", e);
     }
     
     // Subscribe to Firebase Firestore and populate states (only if not admin, to prevent race conditions where admin data is overwritten)
@@ -311,6 +347,7 @@ export default function App() {
                  studentName: String(r.studentName || ''),
                  className: normalizeClassName(r.className),
                  session: r.session || (webhook.year !== 'Default' ? webhook.year : undefined),
+                 dateOfBirth: r.dateOfBirth || r.dob || r["D.O.B"] || r["DOB"] || r["Date of Birth"] || "",
                  marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
                }));
             }
@@ -484,7 +521,7 @@ export default function App() {
         )}
 
         {currentTab === 'results' && (
-          <ResultPortal results={results} config={schoolConfig} />
+          <ResultPortal results={results} config={schoolConfig} students={students} />
         )}
 
         {currentTab === 'admissions' && (

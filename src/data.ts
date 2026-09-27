@@ -121,6 +121,7 @@ export const INITIAL_RESULTS: Result[] = [
     passingYear: 2026,
     studentName: "Mohammad Zaheer Khan",
     fatherName: "Abdur Rahman Khan",
+    dateOfBirth: "12-04-2010",
     photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=200",
     session: "2025-2026",
     marks: {
@@ -149,6 +150,7 @@ export const INITIAL_RESULTS: Result[] = [
     passingYear: 2026,
     studentName: "Ahmad Mujtaba",
     fatherName: "Maulana Ghulam Mustafa",
+    dateOfBirth: "20-08-2012",
     photoUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200",
     session: "2025-2026",
     marks: {
@@ -175,6 +177,7 @@ export const INITIAL_RESULTS: Result[] = [
     passingYear: 2026,
     studentName: "Fatima Bi",
     fatherName: "Sayyid Hamid Ali",
+    dateOfBirth: "15-01-2008",
     photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
     session: "2025-2026",
     marks: {

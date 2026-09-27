@@ -338,7 +338,7 @@ export default function PrincipalDashboard({
     className: 'EDADIA' as ClassName,
     session: getCurrentSession(),
     photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200',
-    dateOfBirth: '2011-01-01',
+    dateOfBirth: '',
     contactNo: ''
   });
 
@@ -395,7 +395,7 @@ export default function PrincipalDashboard({
   const [adminSname, setAdminSname] = useState("");
   const [adminFname, setAdminFname] = useState("");
   const [adminMname, setAdminMname] = useState("");
-  const [adminDob, setAdminDob] = useState("12-04-2011");
+  const [adminDob, setAdminDob] = useState("");
   const [adminSclass, setAdminSclass] = useState<ClassName>(() => (schoolConfig.classes?.[0] || getSchoolClasses()[0] || 'EDADIA') as ClassName);
   const [adminAddress, setAdminAddress] = useState("VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH");
   const [adminDivision, setAdminDivision] = useState("");
@@ -761,7 +761,7 @@ export default function PrincipalDashboard({
       className: studentClassFilter === 'ALL' ? 'EDADIA' : studentClassFilter,
       session: studentYearFilter,
       photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200',
-      dateOfBirth: '2011-01-01',
+      dateOfBirth: '',
       contactNo: ''
     });
     setShowAddStudentModal(true);
@@ -796,7 +796,7 @@ export default function PrincipalDashboard({
       className: studentClassFilter === 'ALL' ? 'EDADIA' : studentClassFilter,
       session: studentYearFilter,
       photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200',
-      dateOfBirth: '2011-01-01',
+      dateOfBirth: '',
       contactNo: ''
     });
   };
@@ -846,7 +846,7 @@ export default function PrincipalDashboard({
       setAdminSname("");
       setAdminFname("");
       setAdminMname("");
-      setAdminDob("12-04-2011");
+      setAdminDob("");
       setAdminDivision("");
       setAdminAttendance("");
       setAdminTeachingDays("");
@@ -912,7 +912,8 @@ export default function PrincipalDashboard({
       teachingDays: adminTeachingDays.trim(),
       presentDays: adminPresentDays.trim(),
       absentDays: adminAbsentDays.trim(),
-      examType: adminExamType
+      examType: adminExamType,
+      dateOfBirth: adminDob.trim()
     };
 
     // Filter old matching roll number, class, session, and exam type record out to keep multiple different result types per student
@@ -1084,7 +1085,8 @@ export default function PrincipalDashboard({
               teachingDays: item.teachingDays || item["Teaching Days"] || "",
               presentDays: item.presentDays || item["Present Day"] || item["Present Days"] || "",
               absentDays: item.absentDays || item["Absent Day"] || item["Absent Days"] || "",
-              examType: examVal
+              examType: examVal,
+              dateOfBirth: item.dateOfBirth || item.dob || item["D.O.B"] || item["DOB"] || item["Date of Birth"] || item["date_of_birth"] || ""
             };
           });
 
@@ -1125,7 +1127,7 @@ export default function PrincipalDashboard({
                 className: newItem.className,
                 session: newItem.session,
                 photoUrl: newItem.photoUrl || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200",
-                dateOfBirth: "",
+                dateOfBirth: newItem.dateOfBirth || "",
                 contactNo: "+91 99999 88888"
               });
             } else {
@@ -1136,7 +1138,8 @@ export default function PrincipalDashboard({
                 motherName: newItem.motherName.trim(),
                 address: newItem.address.trim(),
                 className: newItem.className,
-                photoUrl: newItem.photoUrl || updatedStudents[studentIdx].photoUrl
+                photoUrl: newItem.photoUrl || updatedStudents[studentIdx].photoUrl,
+                dateOfBirth: newItem.dateOfBirth || updatedStudents[studentIdx].dateOfBirth || ""
               };
             }
           });
@@ -1251,7 +1254,8 @@ export default function PrincipalDashboard({
       setAdminSname(match.studentName);
       setAdminFname(match.fatherName);
       setAdminMname(match.motherName || "");
-      setAdminDob(match.dateOfBirth || "12-04-2011");
+      const studentMatch = students.find(s => s.rollNo.toString().trim() === roll.toString().trim());
+      setAdminDob(match.dateOfBirth || studentMatch?.dateOfBirth || "");
       setAdminSclass(normClass);
       setAdminAddress(match.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH");
       setAdminDivision(match.division || "");
@@ -1854,6 +1858,14 @@ export default function PrincipalDashboard({
                           <option key={y} value={y}>{y}</option>
                         ))}
                       </select>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-500">Date of Birth (जन्म तिथि)</label>
+                      <input
+                        type="text" placeholder="DD-MM-YYYY (e.g. 15-08-2015)"
+                        value={newStudent.dateOfBirth} onChange={e => setNewStudent({ ...newStudent, dateOfBirth: e.target.value })}
+                        className="w-full p-2 border border-slate-200 dark:border-slate-750 rounded-lg dark:bg-slate-800 text-slate-850 dark:text-white font-mono"
+                      />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-500">Phone / Contact No</label>
@@ -2694,7 +2706,29 @@ export default function PrincipalDashboard({
                       <span style={{ fontSize: '15px', fontWeight: 800, width: '55px', display: 'inline-block' }}>Roll No:</span> 
                       <input 
                         value={adminRollno}
-                        onChange={(e) => setAdminRollno(e.target.value.replace(/\D/g, ''))}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '');
+                          setAdminRollno(val);
+                          if (val && !adminSname) {
+                            const existingStudent = students.find(s => s.rollNo.toString().trim() === val.trim());
+                            const existingResult = results.find(r => r.rollNo.toString().trim() === val.trim());
+                            if (existingStudent) {
+                              setAdminSname(existingStudent.name || '');
+                              if (existingStudent.fatherName) setAdminFname(existingStudent.fatherName);
+                              if (existingStudent.motherName) setAdminMname(existingStudent.motherName);
+                              if (existingStudent.dateOfBirth) setAdminDob(existingStudent.dateOfBirth);
+                              if (existingStudent.address) setAdminAddress(existingStudent.address);
+                              if (existingStudent.className) setAdminSclass(normalizeClassName(existingStudent.className));
+                            } else if (existingResult) {
+                              setAdminSname(existingResult.studentName || '');
+                              if (existingResult.fatherName) setAdminFname(existingResult.fatherName);
+                              if (existingResult.motherName) setAdminMname(existingResult.motherName);
+                              if (existingResult.dateOfBirth) setAdminDob(existingResult.dateOfBirth);
+                              if (existingResult.address) setAdminAddress(existingResult.address);
+                              if (existingResult.className) setAdminSclass(normalizeClassName(existingResult.className));
+                            }
+                          }
+                        }}
                         placeholder="e.g. 2026101"
                         style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000', textAlign: 'center' }}
                       />
@@ -3921,7 +3955,7 @@ export default function PrincipalDashboard({
                             <span style={{ fontSize: '15px', fontWeight: 800 }}>D.O.B:</span> 
                             <input 
                               readOnly 
-                              value={res.dateOfBirth || "12-04-2011"} 
+                              value={res.dateOfBirth || students.find(s => s.rollNo.toString().trim() === res.rollNo.toString().trim())?.dateOfBirth || ""} 
                               style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', width: '100%', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                             />
                           </div>
