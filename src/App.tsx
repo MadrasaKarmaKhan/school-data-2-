@@ -283,9 +283,7 @@ export default function App() {
         });
         localStudents.forEach((ls: any) => {
           const k = `${String(ls.rollNo).trim()}_${normalizeClassName(ls.className)}_${normalizeSession(ls.session)}`;
-          if (!studentMap.has(k) || localMod >= remoteMod) {
-            studentMap.set(k, ls);
-          }
+          studentMap.set(k, ls);
         });
         const mergedStudents = Array.from(studentMap.values());
         lastFirebaseData.current['students'] = JSON.stringify(mergedStudents);
@@ -317,21 +315,10 @@ export default function App() {
             marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
           });
         });
-        // Always protect local records, especially those with entered subject marks
+        // Always protect local records - user entered marks must NEVER be reverted by remote
         localResults.forEach((lr: any) => {
           const k = `${String(lr.rollNo).trim()}_${normalizeClassName(lr.className)}_${normalizeSession(lr.session)}_${(lr.examType || 'Annual').toLowerCase()}`;
-          const existing = resultMap.get(k);
-          if (!existing) {
-            resultMap.set(k, lr);
-          } else {
-            const localMarksCount = Object.keys(lr.marks || {}).length;
-            const remoteMarksCount = Object.keys(existing.marks || {}).length;
-            if (localMarksCount > 0 && remoteMarksCount === 0) {
-              resultMap.set(k, { ...existing, marks: lr.marks, percentage: lr.percentage, isPassed: lr.isPassed, totalMarks: lr.totalMarks });
-            } else if (localMod >= remoteMod) {
-              resultMap.set(k, lr);
-            }
-          }
+          resultMap.set(k, lr);
         });
         const merged = Array.from(resultMap.values());
         lastFirebaseData.current['results'] = JSON.stringify(merged);

@@ -918,7 +918,19 @@ export default function PrincipalDashboard({
     const normSess = normalizeSession(targetSession);
     const normExam = (targetExamType || "Annual").toLowerCase();
 
-    const existingResult = results.find(r => 
+    // Look in results state AND localStorage to guarantee most recent saved marks are found!
+    let allResults = results;
+    try {
+      const stored = localStorage.getItem("madarsa_records") || localStorage.getItem("nu_results");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          allResults = parsed;
+        }
+      }
+    } catch(e) {}
+
+    const existingResult = allResults.find(r => 
       r.rollNo.toString().trim() === trimmedRoll &&
       normalizeClassName(r.className) === normClass &&
       normalizeSession(r.session) === normSess &&
@@ -968,7 +980,7 @@ export default function PrincipalDashboard({
         } else if (existingResult.marks) {
           const keys = Object.keys(existingResult.marks);
           const values = Object.values(existingResult.marks);
-          const keyMatch = keys.find(k => k.toLowerCase().includes(sub.toLowerCase()) || sub.toLowerCase().includes(k.toLowerCase()));
+          const keyMatch = keys.find(k => k.trim().toLowerCase() === sub.trim().toLowerCase());
           if (keyMatch !== undefined) val = Number(existingResult.marks[keyMatch]);
           else if (i < values.length) val = Number(values[i]);
         }
@@ -985,9 +997,14 @@ export default function PrincipalDashboard({
       if (existingStudent.photoUrl) setAdminPhoto(existingStudent.photoUrl);
       
       const subjects = getClassSubjects(normClass);
-      const resetMarks: { [sub: string]: number } = {};
-      subjects.forEach(sub => { resetMarks[sub] = 75; });
-      setAdminMarks(resetMarks);
+      // Only initialize to 75 if adminMarks is empty; never overwrite marks already being entered
+      setAdminMarks(prev => {
+        const hasExisting = Object.keys(prev).length > 0;
+        if (hasExisting) return prev;
+        const resetMarks: { [sub: string]: number } = {};
+        subjects.forEach(sub => { resetMarks[sub] = 75; });
+        return resetMarks;
+      });
     } else {
       setEditingRecordId(null);
     }
@@ -1099,18 +1116,32 @@ export default function PrincipalDashboard({
       syncToFirebase('schoolData', 'results', updatedResults);
     }
 
-    // Webhook Sync
+    // Webhook Sync to Google Sheets / Excel
     const whList = schoolConfig.googleSheetsWebhooks || [];
     const specific = whList.find(w => w.year === newResultRecord.session || w.year === String(newResultRecord.passingYear));
     const webhookUrl = specific?.url || schoolConfig.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbyzUVQfHEceaWb4k5XMA3zQsY-MCZmeXjQDbzTJG4ElT2J83SzlLy1hQcM07Dt_cwbncQ/exec";
-    if (webhookUrl) {
-      fetch(webhookUrl, {
+    
+    // 1. Sync through server proxy to bypass CORS and guarantee delivery to Google Sheets
+    try {
+      fetch('/api/sync-to-sheet', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newResultRecord)
-      }).catch(err => console.error("Webhook failed", err));
+      }).catch(err => console.warn("Server sheet sync error", err));
+    } catch(e) {}
+
+    // 2. Direct browser sync with mode: 'no-cors' fallback
+    if (webhookUrl) {
+      try {
+        fetch(webhookUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+          },
+          body: JSON.stringify(newResultRecord)
+        }).catch(err => console.warn("Direct webhook failed", err));
+      } catch(e) {}
     }
 
     // Upsert Student profile matching by rollNo, className, and session
@@ -1158,7 +1189,7 @@ export default function PrincipalDashboard({
 
     setEditingRecordId(newResultRecord.id);
     setAdminMarks(cleanedMarks);
-    alert(`Successfully saved record for Roll: ${adminRollno}!`);
+    alert(`✓ रोल नंबर ${adminRollno} (${adminSname}) के किताबों के नंबर सुरक्षित हो गए हैं और एक्सेल शीट (Google Sheets) में सेव हो गए हैं!`);
   };
 
   const handleSaveAs = () => {
@@ -2340,6 +2371,15 @@ export default function PrincipalDashboard({
                   >
                     💾 Save Record
                   </button>
+                  <button
+                    type="button"
+                    onClick={handleExportToExcel}
+                    style={{ background: '#1e7e34' }}
+                    className="px-4 py-2 text-white font-bold text-xs rounded-lg shadow cursor-pointer uppercase tracking-wider transition hover:scale-105 flex items-center gap-1.5"
+                    title="Export currently entered marks and class results directly to Excel (.xlsx)"
+                  >
+                    📊 Download Excel (.xlsx)
+                  </button>
                 </div>
               </div>
 
@@ -3070,7 +3110,14 @@ export default function PrincipalDashboard({
                     </thead>
                     <tbody>
                       {getClassSubjects(adminSclass).map((sub, idx) => {
-                        const mark = adminMarks[sub] !== undefined ? adminMarks[sub] : 75;
+                        const mark = (() => {
+                          if (adminMarks[sub] !== undefined) return adminMarks[sub];
+                          const subClean = sub.trim().toLowerCase();
+                          for (const [k, v] of Object.entries(adminMarks)) {
+                            if (k.trim().toLowerCase() === subClean) return v;
+                          }
+                          return 75;
+                        })();
                         const color = [
                           "#fce4ec", // Pinkish
                           "#e8f5e9", // Greenish

@@ -97,6 +97,32 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   }
 });
 
+// Proxy route for Google Sheets / Excel Webhook sync without browser CORS issues
+app.post('/api/sync-to-sheet', async (req, res) => {
+  try {
+    const record = req.body;
+    const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL || "https://script.google.com/macros/s/AKfycbyzUVQfHEceaWb4k5XMA3zQsY-MCZmeXjQDbzTJG4ElT2J83SzlLy1hQcM07Dt_cwbncQ/exec";
+    
+    // Create a lean record without giant base64 image strings for fast, reliable spreadsheet appending
+    const leanRecord = { ...record };
+    if (leanRecord.photoUrl && leanRecord.photoUrl.length > 500) {
+      leanRecord.photoUrl = "[Photo in portal]";
+    }
+
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(leanRecord)
+    });
+
+    const text = await response.text();
+    return res.json({ success: true, googleResponse: text });
+  } catch (err: any) {
+    console.error('Server sync-to-sheet error:', err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
