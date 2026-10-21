@@ -268,15 +268,29 @@ export default function App() {
     unsubStudents = subscribeToFirebase('schoolData', 'students', (data, fromCache, dataChanged, lastMod) => {
       if (data && Array.isArray(data) && dataChanged) {
         const localMod = parseInt(localStorage.getItem('nu_students_lastModified') || '0', 10);
+        const remoteMod = Number(lastMod) || 0;
         const localStudentsRaw = localStorage.getItem('nu_students');
         let localStudents: any[] = [];
         try { if (localStudentsRaw) localStudents = JSON.parse(localStudentsRaw); } catch(e) {}
         // Never overwrite newer local user modifications with older remote snapshot
-        if (localStudents.length > 0 && localMod > 0 && lastMod && localMod > lastMod) {
+        if (localStudents.length > 0 && localMod >= remoteMod) {
           return;
         }
-        lastFirebaseData.current['students'] = JSON.stringify(data);
-        setStudents(data);
+        const studentMap = new Map<string, Student>();
+        data.filter(Boolean).forEach((s: any) => {
+          const k = `${String(s.rollNo).trim()}_${normalizeClassName(s.className)}_${normalizeSession(s.session)}`;
+          studentMap.set(k, { ...s, rollNo: String(s.rollNo || ''), className: normalizeClassName(s.className) as ClassName });
+        });
+        localStudents.forEach((ls: any) => {
+          const k = `${String(ls.rollNo).trim()}_${normalizeClassName(ls.className)}_${normalizeSession(ls.session)}`;
+          if (!studentMap.has(k) || localMod >= remoteMod) {
+            studentMap.set(k, ls);
+          }
+        });
+        const mergedStudents = Array.from(studentMap.values());
+        lastFirebaseData.current['students'] = JSON.stringify(mergedStudents);
+        setStudents(mergedStudents);
+        localStorage.setItem('nu_students', JSON.stringify(mergedStudents));
       }
       if (!fromCache) studentsLoaded = true;
       checkHideLoading();
@@ -284,16 +298,46 @@ export default function App() {
     unsubResults = subscribeToFirebase('schoolData', 'results', (data, fromCache, dataChanged, lastMod) => {
       if (data && Array.isArray(data) && dataChanged) {
         const localMod = parseInt(localStorage.getItem('nu_results_lastModified') || '0', 10);
+        const remoteMod = Number(lastMod) || 0;
         const localResultsRaw = localStorage.getItem('madarsa_records') || localStorage.getItem('nu_results');
         let localResults: any[] = [];
         try { if (localResultsRaw) localResults = JSON.parse(localResultsRaw); } catch(e) {}
         // Never overwrite newer local user modifications with older remote snapshot
-        if (localResults.length > 0 && localMod > 0 && lastMod && localMod > lastMod) {
+        if (localResults.length > 0 && localMod >= remoteMod) {
           return;
         }
-        const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
-        lastFirebaseData.current['results'] = JSON.stringify(mapped);
-        setResults(mapped);
+        const resultMap = new Map<string, Result>();
+        data.filter(Boolean).forEach((r: any) => {
+          const k = `${String(r.rollNo).trim()}_${normalizeClassName(r.className)}_${normalizeSession(r.session)}_${(r.examType || 'Annual').toLowerCase()}`;
+          resultMap.set(k, {
+            ...r,
+            rollNo: String(r.rollNo || ''),
+            studentName: String(r.studentName || ''),
+            className: normalizeClassName(r.className) as ClassName,
+            marks: typeof r.marks === 'string' ? JSON.parse(r.marks || '{}') : (r.marks || {})
+          });
+        });
+        // Always protect local records, especially those with entered subject marks
+        localResults.forEach((lr: any) => {
+          const k = `${String(lr.rollNo).trim()}_${normalizeClassName(lr.className)}_${normalizeSession(lr.session)}_${(lr.examType || 'Annual').toLowerCase()}`;
+          const existing = resultMap.get(k);
+          if (!existing) {
+            resultMap.set(k, lr);
+          } else {
+            const localMarksCount = Object.keys(lr.marks || {}).length;
+            const remoteMarksCount = Object.keys(existing.marks || {}).length;
+            if (localMarksCount > 0 && remoteMarksCount === 0) {
+              resultMap.set(k, { ...existing, marks: lr.marks, percentage: lr.percentage, isPassed: lr.isPassed, totalMarks: lr.totalMarks });
+            } else if (localMod >= remoteMod) {
+              resultMap.set(k, lr);
+            }
+          }
+        });
+        const merged = Array.from(resultMap.values());
+        lastFirebaseData.current['results'] = JSON.stringify(merged);
+        setResults(merged);
+        localStorage.setItem('nu_results', JSON.stringify(merged));
+        localStorage.setItem('madarsa_records', JSON.stringify(merged));
       }
       if (!fromCache) resultsLoaded = true;
       checkHideLoading();

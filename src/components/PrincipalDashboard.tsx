@@ -908,6 +908,91 @@ export default function PrincipalDashboard({
     }, 0);
   };
 
+  const loadStudentAndResult = (roll: string, targetClass: ClassName, targetSession: string, targetExamType: string) => {
+    const trimmedRoll = roll.trim();
+    if (!trimmedRoll) {
+      setEditingRecordId(null);
+      return;
+    }
+    const normClass = normalizeClassName(targetClass);
+    const normSess = normalizeSession(targetSession);
+    const normExam = (targetExamType || "Annual").toLowerCase();
+
+    const existingResult = results.find(r => 
+      r.rollNo.toString().trim() === trimmedRoll &&
+      normalizeClassName(r.className) === normClass &&
+      normalizeSession(r.session) === normSess &&
+      (r.examType || "Annual").toLowerCase() === normExam
+    );
+
+    const existingStudent = students.find(s => 
+      s.rollNo.toString().trim() === trimmedRoll &&
+      normalizeClassName(s.className) === normClass &&
+      normalizeSession(s.session) === normSess
+    );
+
+    if (existingResult) {
+      setEditingRecordId(existingResult.id);
+      setAdminSname(existingResult.studentName || existingStudent?.name || "");
+      if (existingResult.fatherName || existingStudent?.fatherName) {
+        setAdminFname(existingResult.fatherName || existingStudent?.fatherName || "");
+      }
+      if (existingResult.motherName || existingStudent?.motherName) {
+        setAdminMname(existingResult.motherName || existingStudent?.motherName || "");
+      }
+      if (existingResult.dateOfBirth || existingStudent?.dateOfBirth) {
+        setAdminDob(existingResult.dateOfBirth || existingStudent?.dateOfBirth || "");
+      }
+      if (existingResult.address || existingStudent?.address) {
+        setAdminAddress(existingResult.address || existingStudent?.address || "");
+      }
+      if (existingResult.photoUrl || existingStudent?.photoUrl) {
+        setAdminPhoto(existingResult.photoUrl || existingStudent?.photoUrl || "");
+      }
+      if (existingResult.regNo) setAdminRegNo(existingResult.regNo);
+      if (existingResult.udise) setAdminUdise(existingResult.udise);
+      if (existingResult.division) setAdminDivision(existingResult.division);
+      if (existingResult.teachingDays) setAdminTeachingDays(String(existingResult.teachingDays));
+      if (existingResult.presentDays) setAdminPresentDays(String(existingResult.presentDays));
+      if (existingResult.absentDays) setAdminAbsentDays(String(existingResult.absentDays));
+
+      // Always load the student's saved marks for their subjects
+      const newMarks: { [sub: string]: number } = {};
+      const subjects = getClassSubjects(normClass);
+      subjects.forEach((sub, i) => {
+        let val = 75;
+        if (existingResult.marks && existingResult.marks[sub] !== undefined) {
+          val = Number(existingResult.marks[sub]);
+        } else if (sub.toLowerCase() === "ginti" && existingResult.marks && existingResult.marks["Math"] !== undefined) {
+          val = Number(existingResult.marks["Math"]);
+        } else if (existingResult.marks) {
+          const keys = Object.keys(existingResult.marks);
+          const values = Object.values(existingResult.marks);
+          const keyMatch = keys.find(k => k.toLowerCase().includes(sub.toLowerCase()) || sub.toLowerCase().includes(k.toLowerCase()));
+          if (keyMatch !== undefined) val = Number(existingResult.marks[keyMatch]);
+          else if (i < values.length) val = Number(values[i]);
+        }
+        newMarks[sub] = isNaN(val) ? 0 : val;
+      });
+      setAdminMarks(newMarks);
+    } else if (existingStudent) {
+      setEditingRecordId(null);
+      setAdminSname(existingStudent.name || "");
+      if (existingStudent.fatherName) setAdminFname(existingStudent.fatherName);
+      if (existingStudent.motherName) setAdminMname(existingStudent.motherName);
+      if (existingStudent.dateOfBirth) setAdminDob(existingStudent.dateOfBirth);
+      if (existingStudent.address) setAdminAddress(existingStudent.address);
+      if (existingStudent.photoUrl) setAdminPhoto(existingStudent.photoUrl);
+      
+      const subjects = getClassSubjects(normClass);
+      const resetMarks: { [sub: string]: number } = {};
+      subjects.forEach(sub => { resetMarks[sub] = 75; });
+      setAdminMarks(resetMarks);
+    } else {
+      setEditingRecordId(null);
+    }
+  };
+
   const handleClearAll = () => {
     if (confirm("Reset current form values?")) {
       setEditingRecordId(null);
@@ -1072,6 +1157,7 @@ export default function PrincipalDashboard({
     }
 
     setEditingRecordId(newResultRecord.id);
+    setAdminMarks(cleanedMarks);
     alert(`Successfully saved record for Roll: ${adminRollno}!`);
   };
 
@@ -2440,6 +2526,63 @@ export default function PrincipalDashboard({
                     </button>
                   </div>
                 )}
+                {/* QUICK SELECTOR FOR ALREADY SAVED STUDENTS */}
+                <div className="max-w-[900px] mx-auto mb-4 bg-emerald-50/90 dark:bg-slate-800/90 border-2 border-[#1e5631]/40 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl">📖</span>
+                    <div>
+                      <div className="text-[#1e5631] dark:text-[#a4be7b] font-extrabold text-sm flex items-center gap-2">
+                        <span>कक्षा के सेव्ड छात्र चुनें (Select Student to Enter Marks):</span>
+                        <span className="text-[11px] font-normal bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 px-2 py-0.5 rounded-full font-bold">
+                          {adminSclass} • {adminSession}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        छात्र चुनते ही उनकी डिटेल्स और पहले से सेव्ड नंबर (Marks) ऑटोमैटिक लोड हो जाएंगे
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <select
+                      value={adminRollno}
+                      onChange={(e) => {
+                        const roll = e.target.value;
+                        setAdminRollno(roll);
+                        loadStudentAndResult(roll, adminSclass, adminSession, adminExamType);
+                      }}
+                      className="flex-1 sm:w-72 bg-white dark:bg-slate-900 border-2 border-[#1e5631] rounded-xl px-3 py-2 text-sm font-bold text-slate-900 dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="">-- छात्र चुनें (Select Student) --</option>
+                      {students
+                        .filter(s => 
+                          normalizeClassName(s.className) === normalizeClassName(adminSclass) &&
+                          normalizeSession(s.session) === normalizeSession(adminSession)
+                        )
+                        .map(s => {
+                          const hasSavedResult = results.some(r => 
+                            r.rollNo.toString().trim() === s.rollNo.toString().trim() &&
+                            normalizeClassName(r.className) === normalizeClassName(adminSclass) &&
+                            normalizeSession(r.session) === normalizeSession(adminSession) &&
+                            (r.examType || "Annual").toLowerCase() === adminExamType.toLowerCase()
+                          );
+                          return (
+                            <option key={s.id || s.rollNo} value={s.rollNo}>
+                              Roll: {s.rollNo} - {s.name} {hasSavedResult ? "✓ (Marks Saved)" : "⏳ (No Marks Yet)"}
+                            </option>
+                          );
+                        })}
+                    </select>
+                    <button
+                      type="button"
+                      title="नया छात्र भरें / Reset fields"
+                      onClick={handleCancelEdit}
+                      className="px-3 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer"
+                    >
+                      ✨ New / Clear
+                    </button>
+                  </div>
+                </div>
+
                 <p className="text-center text-xs font-bold font-mono text-slate-450 text-[#1e5631] mb-2 uppercase tracking-widest">
                   👇 Live Certificate Preview & Direct Entry Form 👇
                 </p>
@@ -2729,7 +2872,13 @@ export default function PrincipalDashboard({
                       >
                         <select
                           value={adminExamType}
-                          onChange={(e) => setAdminExamType(e.target.value)}
+                          onChange={(e) => {
+                            const newExam = e.target.value;
+                            setAdminExamType(newExam);
+                            if (adminRollno) {
+                              loadStudentAndResult(adminRollno, adminSclass, adminSession, newExam);
+                            }
+                          }}
                           style={{
                             background: 'transparent',
                             border: 'none',
@@ -2747,7 +2896,13 @@ export default function PrincipalDashboard({
                         - 
                         <select
                           value={adminSession}
-                          onChange={(e) => setAdminSession(e.target.value)}
+                          onChange={(e) => {
+                            const newSess = e.target.value;
+                            setAdminSession(newSess);
+                            if (adminRollno) {
+                              loadStudentAndResult(adminRollno, adminSclass, newSess, adminExamType);
+                            }
+                          }}
                           style={{
                             background: 'transparent',
                             border: 'none',
@@ -2852,12 +3007,16 @@ export default function PrincipalDashboard({
                         onChange={(e) => {
                           const cls = e.target.value as ClassName;
                           setAdminSclass(cls);
-                          const subjects = getClassSubjects(cls);
-                          const newInitialMarks: { [sub: string]: number } = {};
-                          subjects.forEach(sub => {
-                            newInitialMarks[sub] = 75;
-                          });
-                          setAdminMarks(newInitialMarks);
+                          if (adminRollno) {
+                            loadStudentAndResult(adminRollno, cls, adminSession, adminExamType);
+                          } else {
+                            const subjects = getClassSubjects(cls);
+                            const newInitialMarks: { [sub: string]: number } = {};
+                            subjects.forEach(sub => {
+                              newInitialMarks[sub] = 75;
+                            });
+                            setAdminMarks(newInitialMarks);
+                          }
                         }}
                         style={{ fontSize: '16px', fontWeight: 900, padding: '4px 8px', border: '1.5px solid #1e5631', borderRadius: '4px', background: '#f9fff9', boxSizing: 'border-box', height: '32px', color: '#000000' }}
                       >
@@ -2873,37 +3032,10 @@ export default function PrincipalDashboard({
                         onChange={(e) => {
                           const val = e.target.value.replace(/\D/g, "");
                           setAdminRollno(val);
-                          // Auto-fill student data ONLY within the current class and session when not editing another student
-                          if (val && !editingRecordId && !adminSname) {
-                            const normClass = normalizeClassName(adminSclass);
-                            const normSess = normalizeSession(adminSession);
-                            const existingStudent = students.find(s => 
-                              s.rollNo.toString().trim() === val.trim() &&
-                              normalizeClassName(s.className) === normClass &&
-                              normalizeSession(s.session) === normSess
-                            );
-                            const existingResult = results.find(r => 
-                              r.rollNo.toString().trim() === val.trim() &&
-                              normalizeClassName(r.className) === normClass &&
-                              normalizeSession(r.session) === normSess &&
-                              (r.examType || "Annual").toLowerCase() === adminExamType.toLowerCase()
-                            );
-                            if (existingStudent) {
-                              setAdminSname(existingStudent.name || "");
-                              if (existingStudent.fatherName) setAdminFname(existingStudent.fatherName);
-                              if (existingStudent.motherName) setAdminMname(existingStudent.motherName);
-                              if (existingStudent.dateOfBirth) setAdminDob(existingStudent.dateOfBirth);
-                              if (existingStudent.address) setAdminAddress(existingStudent.address);
-                            } else if (existingResult) {
-                              setAdminSname(existingResult.studentName || "");
-                              if (existingResult.fatherName) setAdminFname(existingResult.fatherName);
-                              if (existingResult.motherName) setAdminMname(existingResult.motherName);
-                              if (existingResult.dateOfBirth) setAdminDob(existingResult.dateOfBirth);
-                              if (existingResult.address) setAdminAddress(existingResult.address);
-                              if (existingResult.marks) {
-                                setAdminMarks(existingResult.marks);
-                              }
-                            }
+                          if (val) {
+                            loadStudentAndResult(val, adminSclass, adminSession, adminExamType);
+                          } else {
+                            setEditingRecordId(null);
                           }
                         }}
                         placeholder="e.g. 2026101"
