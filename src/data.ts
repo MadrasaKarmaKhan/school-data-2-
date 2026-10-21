@@ -564,3 +564,16 @@ export const formatSessionDisplay = (session: string, examType: string): string 
 };
 
 
+
+
+export function normalizeSession(session: string): string {
+  if (!session) return "2025-2026";
+  const trimmed = String(session).trim();
+  const match = trimmed.match(/^(\d{4})-(\d{2})$/);
+  if (match) {
+    const firstYear = match[1];
+    const secondYear = match[2];
+    return `${firstYear}-20${secondYear}`;
+  }
+  return trimmed;
+}

@@ -1,31 +1,65 @@
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import { db } from './firebase';
+import { doc, getDoc, setDoc, onSnapshot, disableNetwork } from "firebase/firestore";
+import { db } from "./firebase";
 
 const cache = new Map<string, string>();
 const receivedSnapshots = new Set<string>();
 
+const QUOTA_STORAGE_KEY = "nu_firestore_quota_exhausted";
+const QUOTA_DURATION_MS = 6 * 60 * 60 * 1000; // 6 hours
+
+export function isFirestoreQuotaExhausted(): boolean {
+  try {
+    if (typeof window === "undefined") return false;
+    const raw = localStorage.getItem(QUOTA_STORAGE_KEY);
+    if (!raw) return false;
+    const time = parseInt(raw, 10);
+    if (isNaN(time)) return false;
+    if (Date.now() - time < QUOTA_DURATION_MS) {
+      return true;
+    } else {
+      localStorage.removeItem(QUOTA_STORAGE_KEY);
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+}
+
+export function setFirestoreQuotaExhausted() {
+  try {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(QUOTA_STORAGE_KEY, Date.now().toString());
+    }
+  } catch (e) {}
+  // Gracefully disable network on client to eliminate background retry loops
+  disableNetwork(db).catch(() => {});
+}
+
+// Immediately switch to offline cache on startup if quota is known to be exceeded
+if (typeof window !== "undefined" && isFirestoreQuotaExhausted()) {
+  disableNetwork(db).catch(() => {});
+}
+
 export async function syncToFirebase(collectionName: string, docId: string, data: any) {
   const cacheKey = `${collectionName}_${docId}`;
-  
-  if (!receivedSnapshots.has(cacheKey)) {
-    console.warn(`[Firebase] Ignored write to ${cacheKey} because no snapshot has been received yet.`);
+  const dataString = JSON.stringify(data);
+
+  if (cache.get(cacheKey) === dataString) {
     return;
   }
 
-  const dataString = JSON.stringify(data);
-  if (cache.get(cacheKey) === dataString) {
-    return; // Data hasn't changed, skip write
+  // When quota is exhausted, operate seamlessly using local storage
+  if (isFirestoreQuotaExhausted()) {
+    cache.set(cacheKey, dataString);
+    return;
   }
 
   try {
     const sanitizedData = JSON.parse(dataString);
     
-    // Check if data is array and large (approaching 1MB limit)
-    // Roughly 800KB string length to be safe
     if (dataString.length > 800000) {
       if (Array.isArray(sanitizedData)) {
-        // Legacy Array chunking
-        const CHUNK_SIZE = 50; // 50 items per chunk
+        const CHUNK_SIZE = 50;
         const chunks = [];
         for (let i = 0; i < sanitizedData.length; i += CHUNK_SIZE) {
           chunks.push(sanitizedData.slice(i, i + CHUNK_SIZE));
@@ -44,7 +78,6 @@ export async function syncToFirebase(collectionName: string, docId: string, data
           }, { merge: true });
         }
       } else {
-        // String chunking for Objects or other large types
         const CHUNK_SIZE = 500000;
         const chunks = [];
         for (let i = 0; i < dataString.length; i += CHUNK_SIZE) {
@@ -70,15 +103,21 @@ export async function syncToFirebase(collectionName: string, docId: string, data
     
     cache.set(cacheKey, dataString);
   } catch (error: any) {
-    if (error?.code === 'resource-exhausted') {
-      console.warn(`[Firebase] Quota exceeded. Using local writes for ${collectionName}/${docId}.`);
+    cache.set(cacheKey, dataString);
+    if (error?.code === "resource-exhausted") {
+      setFirestoreQuotaExhausted();
+      console.warn(`[Firebase] Quota limit reached. Operating in offline/local storage mode.`);
     } else {
       console.error(`Error syncing to Firebase ${collectionName}/${docId}:`, error);
     }
   }
 }
 
-export function subscribeToFirebase(collectionName: string, docId: string, callback: (data: any, fromCache: boolean, dataChanged: boolean) => void) {
+export function subscribeToFirebase(collectionName: string, docId: string, callback: (data: any, fromCache: boolean, dataChanged: boolean, lastMod?: number) => void) {
+  if (isFirestoreQuotaExhausted()) {
+    return () => {};
+  }
+
   return onSnapshot(
     doc(db, collectionName, docId),
     { includeMetadataChanges: true },
@@ -87,7 +126,7 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
       const isFromCache = docSnap.metadata.fromCache;
       receivedSnapshots.add(cacheKey);
       
-        if (docSnap.exists()) {
+      if (docSnap.exists()) {
         const docData = docSnap.data();
         let data = docData.data;
         const lastMod = docData._lastModified || 0;
@@ -95,10 +134,9 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
         const isStringChunked = docData.isStringChunked;
         
         try {
-          const isLoggedIn = localStorage.getItem('nu_islogged') === 'true';
           const localModString = localStorage.getItem(`nu_${docId}_lastModified`);
-          if (isLoggedIn && localModString && parseInt(localModString, 10) > lastMod) {
-            return; // Ignore older snapshot from cache
+          if (localModString && parseInt(localModString, 10) > lastMod) {
+            return;
           }
         } catch(e) {}
         
@@ -112,7 +150,8 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
                 if (chunkSnap.exists() && chunkSnap.data().data) {
                   allData = allData.concat(chunkSnap.data().data);
                 }
-              } catch (e) {
+              } catch (e: any) {
+                if (e?.code === "resource-exhausted") setFirestoreQuotaExhausted();
                 console.warn(`[Firebase] Could not fetch chunk ${i} for ${docId}`);
               }
             }
@@ -126,7 +165,8 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
                 if (chunkSnap.exists() && chunkSnap.data().chunkStr) {
                   fullString += chunkSnap.data().chunkStr;
                 }
-              } catch (e) {
+              } catch (e: any) {
+                if (e?.code === "resource-exhausted") setFirestoreQuotaExhausted();
                 console.warn(`[Firebase] Could not fetch string chunk ${i} for ${docId}`);
               }
             }
@@ -149,7 +189,7 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
             cache.set(cacheKey, dataString);
           }
           
-          callback(data, isFromCache, dataChanged);
+          callback(data, isFromCache, dataChanged, lastMod);
         };
         
         processData();
@@ -158,12 +198,12 @@ export function subscribeToFirebase(collectionName: string, docId: string, callb
       }
     },
     (error: any) => {
-      if (error?.code === 'resource-exhausted') {
-        console.warn(`[Firebase] Quota exceeded. Skipping sync for ${collectionName}/${docId}.`);
+      if (error?.code === "resource-exhausted") {
+        setFirestoreQuotaExhausted();
+        console.warn(`[Firebase] Quota exceeded on subscription. Operating with local cache for ${collectionName}/${docId}.`);
       } else {
         console.error(`Error subscribing to Firebase ${collectionName}/${docId}:`, error);
       }
     }
   );
 }
-

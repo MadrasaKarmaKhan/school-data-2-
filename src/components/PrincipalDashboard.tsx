@@ -11,7 +11,7 @@ import { getClassSubjects, DEFAULT_CLASS_SUBJECTS, getSchoolClasses, getSchoolSe
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { DAILY_DUAS } from '../data/duas';
-import { syncToFirebase } from '../lib/firebaseUtils';
+import { syncToFirebase, setFirestoreQuotaExhausted, isFirestoreQuotaExhausted } from '../lib/firebaseUtils';
 
 interface PrincipalDashboardProps {
   students: Student[];
@@ -163,7 +163,7 @@ export default function PrincipalDashboard({
 
   // Real-time listener for Registered Children (Dua App Students)
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn || isFirestoreQuotaExhausted()) return;
     const unsub = onSnapshot(collection(db, 'students'), (snapshot) => {
       const studs: any[] = [];
       snapshot.forEach(docSnap => {
@@ -179,6 +179,7 @@ export default function PrincipalDashboard({
       setDuaStudents(studs);
     }, (error: any) => {
       if (error?.code === 'resource-exhausted') {
+        setFirestoreQuotaExhausted();
         console.warn("Firebase Quota Exceeded. Using local/cached students.");
       } else {
         console.error("Firestore loading error: ", error);
@@ -189,7 +190,7 @@ export default function PrincipalDashboard({
 
   // Real-time listener for Duas management
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn || isFirestoreQuotaExhausted()) return;
     const unsub = onSnapshot(collection(db, 'duas'), (snapshot) => {
       const fbCustom: any[] = [];
       snapshot.forEach(docSnap => {
@@ -220,6 +221,7 @@ export default function PrincipalDashboard({
       setDuas(sorted);
     }, (error: any) => {
       if (error?.code === 'resource-exhausted') {
+        setFirestoreQuotaExhausted();
         console.warn("Firebase Quota Exceeded. Using local/default duas.");
       } else {
         console.error("Firestore duas loading error: ", error);
@@ -389,6 +391,7 @@ export default function PrincipalDashboard({
   const [deleteConfirmNewsId, setDeleteConfirmNewsId] = useState<string | null>(null);
 
   // Madarsa custom result form states
+  const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
   const [adminRegNo, setAdminRegNo] = useState("G- 59313");
   const [adminUdise, setAdminUdise] = useState("4053");
   const [adminRollno, setAdminRollno] = useState("");
@@ -774,19 +777,33 @@ export default function PrincipalDashboard({
       return;
     }
 
-    // Check duplicate roll number
-    const duplicate = students.find(s => s.rollNo.toString().trim() === newStudent.rollNo.toString().trim());
+    const normClass = normalizeClassName(newStudent.className);
+    const normSession = normalizeSession(newStudent.session || studentYearFilter);
+    // Check duplicate roll number in the SAME class and session
+    const duplicate = students.find(s => 
+      s.rollNo.toString().trim() === newStudent.rollNo.toString().trim() &&
+      normalizeClassName(s.className) === normClass &&
+      normalizeSession(s.session) === normSession
+    );
     if (duplicate) {
-      alert(`Roll Number "${newStudent.rollNo}" already exists for student "${duplicate.name}"! Please use a unique roll number.`);
+      alert(`Roll Number "${newStudent.rollNo}" already exists for student "${duplicate.name}" in Class "${newStudent.className}" (${normSession})! Please use a unique roll number for this class.`);
       return;
     }
 
     const created: Student = {
-      id: "s_" + Date.now(),
+      id: "s_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
       ...newStudent,
-      session: normalizeSession(newStudent.session || studentYearFilter)
+      className: normClass,
+      session: normSession
     };
-    setStudents(prev => [...prev, created]);
+    const updated = [...students, created];
+    setStudents(updated);
+    const nowTs = Date.now().toString();
+    localStorage.setItem('nu_students', JSON.stringify(updated));
+    localStorage.setItem('nu_students_lastModified', nowTs);
+    if (isLoggedIn) {
+      syncToFirebase('schoolData', 'students', updated);
+    }
     setShowAddStudentModal(false);
     // Reset inputs
     setNewStudent({
@@ -803,7 +820,14 @@ export default function PrincipalDashboard({
 
   const handleDeleteStudent = (id: string) => {
     if (confirm("Are you sure you want to remove this student?")) {
-      setStudents(prev => prev.filter(s => s.id !== id));
+      const updated = students.filter(s => s.id !== id);
+      setStudents(updated);
+      const nowTs = Date.now().toString();
+      localStorage.setItem('nu_students', JSON.stringify(updated));
+      localStorage.setItem('nu_students_lastModified', nowTs);
+      if (isLoggedIn) {
+        syncToFirebase('schoolData', 'students', updated);
+      }
     }
   };
 
@@ -820,14 +844,58 @@ export default function PrincipalDashboard({
       return;
     }
 
-    // Check duplicate roll number, excluding current student
-    const duplicate = students.find(s => s.id !== editStudent.id && s.rollNo.toString().trim() === editStudent.rollNo.toString().trim());
+    const normClass = normalizeClassName(editStudent.className);
+    const normSession = normalizeSession(editStudent.session);
+    // Check duplicate roll number, excluding current student, within the same class and session
+    const duplicate = students.find(s => 
+      s.id !== editStudent.id && 
+      s.rollNo.toString().trim() === editStudent.rollNo.toString().trim() &&
+      normalizeClassName(s.className) === normClass &&
+      normalizeSession(s.session) === normSession
+    );
     if (duplicate) {
-      alert(`Roll Number "${editStudent.rollNo}" is already in use by student "${duplicate.name}"! Please use a unique roll number.`);
+      alert(`Roll Number "${editStudent.rollNo}" is already in use by student "${duplicate.name}" in Class "${editStudent.className}" (${normSession})! Please use a unique roll number for this class.`);
       return;
     }
 
-    setStudents(prev => prev.map(s => s.id === editStudent.id ? editStudent : s));
+    const updated = students.map(s => s.id === editStudent.id ? editStudent : s);
+    setStudents(updated);
+    const nowTs = Date.now().toString();
+    localStorage.setItem('nu_students', JSON.stringify(updated));
+    localStorage.setItem('nu_students_lastModified', nowTs);
+    if (isLoggedIn) {
+      syncToFirebase('schoolData', 'students', updated);
+    }
+    // Also synchronize updated student information with existing results to prevent mismatches
+    setResults(prev => {
+      let changed = false;
+      const updatedResults = prev.map(res => {
+        if (res.rollNo.toString().trim() === editStudent.rollNo.toString().trim() &&
+            normalizeClassName(res.className) === normClass) {
+          changed = true;
+          return {
+            ...res,
+            studentName: editStudent.name,
+            fatherName: editStudent.fatherName,
+            motherName: editStudent.motherName || res.motherName,
+            address: editStudent.address || res.address,
+            dateOfBirth: editStudent.dateOfBirth || res.dateOfBirth,
+            className: editStudent.className,
+            session: editStudent.session
+          };
+        }
+        return res;
+      });
+      if (changed) {
+        localStorage.setItem("madarsa_records", JSON.stringify(updatedResults));
+        localStorage.setItem("nu_results", JSON.stringify(updatedResults));
+        localStorage.setItem("nu_results_lastModified", nowTs);
+        if (isLoggedIn) {
+          syncToFirebase('schoolData', 'results', updatedResults);
+        }
+      }
+      return changed ? updatedResults : prev;
+    });
     setShowEditStudentModal(false);
     setEditStudent(null);
   };
@@ -842,6 +910,7 @@ export default function PrincipalDashboard({
 
   const handleClearAll = () => {
     if (confirm("Reset current form values?")) {
+      setEditingRecordId(null);
       setAdminRollno("");
       setAdminSname("");
       setAdminFname("");
@@ -891,7 +960,7 @@ export default function PrincipalDashboard({
     });
 
     const newResultRecord: Result = {
-      id: "r_" + Date.now(),
+      id: editingRecordId || ("r_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5)),
       rollNo: adminRollno.trim(),
       className: adminSclass,
       passingYear: parsedPassingYear,
@@ -916,13 +985,17 @@ export default function PrincipalDashboard({
       dateOfBirth: adminDob.trim()
     };
 
-    // Filter old matching roll number, class, session, and exam type record out to keep multiple different result types per student
-    const updatedResults = results.filter(r => 
-      !(r.rollNo.toString().trim() === adminRollno.toString().trim() && 
-        r.className === adminSclass && 
-        normalizeSession(r.session) === normalizeSession(adminSession) &&
-        (r.examType || 'Annual').toLowerCase() === adminExamType.toLowerCase())
-    );
+    // Filter old matching record: match by editingRecordId IF set, OR by (rollNo + className + session + examType)
+    const updatedResults = results.filter(r => {
+      if (editingRecordId && r.id && r.id === editingRecordId) {
+        return false;
+      }
+      const matchRoll = r.rollNo.toString().trim() === adminRollno.toString().trim();
+      const matchClass = normalizeClassName(r.className) === normalizeClassName(adminSclass);
+      const matchSession = normalizeSession(r.session) === normalizeSession(adminSession);
+      const matchExam = (r.examType || 'Annual').toLowerCase() === adminExamType.toLowerCase();
+      return !(matchRoll && matchClass && matchSession && matchExam);
+    });
     updatedResults.push(newResultRecord);
 
     // Sort by total obtained score descending to determine ranks
@@ -932,8 +1005,14 @@ export default function PrincipalDashboard({
       return totalB - totalA;
     });
 
+    const nowTs = Date.now().toString();
     setResults(updatedResults);
     localStorage.setItem("madarsa_records", JSON.stringify(updatedResults));
+    localStorage.setItem("nu_results", JSON.stringify(updatedResults));
+    localStorage.setItem("nu_results_lastModified", nowTs);
+    if (isLoggedIn) {
+      syncToFirebase('schoolData', 'results', updatedResults);
+    }
 
     // Webhook Sync
     const whList = schoolConfig.googleSheetsWebhooks || [];
@@ -949,11 +1028,16 @@ export default function PrincipalDashboard({
       }).catch(err => console.error("Webhook failed", err));
     }
 
-    // Upsert Student profile
-    const studentIdx = students.findIndex(s => s.rollNo.toString().trim() === adminRollno.toString().trim() && normalizeSession(s.session) === normalizeSession(adminSession));
+    // Upsert Student profile matching by rollNo, className, and session
+    const studentIdx = students.findIndex(s => 
+      s.rollNo.toString().trim() === adminRollno.toString().trim() && 
+      normalizeClassName(s.className) === normalizeClassName(adminSclass) &&
+      normalizeSession(s.session) === normalizeSession(adminSession)
+    );
+    let updatedStudents: Student[];
     if (studentIdx === -1) {
       const newStudentProfile: Student = {
-        id: "s_" + Date.now(),
+        id: "s_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
         rollNo: adminRollno.trim(),
         name: adminSname.trim(),
         fatherName: adminFname.trim(),
@@ -963,11 +1047,11 @@ export default function PrincipalDashboard({
         session: adminSession,
         photoUrl: adminPhoto || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200",
         dateOfBirth: adminDob,
-        contactNo: "+91 99999 88888"
+        contactNo: ""
       };
-      setStudents(prev => [...prev, newStudentProfile]);
+      updatedStudents = [...students, newStudentProfile];
     } else {
-      const updatedStudents = [...students];
+      updatedStudents = [...students];
       updatedStudents[studentIdx] = {
         ...updatedStudents[studentIdx],
         name: adminSname.trim(),
@@ -979,13 +1063,20 @@ export default function PrincipalDashboard({
         photoUrl: adminPhoto || updatedStudents[studentIdx].photoUrl,
         dateOfBirth: adminDob
       };
-      setStudents(updatedStudents);
+    }
+    setStudents(updatedStudents);
+    localStorage.setItem("nu_students", JSON.stringify(updatedStudents));
+    localStorage.setItem("nu_students_lastModified", nowTs);
+    if (isLoggedIn) {
+      syncToFirebase('schoolData', 'students', updatedStudents);
     }
 
+    setEditingRecordId(newResultRecord.id);
     alert(`Successfully saved record for Roll: ${adminRollno}!`);
   };
 
   const handleSaveAs = () => {
+    setEditingRecordId(null);
     // "Save As" logic is identical to SaveAndRank, because by changing the roll number or class, 
     // the system natively creates a new record instead of overwriting the previous one (since ID matching is based on roll no/class).
     // This explicit function satisfies the user's conceptual model.
@@ -1244,59 +1335,110 @@ export default function PrincipalDashboard({
     }, 500);
   };
 
-  const handleEditRecord = (roll: string) => {
-    const match = results.find(r => r.rollNo.toString().trim() === roll.toString().trim());
-    if (match) {
-      const normClass = normalizeClassName(match.className);
-      setAdminRegNo(match.regNo || "G- 59313");
-      setAdminUdise(match.udise || "4053");
-      setAdminRollno(match.rollNo);
-      setAdminSname(match.studentName);
-      setAdminFname(match.fatherName);
-      setAdminMname(match.motherName || "");
-      const studentMatch = students.find(s => s.rollNo.toString().trim() === roll.toString().trim());
-      setAdminDob(match.dateOfBirth || studentMatch?.dateOfBirth || "");
-      setAdminSclass(normClass);
-      setAdminAddress(match.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH");
-      setAdminDivision(match.division || "");
-      setAdminAttendance(match.attendance || "");
-      setAdminTeachingDays(match.teachingDays ? String(match.teachingDays) : (match.attendance?.includes('/') ? match.attendance.split('/')[1]?.replace(/[^\d]/g, '') : "220"));
-      setAdminPresentDays(match.presentDays ? String(match.presentDays) : (match.attendance?.includes('/') ? match.attendance.split('/')[0]?.replace(/[^\d]/g, '') : "205"));
-      setAdminAbsentDays(match.absentDays ? String(match.absentDays) : "15");
-      const rawSess = match.session || getCurrentSession();
-      setAdminSession(normalizeSession(rawSess));
-      setAdminExamType(match.examType || "Annual");
-      setAdminPhoto(match.photoUrl || "");
+  const handleEditRecord = (targetRecord: Result) => {
+    const match = results.find(r => 
+      (targetRecord.id && r.id && r.id === targetRecord.id) ||
+      (r.rollNo.toString().trim() === targetRecord.rollNo.toString().trim() &&
+       normalizeClassName(r.className) === normalizeClassName(targetRecord.className) &&
+       normalizeSession(r.session) === normalizeSession(targetRecord.session) &&
+       (r.examType || "Annual").toLowerCase() === (targetRecord.examType || "Annual").toLowerCase())
+    ) || targetRecord;
 
-      const newMarks: { [sub: string]: number } = {};
-      getClassSubjects(normClass).forEach((sub, i) => {
-        let val = 75;
-        if (match.marks && match.marks[sub] !== undefined) {
-          val = Number(match.marks[sub]);
-        } else if (sub.toLowerCase() === 'ginti' && match.marks && match.marks['Math'] !== undefined) {
-          val = Number(match.marks['Math']);
-        } else if (match.marks) {
-          // Fallback parsing
-          const keys = Object.keys(match.marks);
-          const values = Object.values(match.marks);
-          const keyMatch = keys.find(k => k.toLowerCase().includes(sub.toLowerCase()) || sub.toLowerCase().includes(k.toLowerCase()));
-          if (keyMatch !== undefined) val = Number(match.marks[keyMatch]);
-          else if (i < values.length) val = Number(values[i]);
-        }
-        newMarks[sub] = val;
-      });
-      setAdminMarks(newMarks);
+    setEditingRecordId(match.id || `r_${match.rollNo}_${match.className}_${match.session}`);
+    const normClass = normalizeClassName(match.className);
+    setAdminRegNo(match.regNo || "G- 59313");
+    setAdminUdise(match.udise || "4053");
+    setAdminRollno(match.rollNo);
+    setAdminSname(match.studentName);
+    setAdminFname(match.fatherName);
+    setAdminMname(match.motherName || "");
+    const studentMatch = students.find(s => 
+      s.rollNo.toString().trim() === match.rollNo.toString().trim() &&
+      normalizeClassName(s.className) === normClass &&
+      normalizeSession(s.session) === normalizeSession(match.session)
+    ) || students.find(s => 
+      s.rollNo.toString().trim() === match.rollNo.toString().trim() &&
+      normalizeClassName(s.className) === normClass
+    );
+    setAdminDob(match.dateOfBirth || studentMatch?.dateOfBirth || "");
+    setAdminSclass(normClass);
+    setAdminAddress(match.address || "VILLAGE & POST KARMA KHAN, DISTRICT SANT KABIR NAGAR, UTTAR PRADESH");
+    setAdminDivision(match.division || "");
+    setAdminAttendance(match.attendance || "");
+    setAdminTeachingDays(match.teachingDays ? String(match.teachingDays) : (match.attendance?.includes("/") ? match.attendance.split("/")[1]?.replace(/[^\d]/g, "") : "220"));
+    setAdminPresentDays(match.presentDays ? String(match.presentDays) : (match.attendance?.includes("/") ? match.attendance.split("/")[0]?.replace(/[^\d]/g, "") : "205"));
+    setAdminAbsentDays(match.absentDays ? String(match.absentDays) : "15");
+    const rawSess = match.session || getCurrentSession();
+    setAdminSession(normalizeSession(rawSess));
+    setAdminExamType(match.examType || "Annual");
+    setAdminPhoto(match.photoUrl || "");
+    const newMarks: { [sub: string]: number } = {};
+    getClassSubjects(normClass).forEach((sub, i) => {
+      let val = 75;
+      if (match.marks && match.marks[sub] !== undefined) {
+        val = Number(match.marks[sub]);
+      } else if (sub.toLowerCase() === "ginti" && match.marks && match.marks["Math"] !== undefined) {
+        val = Number(match.marks["Math"]);
+      } else if (match.marks) {
+        const keys = Object.keys(match.marks);
+        const values = Object.values(match.marks);
+        const keyMatch = keys.find(k => k.toLowerCase().includes(sub.toLowerCase()) || sub.toLowerCase().includes(k.toLowerCase()));
+        if (keyMatch !== undefined) val = Number(match.marks[keyMatch]);
+        else if (i < values.length) val = Number(values[i]);
+      }
+      newMarks[sub] = val;
+    });
+    setAdminMarks(newMarks);
 
-      window.scrollTo({ top: 150, behavior: 'smooth' });
+    const formElem = document.getElementById("madarsa-result-form");
+    if (formElem) {
+      formElem.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.scrollTo({ top: 150, behavior: "smooth" });
     }
   };
 
-  const handleDeleteRecord = (roll: string) => {
-    if (confirm(`Do you really want to delete Roll No: ${roll}?`)) {
-      setResults(prev => prev.filter(r => r.rollNo.toString().trim() !== roll.toString().trim()));
-      // Update backup local storage too
-      const backup = results.filter(r => r.rollNo.toString().trim() !== roll.toString().trim());
-      localStorage.setItem("madarsa_records", JSON.stringify(backup));
+  const handleCancelEdit = () => {
+    setEditingRecordId(null);
+    setAdminRollno("");
+    setAdminSname("");
+    setAdminFname("");
+    setAdminMname("");
+    setAdminDob("");
+    setAdminDivision("");
+    setAdminAttendance("");
+    setAdminTeachingDays("220");
+    setAdminPresentDays("205");
+    setAdminAbsentDays("15");
+    setAdminPhoto("");
+    const subjects = getClassSubjects(adminSclass);
+    const resetMarks: { [sub: string]: number } = {};
+    subjects.forEach(sub => { resetMarks[sub] = 75; });
+    setAdminMarks(resetMarks);
+  };
+
+  const handleDeleteRecord = (targetRecord: Result) => {
+    if (confirm(`Do you really want to delete Roll No: ${targetRecord.rollNo} (${targetRecord.studentName}) - Class: ${targetRecord.className}?`)) {
+      setResults(prev => {
+        const filtered = prev.filter(r => {
+          if (targetRecord.id && r.id && r.id === targetRecord.id) return false;
+          const matchRoll = r.rollNo.toString().trim() === targetRecord.rollNo.toString().trim();
+          const matchClass = normalizeClassName(r.className) === normalizeClassName(targetRecord.className);
+          const matchSession = normalizeSession(r.session) === normalizeSession(targetRecord.session);
+          const matchExam = (r.examType || "Annual").toLowerCase() === (targetRecord.examType || "Annual").toLowerCase();
+          return !(matchRoll && matchClass && matchSession && matchExam);
+        });
+        localStorage.setItem("madarsa_records", JSON.stringify(filtered));
+        localStorage.setItem("nu_results", JSON.stringify(filtered));
+        localStorage.setItem("nu_results_lastModified", Date.now().toString());
+        if (isLoggedIn) {
+          syncToFirebase("schoolData", "results", filtered);
+        }
+        return filtered;
+      });
+      if (editingRecordId && targetRecord.id && editingRecordId === targetRecord.id) {
+        handleCancelEdit();
+      }
     }
   };
 
@@ -2275,7 +2417,29 @@ export default function PrincipalDashboard({
               </div>
 
               {/* LIVE IN-PLACE CARD EDITOR */}
-              <div className="overflow-x-auto py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-inner no-print">
+              <div id="madarsa-result-form" className="overflow-x-auto py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-inner no-print">
+                {editingRecordId && (
+                  <div className="max-w-[900px] mx-auto mb-4 p-3.5 bg-amber-50 dark:bg-amber-950/50 border-2 border-amber-400 dark:border-amber-600 rounded-xl flex items-center justify-between shadow-md">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-2xl">✏️</span>
+                      <div>
+                        <div className="text-amber-900 dark:text-amber-200 font-extrabold text-sm">
+                          छात्र का रिकॉर्ड एडिट किया जा रहा है (Editing Student Result):
+                        </div>
+                        <div className="text-amber-800 dark:text-amber-300 font-bold text-xs mt-0.5">
+                          नाम: <span className="font-extrabold underline">{adminSname || "N/A"}</span> | रोल नं: <span className="font-extrabold underline">{adminRollno || "N/A"}</span> | कक्षा: <span className="font-extrabold underline">{adminSclass}</span> | परीक्षा: <span className="font-extrabold underline">{adminExamType}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs font-bold rounded-lg shadow transition cursor-pointer"
+                    >
+                      Cancel Edit (रद्द करें)
+                    </button>
+                  </div>
+                )}
                 <p className="text-center text-xs font-bold font-mono text-slate-450 text-[#1e5631] mb-2 uppercase tracking-widest">
                   👇 Live Certificate Preview & Direct Entry Form 👇
                 </p>
@@ -2707,25 +2871,38 @@ export default function PrincipalDashboard({
                       <input 
                         value={adminRollno}
                         onChange={(e) => {
-                          const val = e.target.value.replace(/\D/g, '');
+                          const val = e.target.value.replace(/\D/g, "");
                           setAdminRollno(val);
-                          if (val && !adminSname) {
-                            const existingStudent = students.find(s => s.rollNo.toString().trim() === val.trim());
-                            const existingResult = results.find(r => r.rollNo.toString().trim() === val.trim());
+                          // Auto-fill student data ONLY within the current class and session when not editing another student
+                          if (val && !editingRecordId && !adminSname) {
+                            const normClass = normalizeClassName(adminSclass);
+                            const normSess = normalizeSession(adminSession);
+                            const existingStudent = students.find(s => 
+                              s.rollNo.toString().trim() === val.trim() &&
+                              normalizeClassName(s.className) === normClass &&
+                              normalizeSession(s.session) === normSess
+                            );
+                            const existingResult = results.find(r => 
+                              r.rollNo.toString().trim() === val.trim() &&
+                              normalizeClassName(r.className) === normClass &&
+                              normalizeSession(r.session) === normSess &&
+                              (r.examType || "Annual").toLowerCase() === adminExamType.toLowerCase()
+                            );
                             if (existingStudent) {
-                              setAdminSname(existingStudent.name || '');
+                              setAdminSname(existingStudent.name || "");
                               if (existingStudent.fatherName) setAdminFname(existingStudent.fatherName);
                               if (existingStudent.motherName) setAdminMname(existingStudent.motherName);
                               if (existingStudent.dateOfBirth) setAdminDob(existingStudent.dateOfBirth);
                               if (existingStudent.address) setAdminAddress(existingStudent.address);
-                              if (existingStudent.className) setAdminSclass(normalizeClassName(existingStudent.className));
                             } else if (existingResult) {
-                              setAdminSname(existingResult.studentName || '');
+                              setAdminSname(existingResult.studentName || "");
                               if (existingResult.fatherName) setAdminFname(existingResult.fatherName);
                               if (existingResult.motherName) setAdminMname(existingResult.motherName);
                               if (existingResult.dateOfBirth) setAdminDob(existingResult.dateOfBirth);
                               if (existingResult.address) setAdminAddress(existingResult.address);
-                              if (existingResult.className) setAdminSclass(normalizeClassName(existingResult.className));
+                              if (existingResult.marks) {
+                                setAdminMarks(existingResult.marks);
+                              }
                             }
                           }
                         }}
@@ -3616,14 +3793,14 @@ export default function PrincipalDashboard({
                               </td>
                               <td className="p-2.5 border border-slate-200 dark:border-slate-700 flex justify-center items-center gap-2">
                                 <button
-                                  onClick={() => handleEditRecord(r.rollNo)}
+                                  onClick={() => handleEditRecord(r)}
                                   className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded text-[11px] transition flex items-center gap-1 cursor-pointer shadow-sm hover:scale-105"
                                   title="Edit this student's result card"
                                 >
                                   <Edit2 className="w-3 h-3" /> Edit
                                 </button>
                                 <button
-                                  onClick={() => handleDeleteRecord(r.rollNo)}
+                                  onClick={() => handleDeleteRecord(r)}
                                   className="px-3 py-1.5 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold rounded text-[11px] transition flex items-center gap-1 cursor-pointer shadow-sm hover:scale-105"
                                   title="Delete this student's result permanently"
                                 >

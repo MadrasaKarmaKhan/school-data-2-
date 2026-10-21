@@ -13,7 +13,8 @@ import {
 import {
   INITIAL_CONFIG, INITIAL_STUDENTS, INITIAL_RESULTS, INITIAL_TEACHERS,
   INITIAL_ADMISSIONS, INITIAL_GALLERY, INITIAL_NEWS, getStoredData, setStoredData, getSchoolClasses,
-  syncDefaultSubjects
+  syncDefaultSubjects,
+  normalizeSession
 } from './data';
 import { ArrowUp, MessageSquare, ShieldCheck, HelpCircle } from 'lucide-react';
 import { syncToFirebase, subscribeToFirebase } from './lib/firebaseUtils';
@@ -264,13 +265,32 @@ export default function App() {
       if (!fromCache) teachersLoaded = true;
       checkHideLoading();
     });
-    unsubStudents = subscribeToFirebase('schoolData', 'students', (data, fromCache, dataChanged) => {
-      if (data && dataChanged) { lastFirebaseData.current['students'] = JSON.stringify(data); setStudents(data); }
+    unsubStudents = subscribeToFirebase('schoolData', 'students', (data, fromCache, dataChanged, lastMod) => {
+      if (data && Array.isArray(data) && dataChanged) {
+        const localMod = parseInt(localStorage.getItem('nu_students_lastModified') || '0', 10);
+        const localStudentsRaw = localStorage.getItem('nu_students');
+        let localStudents: any[] = [];
+        try { if (localStudentsRaw) localStudents = JSON.parse(localStudentsRaw); } catch(e) {}
+        // Never overwrite newer local user modifications with older remote snapshot
+        if (localStudents.length > 0 && localMod > 0 && lastMod && localMod > lastMod) {
+          return;
+        }
+        lastFirebaseData.current['students'] = JSON.stringify(data);
+        setStudents(data);
+      }
       if (!fromCache) studentsLoaded = true;
       checkHideLoading();
     });
-    unsubResults = subscribeToFirebase('schoolData', 'results', (data, fromCache, dataChanged) => {
+    unsubResults = subscribeToFirebase('schoolData', 'results', (data, fromCache, dataChanged, lastMod) => {
       if (data && Array.isArray(data) && dataChanged) {
+        const localMod = parseInt(localStorage.getItem('nu_results_lastModified') || '0', 10);
+        const localResultsRaw = localStorage.getItem('madarsa_records') || localStorage.getItem('nu_results');
+        let localResults: any[] = [];
+        try { if (localResultsRaw) localResults = JSON.parse(localResultsRaw); } catch(e) {}
+        // Never overwrite newer local user modifications with older remote snapshot
+        if (localResults.length > 0 && localMod > 0 && lastMod && localMod > lastMod) {
+          return;
+        }
         const mapped = data.filter(Boolean).map(r => ({ ...r, rollNo: String(r.rollNo || ''), studentName: String(r.studentName || ''), className: normalizeClassName(r.className) as ClassName }));
         lastFirebaseData.current['results'] = JSON.stringify(mapped);
         setResults(mapped);
@@ -364,11 +384,11 @@ export default function App() {
         if (mapped.length > 0) {
            setResults(prev => {
              const existingMap = new Map();
-             prev.forEach(r => existingMap.set(`${String(r.rollNo).trim()}-${r.className}-${r.session}`, r));
+             prev.forEach(r => existingMap.set(`${String(r.rollNo).trim()}-${normalizeClassName(r.className)}-${normalizeSession(r.session)}-${(r.examType || 'Annual').toLowerCase()}`, r));
              
              let changed = false;
              mapped.forEach(gsResult => {
-               const key = `${String(gsResult.rollNo).trim()}-${gsResult.className}-${gsResult.session}`;
+               const key = `${String(gsResult.rollNo).trim()}-${normalizeClassName(gsResult.className)}-${normalizeSession(gsResult.session)}-${(gsResult.examType || 'Annual').toLowerCase()}`;
                if (!existingMap.has(key)) {
                  existingMap.set(key, gsResult);
                  changed = true;
